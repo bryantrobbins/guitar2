@@ -10,7 +10,8 @@
 
 	<modules>
 		<module>tool-jemmy</module>
-	        <module>tool-maven-updater</module>
+	    <module>tool-maven-updater</module>
+		<module>tool-testdata</module>
 		<module>gui-model-core</module>
 		<module>gui-ripper-core</module>
 		<module>gui-replayer-core</module>
