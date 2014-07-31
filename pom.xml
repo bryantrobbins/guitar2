@@ -11,7 +11,7 @@
 	<modules>
 		<module>tool-jemmy</module>
 	    <module>tool-maven-updater</module>
-		<module>tool-testdata</module>
+<!--		<module>tool-testdata</module> -->
 		<module>gui-model-core</module>
 		<module>gui-ripper-core</module>
 		<module>gui-replayer-core</module>
@@ -20,8 +20,6 @@
 		<module>gui-replayer-jfc</module>
 		<module>guistructure2graph-core</module>
 		<module>guistructure2graph-efg</module>
-		<module>ome-core</module>
-		<module>ome-replayer-jfc</module>
 		<module>testcase-generator-core</module>
 		<module>testcase-generator-random-sequence-length</module>
 		<module>testcase-generator-sequence-length</module>
