@@ -1,0 +1,86 @@
+\def\ind#1{{\it #1}\index{#1}}
+
+\def\processfull{\underline{P}lanning \underline{A}ssisted
+\underline{T}esting}
+ 
+\def\definition#1#2{
+\begin{smalldescription}
+\item[Definition:] \underline{#1}\\
+#2\hfill
+%~$\Box$
+\end{smalldescription}
+%\vspace*{-5mm}
+}
+
+\def\definition#1{
+%\begin{smalldescription}
+%\item[Definition:]
+{\it Definition:} #1\hfill
+%~$\Box$
+%\end{smalldescription}
+%\vspace*{-5mm}
+}
+
+\def\ourtool{{\it Rachet}}
+\def\dart{{DART}}
+
+\def\dartfull{{\it Daily Automated Regression Tester}}
+
+
+
+\def\process{PAT}
+
+\def\fromcfp#1{{\bf From the CFP:} {\it #1}}
+\def\fromcfp#1{}
+
+\def\ie{{\it i.e.}}
+
+\def\eg{{\it e.g.}}
+
+\def\etal{{\it et al.}}
+
+ 
+\def\systemfull{\underline{P}lanning \underline{A}ssisted
+        \underline{T}ester for grap\underline{H}ical user interface
+        \underline{S}ystems}
+ 
+\def\system{PATHS}
+ 
+\def\figwidth{\hsize}
+\def\figwidth{=30pc}
+
+%% Alternative to itemize
+\newenvironment{smallitemize}{
+   \setlength{\topsep}{0pt}
+   \setlength{\partopsep}{0pt}
+   \setlength{\parskip}{0pt}
+   \begin{itemize}
+   \setlength{\leftmargin}{0pt}
+   \setlength{\parsep}{0pt}
+   \setlength{\parskip}{0pt}
+   \setlength{\itemsep}{0pt}}{\end{itemize}}
+
+%% Alternative to enumerate
+\newenvironment{smallenumerate}{
+   \setlength{\topsep}{0pt}
+   \setlength{\partopsep}{0pt}
+   \setlength{\parskip}{0pt}
+   \begin{enumerate}
+   \setlength{\leftmargin}{0pt}
+   \setlength{\parsep}{0pt}
+   \setlength{\parskip}{0pt}
+   \setlength{\itemsep}{0pt}}{\end{enumerate}}
+
+%% Alternative to description
+\newenvironment{smalldescription}{
+   \setlength{\topsep}{0pt}
+   \setlength{\partopsep}{0pt}
+   \setlength{\parskip}{0pt}
+   \begin{description}
+   \setlength{\leftmargin}{0pt}
+   \setlength{\parsep}{0pt}
+   \setlength{\parskip}{0pt}
+   \setlength{\itemsep}{0pt}}{\end{description}}
+
+% todo-s
+\newcommand{\todo}[1]{\textbf{{[TODO: #1]}}}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Rachota 2.1 diary file - editing not recommended
+    Wed Jul 20 22:20:17 PDT 2011
+-->
+<!DOCTYPE week SYSTEM "diary.dtd">
+
+<week year="2011" id="30">
+    <day id="4" start="00:00" finish="00:00">
+        <task state="0" duration="00:00:00">
+            <priority>0</priority>
+            <description>Meeting with Atif</description>
+            <keyword>Meeting</keyword>
+            <notes>Regarding survey paper.</notes>
+            <notification time="20:30" switch="true"/>
+            <private/>
+        </task>
+        <task state="0" duration="00:00:00">
+            <priority>1</priority>
+            <description>GUITAR meeting</description>
+            <keyword>Meeting</keyword>
+            <notes>Regarding GUITAR.</notes>
+            <notification time="08:00" switch="true"/>
+        </task>
+        <task state="1" duration="00:08:08">
+            <priority>2</priority>
+            <description>Idle time</description>
+            <keyword>idle</keyword>
+            <notes>Time spent when no task was measured.</notes>
+            <idle/>
+        </task>
+    </day>
+</week>

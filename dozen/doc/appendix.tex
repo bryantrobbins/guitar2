@@ -1,0 +1,139 @@
+
+
+\appendix
+
+\section{Appendix}
+\label{sec:appendix}
+
+Utilities and software required for using \mddozen{} with a testbed.
+
+\subsection{Xvfb}
+
+Xvfb\footnote{\url{http://www.xfree86.org/4.0.1/Xvfb.1.html}} is an X server that can run on machines with no display hardware. It emulates a dumb framebuffer using virtual memory.
+
+\begin{figure}
+
+   \scriptsize{
+   \noindent Start Xvfb:\\
+   \begin{lstlisting}
+   Xvfb :<display_number> -fbdir <session_dir>
+                          -screen 0 1600x1200x16
+   \end{lstlisting}
+   }
+
+   \noindent Stop Xvfb:\\
+
+   \scriptsize{
+   \begin{lstlisting}
+   pkill -x "(Xvfb)"
+   rm -f /tmp/.X11-unix/X:<display_number>
+   \end{lstlisting}
+   }
+   \caption{\texttt{Xvfb} commands.}
+   \label{fig:xvfb}
+\end{figure}
+
+Commands to start and stop \texttt{Xvfb} are shown in Figure~\ref{fig:xvfb}. It uses the \texttt{$<$session\_dir$>$} as a scratch directory, uses the virtual display entry \texttt{$<$display\_number$>$} and creates a virtual screen of resolution $1600*1200$ with $16$-bit colour depth.
+
+When started Xvfb creates two lock files --
+\begin{lstlisting}
+/tmp/.X<display_number>-lock
+/tmp/.x11-unix/X<display_number>
+\end{lstlisting}
+Xvfb will not start if these files are already present. After stopping \texttt{Xvfb} these lock file, if present, needs to be deleted.
+
+
+\subsection{Jenkins}
+
+Jenkins\footnote{http://jenkins-ci.org/} is a build and job control system. Jenkins allows jobs to be executed locally on a machine as well on a remote machines which are configured as a Jenkins slave.
+
+When used with \mddozen{} it is recommended that simple Jenkins jobs be created to run on a local machine only. The Jenkins job itself can execute scripts on remote machines using \texttt{ssh}. This gives greater control to the job scripts. For example, Figure~\ref{fig:jenkinsjob} shows the command line from a simple Jenkins job.
+
+
+\begin{figure}
+   \scriptsize{
+   \begin{lstlisting}
+   ./dozen/jenkins/cluster-run-testsuite.sh
+      ArgoUML
+      jenkins gandalf.cs.umd.edu /tmp/auts/
+      sq_l_2
+      ./dozen/jenkins/experiments-one-machine.cfg
+   \end{lstlisting}
+   }
+
+   \caption{A simple Jenkins job. The script \texttt{cluster-run-testsuite.sh} has full control on the cluster.}
+   \label{fig:jenkinsjob}
+\end{figure}
+
+
+\subsection{.bashrc}
+\label{sec:bashrc}
+
+The controller and archive machine requires \texttt{dozen/} and \texttt{ecig/} scripts from time to time. It would be useful to checkout and store a copy of the \texttt{dozen/} and \texttt{ecig/} repositories on these two machines. It would be also useful to have certain environment variables set up in both places.
+
+Figure~\ref{fig:bashrc} shows the example of a \texttt{$\tilde{}$/.bashrc} file containing environment settings. The path to Java binaries or JDK may also need to be appended to \texttt{PATH}.
+
+
+\begin{figure}
+   \scriptsize{
+   \begin{lstlisting}
+# History
+export HISTSIZE=1048576
+export HISTCONTROL=erasedups
+shopt -s histappend
+
+# ANT
+export ANT_HOME=/usr/bin/ant/
+export PATH=$PATH:/usr/bin/ant/bin/
+
+# CSSVN
+export CSSVN=/root/
+export SVN_EDITOR=vi
+
+# DOZEN
+export DOZEN=$CSSVN/dozen
+export PATH=$PATH:$DOZEN/tools/scripts:
+            $DOZEN/tools/bin/guitar/bin:
+            $DOZEN/tools/bin/cobertura:
+            $DOZEN/common/
+
+# ECIG
+export ECIG=$CSSVN/ecig
+export PATH=$PATH:$ECIG/bin/
+export PERL5LIB=$ECIG/bin/
+
+# Java
+export JAVA_HOME=/usr/java/jdk1.7.0/
+export PATH=$PATH:$JAVA_HOME
+
+# Misc
+alias dozen='cd $CSSVN/dozen'
+alias ecig='cd $CSSVN/ecig'
+   \end{lstlisting}
+   }
+
+   \caption{A \texttt{$\tilde{}$/.bashrc} file to be used on controller and archive machine.}
+   \label{fig:bashrc}
+\end{figure}
+
+\subsection{ssh-keygen}
+\label{sec:sshkeygen}
+
+To enable password-less \texttt{ssh}, \texttt{rsync} from machine local-host to machine remote-host, the steps described in Figure~\ref{fig:sshkeygen} are done.
+
+\begin{figure}
+   \scriptsize{
+      \begin{lstlisting}
+local-host:
+
+   ssh-keygen -t rsa      # no passphrase
+   scp ~/.ssh/id_rsa.pub <remote-user>@<remote-host>:/tmp/
+
+remote-host:
+
+   cat /tmp/id_rsa.pub >> ~/.ssh/authorized_keys
+   \end{lstlisting}
+   }
+   \caption{Password-less \texttt{ssh} from local-host to remote-host.}
+   \label{fig:sshkeygen}
+\end{figure}

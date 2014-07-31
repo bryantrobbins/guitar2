@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Configuration>
+	
+	<IgnoredComponents>
+
+		<!-- 
+			Components
+		-->
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>New</Value>
+                    
+					</Property>
+					<Property>
+						<Name>Class</Name>
+						<Value>javax.swing.JMenu$1</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Connect to SQL database</Value>
+                        
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Open database</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		
+
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Save database</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+	
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Save database as ...</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Save all</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Save selected as ...</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Export</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>	
+
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Import</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>	
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Recent files</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>	
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Close database</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>		
+
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>New entry ...</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>	
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>New entry from plain text</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>edit_add.png</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>	
+		
+		<FullComponent>	
+				<Component>
+				<Attributes>
+					<Property>
+						<Name>Class</Name>
+						<Value>javax.swing.JFileChooser</Value>
+					</Property>
+				</Attributes>
+				</Component>
+		</FullComponent>	
+		
+		<!-- 
+			Windows 
+		-->
+		<FullComponent>	
+			<Window>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Open</Value>
+					</Property>
+				</Attributes>
+			</Window>
+		</FullComponent>	
+
+		<FullComponent>	
+			<Window>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Save</Value>
+					</Property>
+				</Attributes>
+			</Window>
+		</FullComponent>	
+		
+		<FullComponent>	
+			<Window>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>JabRef help</Value>
+					</Property>
+				</Attributes>
+			</Window>
+		</FullComponent>	
+
+		<FullComponent>	
+			<Window>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Select entry type</Value>
+					</Property>
+				</Attributes>
+			</Window>
+		</FullComponent>	
+		
+	
+		
+	</IgnoredComponents>
+	
+	<TerminalComponents>
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>cancel</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>no</Value>
+					</Property>				
+				</Attributes>
+			</Component>
+		</FullComponent>
+				<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>close</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>reject</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>exit</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>ok</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+				<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>yes</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>insert</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>	
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>quit</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>	
+		
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Article</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>	
+
+		
+		</TerminalComponents>
+	
+</Configuration>

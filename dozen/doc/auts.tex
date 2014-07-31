@@ -1,0 +1,167 @@
+%
+% Components of Maryland dozen
+%
+\section{Components}
+\label{sec:components}
+
+\mddozen{} consists of twelve Java applications, common scripts and tools.
+
+Applications in the \mddozen{} are Java based applications, with a GUI interface. Let us call these applications \textit{application under test} or AUT. All the AUTs have a GUI interface of varying complexity. They are chosen as candidate AUTs which can be used as subjects of testing. They will be used to evaluate GUITAR, its algorithms and features. They will also help understand how GUITAR can be extended or modified to work with different kinds of GUI based applications.
+
+Scripts in the \mddozen{} form a test harness for GUITAR. These scripts enable GUITAR to be deployed on a testbed, perform experiments and collect results.
+
+\mddozen{} has a set of tools. GUITAR is the primary tool. Other tools are used for code coverage, graph visualization and analysis of results.
+
+Jenkins\footnote{http://jenkins-ci.org/} can be used to control some of the test harness scripts. The \mddozen{} includes Jenkins job scripts for executing testcase execution on a cluster.
+
+In this section, the different components of \mddozen{} are described -- applications, common scripts, tools and Jenkins job scripts.
+
+
+\subsection{Applications}
+
+This sections describes the AUTs, their directory layout and scripts specific to each AUT. The AUTs are placed in the directory \texttt{auts/} from Figure~\ref{fig:dozenlayout}.
+
+%
+% Dozen applications
+%
+\subsubsection{Dozen}
+
+There are twelve Java based applications in \mddozen{}. They are listed in Table~\ref{table:aut} along with attributes relevant to their use. RadioButton is an additional toy AUT which serves to smoke test \mddozen{} and GUITAR.
+
+In this table, \textit{Revision} indicates the revision number of the AUT which is currently used. A revision is deployed only if it is deemed to be stable and free from defects which might cause the AUT to crash excessivly. An AUT may be supplied with an \textit{Initial Input}. The initial input may be in the form of command line arguments. If the initial input requires a file to be read by the AUt, then the file(s) is placed in the \texttt{auts/<aut-name>/aut/input} directory (see Section~\ref{sec:autlayout}. Not all of the AUTs in the \mddozen{} are in working condition. The \textit{Status} indicates if an AUT is stable and has been configured to be used with GUITAR.
+
+%
+% AUT attributes
+%
+\begin{table}[tbp]
+   \centering
+   \begin{tabular}{l l l l}
+      & & & \\
+      \hline
+      & & & \\
+      Name          & Revision & Initial input & Status            \\
+      & & & \\
+      \hline
+      & & & \\
+      ArgoUML       & 19535    & Yes           & OK                \\
+      Buddi         & 3.2.2.10 & Yes           & OK                \\
+      CrosswordSage & 0.3.5    & Yes           & OK                \\
+      DrJava        & -        & -             & --Incomplete--    \\
+      FreeMind      & 0.9.0    & None          & OK                \\
+      GanttProject  & -        & -             & --Incomplete--    \\
+      JabRef        & 2.5      & Yes           & OK                \\
+      JEdit         & 4.4.3    & None          & Rip exception     \\
+      OmegaT        & v2-1-2   & None          & OK                \\
+      OpenProject   & -        & -             & --Incomplete--    \\
+      PdfSam        & -        & -             & --Incomplete--    \\
+      Rachota       & HEAD     & Yes           & Hangs with xvnc   \\
+      RadioButton   & N/A      & None          & OK                \\
+      & & & \\
+   \end{tabular}
+
+   \caption{Application under test (AUT) in \mddozen{}.}
+   \label{table:aut}
+\end{table}
+
+
+%
+% Application layout
+%
+\subsubsection{Layout}
+\label{sec:autlayout}
+
+AUTs of the \mddozen{} are stored under the directory \texttt{aut/} (see Figure~\ref{fig:dozenlayout}). The directory structure of this directory is shown in Figure~\ref{fig:autlayout}. In this figure, directory names terminate with \texttt{/}.
+
+Files and directories which are stored in the \mddozen{} repository, and are retrieved when the \mddozen{} is installed, are marked with \texttt{+}. Entries which are generated when working with the AUTs or with GUITAR are marked with \texttt{*}. These are not stored in the repository. The user needs to manage these files and directories.
+
+\begin{figure}
+\scriptsize{
+   \begin{lstlisting}[language=sh, showstringspaces=false, breaklines=true]
+   
+      auts/
+         +- ArgoUML/
+              +- aut/
+                   +- input/
+                   *- src/
+                   *- bin/
+                   *- inst/
+                   *- coverage-artifact/
+              +- guitar-config/
+                   +- configuration.xml
+              +- scripts/
+                   +- aut.cfg
+                   +- aut.checkout.sh
+                   +- aut.builds.sh
+                   +- aut.utils.sh
+              *- models/
+                   *- ArgoUML.EFG
+                   *- ArgoUML.GUI
+                   *- ripping-coverage/
+                        *- cobertura_ripper.ser
+                        *- cobertura_ripper.xml
+              *- testsuites/
+                   *- <testsuite_name_1>
+                        *- testcases
+                        *- coverage
+                        *- logs
+                        *- oracles
+                   *- <testsuite_name_2>
+                      ...
+                   *- <testsuite_name_n>
+         +- Buddi/
+            ...
+         +- RadioButton/
+   \end{lstlisting}
+}
+
+   \caption{Directory layout for each AUT, starting at the \texttt{auts/} directory. \texttt{+} indicates directories present in the \mddozen{} repository. \texttt{*} indicates directories not present in the repository.}
+   \label{fig:autlayout}
+\end{figure}
+
+
+%
+% Application specific scripts
+%
+\subsubsection{Application specific scripts}
+
+Each AUT in the \mddozen{} requires some AUT specific handling. The AUT specific steps are built into scripts stored under \texttt{auts/<aut-name>/scripts}. There are four scripts for each AUT.\\
+
+\begin{smalldescription}
+ \item [aut.cfg] Contains configuration which are used by the \mddozen{} scripts to run itself and drive GUITAR in a manner specific to that AUT
+ \item [aut.checkout.sh] Contains steps for obtaining the AUT from a clean external repository. Checkout commands for each AUT is summarized in Table~\ref{table:autcheckout}
+ \item [aut.build.sh] Contains steps for building the AUT
+ \item [aut.utils.sh] Contains miscellaneous steps specific to the AUT, for example, cleaning up the AUT after a test case execution
+\end{smalldescription}
+
+%
+% AUT checkout commands
+%
+\begin{table*}[tbp]
+   \centering
+   \scriptsize{
+   \begin{tabular}{ll}
+      \hline
+      & \\
+      AUT           & Command \\
+      & \\
+      \hline
+      & \\
+      ArgoUML       & svn co -r $<$revision$>$ --username guest --password $''$ http://argouml.tigris.org/svn/argouml/trunk/[src$|$tools] [src$|$tools] \\
+      Buddi         & wget http://sourceforge.net/projects/buddi/files/Buddi\%20\%28Stable\%29/3.2.2.10/Buddi-3.2.2.10.src.tgz \\
+      CrosswordSage & wget http://iweb.dl.sourceforge.net/project/crosswordsage/crosswordsage/0.3.5/crosswordsage-0.3.5-src.zip \\
+      DrJava        & --Incomplete-- \\
+      FreeMind      & wget http://sourceforge.net/projects/freemind/files/freemind/0.9.0/freemind-src-0.9.0.tar.gz \\
+      GanttProject  & --Incomplete-- \\
+      JabRef        & wget http://sourceforge.net/projects/jabref/files/jabref/2.5/JabRef-2.5-src.zip \\
+      JEdit         & wget http://sourceforge.net/projects/jedit/files/jedit/4.3.3/jedit4.3.3source.tar.bz2 \\
+      OmegaT        & svn co https://omegat.svn.sourceforge.net/svnroot/omegat/tags/v2-1-2/ . \\
+      OpenProj      & --Incomplete-- \\
+      PdfSam        & --Incomplete-- \\
+      Rachota       & cvs -z3 -d:pserver:anonymous@rachota.cvs.sourceforge.net:/cvsroot/rachota co  rachota \\
+      RadioButton   & Stored in \mddozen{} repository \\
+      &  \\
+   \end{tabular}
+   }
+   \caption{Command to fetch AUT from external repository}
+   \label{table:autcheckout}
+\end{table*}

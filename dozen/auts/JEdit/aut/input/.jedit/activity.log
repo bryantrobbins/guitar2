@@ -1,0 +1,100 @@
+Log file created on Sun Jul 28 16:47:31 PDT 2013
+IMPORTANT:
+Because updating this file after every log message would kill
+performance, it will be *incomplete* unless you invoke the
+Utilities->Troubleshooting->Update Activity Log on Disk command!
+4:47:31 PM [main] [message] Log: When reporting bugs, please include the following information:
+4:47:31 PM [main] [message] Log: java.version=1.6.0_18
+4:47:31 PM [main] [message] Log: java.vm.version=14.0-b16
+4:47:31 PM [main] [message] Log: java.vm.name=OpenJDK 64-Bit Server VM
+4:47:31 PM [main] [message] Log: java.runtime.version=1.6.0_18-b18
+4:47:31 PM [main] [message] Log: java.runtime.name=OpenJDK Runtime Environment
+4:47:31 PM [main] [message] Log: java.vendor=Sun Microsystems Inc.
+4:47:31 PM [main] [message] Log: java.compiler=null
+4:47:31 PM [main] [message] Log: os.name=Linux
+4:47:31 PM [main] [message] Log: os.version=2.6.32.26-175.fc12.x86_64
+4:47:31 PM [main] [message] Log: os.arch=amd64
+4:47:31 PM [main] [message] Log: user.home=/root/cs.svn/guitar/dozen/auts/JEdit/home/
+4:47:31 PM [main] [message] Log: java.home=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre
+4:47:31 PM [main] [message] Log: java.class.path=/root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build/jedit.jar
+4:47:31 PM [main] [message] jEdit: starting with command line arguments: -nosplash -nostartupscripts
+4:47:31 PM [main] [debug] jEdit: before splash screen activation:28 ms
+4:47:31 PM [main] [debug] jEdit: after splash screen activation:28 ms
+4:47:31 PM [main] [debug] MiscUtilities: Saving backup of file "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/activity.log" to "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/settings-backup/activity.log~1~"
+4:47:31 PM [main] [notice] jEdit: jEdit version 5.0.0
+4:47:31 PM [main] [message] jEdit: Settings directory is /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit
+4:47:31 PM [main] [message] jEdit: jEdit home directory is /root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build
+4:47:31 PM [main] [message] BeanShell: Beanshell Init
+4:47:31 PM [main] [debug] GUIUtilities: Icon theme set to: tango
+4:47:31 PM [main] [debug] GUIUtilities: Loading icon theme from: jeditresource:/org/gjt/sp/jedit/icons/themes/tango/
+4:47:31 PM [main] [debug] EditServer: jEdit server started on port 38771
+4:47:31 PM [main] [debug] EditServer: Authorization key is 206696465
+4:47:32 PM [main] [debug] jEdit: initPLAF non-edt old=javax.swing.plaf.metal.MetalLookAndFeel requested=null new=javax.swing.plaf.metal.MetalLookAndFeel
+4:47:32 PM [main] [warning] jEdit: inifPLAF failed to set required l&f
+4:47:32 PM [main] [debug] ActionSet: Loading actions from jar:file:/root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build/jedit.jar!/org/gjt/sp/jedit/actions.xml
+4:47:32 PM [main] [debug] DockableWindowManager: Loading dockables from jar:file:/root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build/jedit.jar!/org/gjt/sp/jedit/dockables.xml
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: SearchSettingsChanged[source=null]
+4:47:32 PM [main] [notice] jEdit: Loading plugins from /root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build/jars
+4:47:32 PM [main] [debug] PluginJAR: Opening /root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build/jars/QuickNotepad.jar
+4:47:32 PM [main] [debug] ActionSet: Loading actions from jeditresource:/QuickNotepad.jar!/actions.xml
+4:47:32 PM [main] [debug] DockableWindowManager: Loading dockables from jeditresource:/QuickNotepad.jar!/dockables.xml
+4:47:32 PM [main] [debug] PluginJAR: Writing /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/jars-cache/QuickNotepad.jar.summary
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: PluginUpdate[what=LOADED,exit=false,version=5.0,source=/root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build/jars/QuickNotepad.jar,class=QuickNotepadPlugin]
+4:47:32 PM [main] [notice] jEdit: Loading plugins from /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/jars
+4:47:32 PM [main] [message] BufferHistory: Loading /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/recent.xml
+4:47:32 PM [main] [message] KillRing: Loading /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/killring.xml
+4:47:32 PM [main] [debug] jEdit: initPLAF non-edt old=javax.swing.plaf.metal.MetalLookAndFeel requested=null new=javax.swing.plaf.metal.MetalLookAndFeel
+4:47:32 PM [main] [warning] jEdit: inifPLAF failed to set required l&f
+4:47:32 PM [main] [debug] jEdit: SOCKS proxy disabled
+4:47:32 PM [main] [debug] jEdit: HTTP proxy disabled
+4:47:32 PM [main] [error] JEditSwingTrayIcon: Unable to add Tray icon
+4:47:32 PM [main] [error] JEditSwingTrayIcon: java.awt.AWTException: TrayIcon couldn't be displayed.
+4:47:32 PM [main] [error] JEditSwingTrayIcon:  at sun.awt.X11.XSystemTrayPeer.addTrayIcon(XSystemTrayPeer.java:71)
+4:47:32 PM [main] [error] JEditSwingTrayIcon:  at sun.awt.X11.XTrayIconPeer.<init>(XTrayIconPeer.java:235)
+4:47:32 PM [main] [error] JEditSwingTrayIcon:  at sun.awt.X11.XToolkit.createTrayIcon(XToolkit.java:1058)
+4:47:32 PM [main] [error] JEditSwingTrayIcon:  at java.awt.TrayIcon.addNotify(TrayIcon.java:677)
+4:47:32 PM [main] [error] JEditSwingTrayIcon:  at java.awt.SystemTray.add(SystemTray.java:260)
+4:47:32 PM [main] [error] JEditSwingTrayIcon:  at org.gjt.sp.jedit.gui.tray.JTrayIconManager.addTrayIcon(JTrayIconManager.java:84)
+4:47:32 PM [main] [error] JEditSwingTrayIcon:  at org.gjt.sp.jedit.jEdit.propertiesChanged(jEdit.java:1023)
+4:47:32 PM [main] [error] JEditSwingTrayIcon:  at org.gjt.sp.jedit.jEdit.main(jEdit.java:501)
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: PropertiesChanged[source=null]
+4:47:32 PM [main] [message] jEdit: Loading mode catalog file /root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build/modes/catalog
+4:47:32 PM [main] [message] jEdit: Loading mode catalog file /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/modes/catalog
+4:47:32 PM [main] [debug] Macros: Registered beanshell macro handler
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: DynamicMenuChanged[menu=macros,source=null]
+4:47:32 PM [AWT-EventQueue-0] [message] PerspectiveManager: Loading /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/perspective.xml
+4:47:32 PM [main] [debug] jEdit: main done:630 ms
+4:47:32 PM [AWT-EventQueue-0] [notice] jEdit$3: Loading edit mode /root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build/modes/text.xml
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: BufferUpdate[what=PROPERTIES_CHANGED,view=null,source=Untitled-1 (~)]
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: BufferUpdate[what=CREATED,view=null,source=Untitled-1 (~)]
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: BufferUpdate[what=LOAD_STARTED,view=null,source=Untitled-1 (~)]
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: BufferUpdate[what=LOADED,view=null,source=Untitled-1 (~)]
+4:47:32 PM [AWT-EventQueue-0] [debug] BufferSet: 1153890100: addBufferSetListener org.gjt.sp.jedit.EditPane[inactive]
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: BufferChanging[what=BUFFER_CHANGING,source=org.gjt.sp.jedit.EditPane[inactive]]
+4:47:32 PM [AWT-EventQueue-0] [debug] BufferSet: 1153890100 addBufferAt(Untitled-1 (~),-1)
+4:47:32 PM [AWT-EventQueue-0] [debug] BufferSet: 1153890100: Buffer added Untitled-1 (~) at 0
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: EditPaneUpdate[what=CREATED,source=org.gjt.sp.jedit.EditPane[inactive]]
+4:47:32 PM [AWT-EventQueue-0] [debug] BufferSet: 1153890100 addBufferAt(Untitled-1 (~),0)
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: ViewUpdate[what=CREATED,source=org.gjt.sp.jedit.View[active]]
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: EditorStarted[source=null]
+4:47:32 PM [jEdit I/O #1] [debug] WorkThread: Work request thread starting [jEdit I/O #1]
+4:47:32 PM [jEdit I/O #2] [debug] WorkThread: Work request thread starting [jEdit I/O #2]
+4:47:32 PM [jEdit I/O #3] [debug] WorkThread: Work request thread starting [jEdit I/O #3]
+4:47:32 PM [jEdit I/O #4] [debug] WorkThread: Work request thread starting [jEdit I/O #4]
+4:47:32 PM [AWT-EventQueue-0] [message] jEdit: Startup complete: 970 ms
+4:47:32 PM [AWT-EventQueue-0] [debug] EditBus: ViewUpdate[what=VIEW_ACTIVATED,source=org.gjt.sp.jedit.View[active]]
+4:47:32 PM [AWT-EventQueue-0] [debug] JEditTextArea: InputMethodSupport is activated
+4:47:35 PM [AWT-EventQueue-0] [debug] EditBus: EditorExitRequested[source=org.gjt.sp.jedit.View[active]]
+4:47:35 PM [AWT-EventQueue-0] [message] PerspectiveManager: Saving /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/perspective.xml
+4:47:35 PM [AWT-EventQueue-0] [debug] MiscUtilities: Saving backup of file "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/perspective.xml" to "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/settings-backup/perspective.xml~1~"
+4:47:35 PM [AWT-EventQueue-0] [debug] EditBus: EditorExiting[source=null]
+4:47:35 PM [AWT-EventQueue-0] [debug] EditBus: ViewUpdate[what=CLOSED,source=org.gjt.sp.jedit.View[active]]
+4:47:35 PM [AWT-EventQueue-0] [debug] EditBus: EditPaneUpdate[what=DESTROYED,source=org.gjt.sp.jedit.EditPane[active]]
+4:47:35 PM [AWT-EventQueue-0] [debug] BufferSet: 1153890100: Buffer removed Untitled-1 (~)
+4:47:35 PM [AWT-EventQueue-0] [debug] BufferSetManager: Buffer:Untitled-1 (~) is in no bufferSet anymore, closing it
+4:47:35 PM [AWT-EventQueue-0] [debug] EditBus: PluginUpdate[what=UNLOADED,exit=true,version=5.0,source=/root/cs.svn/guitar/dozen/auts/JEdit/aut/src/jEdit/build/jars/QuickNotepad.jar,class=QuickNotepadPlugin]
+4:47:35 PM [AWT-EventQueue-0] [message] BufferHistory: Saving /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/recent.xml
+4:47:35 PM [AWT-EventQueue-0] [debug] MiscUtilities: Saving backup of file "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/recent.xml" to "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/settings-backup/recent.xml~1~"
+4:47:35 PM [AWT-EventQueue-0] [message] KillRing: Saving /root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/killring.xml
+4:47:35 PM [AWT-EventQueue-0] [debug] MiscUtilities: Saving backup of file "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/killring.xml" to "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/settings-backup/killring.xml~1~"
+4:47:35 PM [AWT-EventQueue-0] [debug] MiscUtilities: Saving backup of file "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/properties" to "/root/cs.svn/guitar/dozen/auts/JEdit/home/.jedit/settings-backup/properties~1~"

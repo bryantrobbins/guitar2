@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="pit-ant-example" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+    <property name="classOutputDir" value="build"/>
+
+    <path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.1.3.jar" />
+
+    <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+       uri="antlib:org.apache.maven.artifact.ant"
+       classpathref="maven-ant-tasks.classpath" />
+
+    <artifact:dependencies pathId="pitest.path">
+        <dependency groupId="org.pitest" artifactId="pitest" version="0.32" />
+        <dependency groupId="org.pitest" artifactId="pitest-ant" version="0.32" />
+    </artifact:dependencies>
+
+    <artifact:dependencies pathId="deps.path">
+        <dependency groupId="edu.umd.cs.guitar" artifactId="testdata" version="1.0.6-SNAPSHOT" scope="test"/>
+        <dependency groupId="edu.umd.cs.guitar" artifactId="ome-jfc" version="0.0.1-SNAPSHOT" scope="test"/>
+        <dependency groupId="junit" artifactId="junit" version="4.11" scope="test"/>
+    </artifact:dependencies>
+
+    <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pitest.path"/>
+
+    <target name="clean">
+        <delete dir="${classOutputDir}"/>
+    </target>
+
+    <path id="test.path">
+        <pathelement location="${classOutputDir}/test-classes"/>
+        <pathelement location="test"/>
+        <path refid="deps.path"/>
+    </path>
+
+    <target name="test">
+        <mkdir dir="${classOutputDir}/test-result"/>
+        <mkdir dir="${classOutputDir}/test-classes"/>
+
+        <javac srcdir="test" destdir="${classOutputDir}/test-classes">
+            <classpath refid="test.path"/>
+        </javac>
+
+	<copy todir="${classOutputDir}/test-classes">
+	    <fileset dir="test" includes="**/*.properties" />
+	</copy>
+
+        <junit>
+            <classpath refid="test.path"/>
+	    <test name="edu.umd.cs.guitar.testdata.guitar.GUITARTests" haltonfailure="no" todir="${classOutputDir}/test-result">
+	      <formatter type="xml"/>
+	    </test>
+        </junit>
+
+        <junitreport todir="${classOutputDir}/test-result">
+            <fileset dir="${classOutputDir}/test-result">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${classOutputDir}/test-result/report"/>
+        </junitreport>
+
+    </target>
+
+    <target name="pit" depends="test">
+        <path id="mutation.path">
+            <path refid="pitest.path"/>
+            <path refid="test.path"/>
+        </path>
+        <pitest pitClasspath="mutation.path" classPath="test.path" targetTests="com.example.*" targetClasses="com.example.*"
+                reportDir="pitReports" sourceDir="src"/>
+    </target>
+
+</project>

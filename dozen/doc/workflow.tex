@@ -1,0 +1,187 @@
+%
+% Worflow
+%
+\section{Workflow}
+\label{sec:workflow}
+
+The \mddozen{} can be used to build workflows. Workflows are used for demonstrating GUITAR, running experiments for evaluating GUITAR or GUI testing algorithms. 
+
+\subsection{Basic workflow}
+\label{sec:basicworkflow}
+
+Components of the \mddozen{} were described in Section~\ref{sec:components}. The basic workflow operates on any Java based GUI application. In the \mddozen{} it operates on one of the twelve AUTs. It uses only one machine to execute all the steps.
+
+The workflow is described with an example. Figure~\ref{fig:basicworkflow} shows the steps. They are executed locally on a machine using the toy AUT, RadioButton.\\
+
+\noindent A test machine is used up with the following configurations:\\
+
+\begin{smalldescription}
+   \item [local machine] 2GHz $*$ 2. 8GB RAM. 1TB local storage \texttt{/}. Installed software: Linux, JDK, subversion.\\
+\end{smalldescription}
+
+The steps prepare \mddozen{} on a machine, rip the AUT, generate testcases and executes them on the AUT. Test artifacts generated during these steps are stored on the machine itself -- models are stored under \texttt{models/} directory, generated test cases under \texttt{/testsuites/<testsuite-name>/testcases/}, test case execution artifacts under \texttt{testsuites/<testsuite-name>/\{logs, oracles/, coverage/\}}.
+
+
+\begin{figure}
+\scriptsize{
+\begin{lstlisting}[language=sh]
+#
+# Step 1:
+#
+# Checkout Maryland dozen and set up environment
+#
+svn checkout http://svn.cs.umd.edu/repos/guitar/dozen ~/
+export PATH=$PATH:~/dozen/common/
+export PATH=$PATH:~/dozen/tools/scripts/
+
+#
+# Step 2:
+#
+# Checkout and build GUITAR and other tools
+main.sh HEAD num
+
+#
+# Step 3:
+#
+# Initialize RadioButton directory structure
+#
+common-init-dir.sh RadioButton
+
+#
+# Step 4:
+#
+# Checkout, build, instrument, validate build
+#
+common-checkout.sh RadioButton
+common-build.sh RadioButton
+common-inst.sh RadioButton
+common-build-check.sh RadioButton
+
+#
+# Step 5:
+#
+# Rip RadioButton, generates RadioButton.GUI
+#
+common-rip.sh RadioButton NULL NULL NULL
+
+#
+# Step 6:
+#
+# Generate EFG, RadioButton.EFG
+#
+common-gui2efg.sh RadioButton new
+common-efg2gephipdf.sh RadioButton
+
+#
+# Step 7:
+#
+# Generate 5 sequential length testcases
+# Each testcase is of length 2 and stored
+# in the testsuite named sq_l_2 
+#
+common-tc-gen-sq.sh RadioButton 2 5
+
+#
+# Step 8:
+#
+# Execute testcases from testsuite sq_l_2
+#
+common-replay.sh RaduiButton
+   ~/dozen/auts/RadioButton/models/RadioButton.GUI
+   ~/dozen/auts/RadioButton/models/RadioButton.EFG
+   ~/dozen/auts/RadioButton/testsuites
+   sq_l_2 NULL NULL NULL
+
+\end{lstlisting}
+}
+
+\caption{The basic workflow. Steps for generating and executing testcases on a local machine.}
+\label{fig:basicworkflow}
+\end{figure}
+
+
+
+\subsection{Standard workflow}
+\label{sec:standardworkflow}
+
+In this section, a \textit{standard workflow} is described. The standard workflow operates on any Java based GUI application. In the \mddozen{} it operates on one of the twelve AUTs using a cluster of machines.
+
+The standard workflow configures the testbed (cluster of machines), rips the specified AUT to generate a GUI model -- EFG, generates EFG based testcases from the EFG, executes all the testcases on the AUT. All artifacts of the workflow are stored in an \textit{archive machine}. The artifacts can be analysed later for crashes and other attributes. The analysis does not form a part of the \mddozen{} workflow.
+
+The cluster of machines act as slave machine. They do not store any state information after the tests complete. A cluster machine may be used for another experiment after one experiment completes. The new experiment will require a complete workflow to be executed.
+
+The process of setting up a testbed and executing the standard workflow is described with an example.\\
+
+\noindent A testbed is set up with the following configurations:\\
+
+\begin{smalldescription}
+   \item [controller] Controller machine named \texttt{gandalf.cs.umd.edu}. 2GHz $*$ 2. 8GB RAM. 1TB local storage \texttt{/}, 1TB local storage \texttt{/archive/}. Username: \texttt{jenkins} - created by Jenkins installation. Installed software: Linux, Jenkins, subversion.
+
+   \item [stage machine] Staging machine named \texttt{bugs.cs.umd.edu:2201}. 2.4GHz, 1GB RAM. 32GB local storage \texttt{/}. Username: \texttt{cluster}. Installed software: Linux, subversion, Xvfb, JDK.
+
+   \item [cluster machines] Set of machines named \texttt{bugs.cs.umd.edu:2202} -- \texttt{bugs.cs.umd.edu:2203}. Identical hardware and software as staging machine.
+
+   \item [archive machine] Same machine as controller machine. Archive location: \texttt{/archive/}.\\
+
+\end{smalldescription}
+
+
+The username \texttt{jenkins} will be used on the controller machine. This username is created when Jenkins is installed. Jenkins uses this username for its operations. The same username can also be used for executing steps manually.
+
+\begin{figure}
+\scriptsize{
+\begin{lstlisting}[language=sh]
+#
+# Step 1:
+#
+# Checkout Maryland dozen and set up environment
+#
+svn checkout http://svn.cs.umd.edu/repos/guitar/dozen ~/
+export PATH=$PATH:~/dozen/common/
+
+#
+# Step 2:
+#
+# Generate test cases for RadioButton on a staging
+# machine and store them in the archive location.
+#
+cluster-tc-gen-sq.sh RadioButton /tmp/mycluster.cfg 2 0
+
+#
+# Step 3:
+#
+# Replay the generated testcases on  cluster and store
+# results in archive machine.
+# 
+cd ~/dozen/jenkins
+~/dozen/jenkins/cluster-run-testsuite.sh
+   RadioButton jenkins gandalf.cs.umd.edu
+   /archive/auts/ sq_l_2 /tmp/mycluster.cfg
+
+\end{lstlisting}
+}
+\caption{The standard workflow. Steps for generating testcases and executing them on a cluster. All steps are executed on a controller machine.}
+\label{fig:standardworkflow}
+\end{figure}
+
+The standard workflow requires that password-less \texttt{ssh} be setup between the pairs of machines in Table~\ref{table:ssh}. This is required for invoking remote commands and executing \texttt{rsync}.
+
+\begin{table}
+\scriptsize{
+\begin{lstlisting}[language=sh]
+controller -> stage machine
+controller -> cluster machine
+controller -> archive machine
+stage machine -> archive machine
+cluster machine -> archive machine
+\end{lstlisting}
+}
+\caption{Password-less login is required from the machine on the left hand side to the machine on the right hand side.}
+\label{table:ssh}
+\end{table}
+
+Figure~\ref{fig:standardworkflow} shows the steps for generating testcases for the RadionButton AUT and executing them using a cluster of machines. The cluster is defined using the host configuration file \texttt{/tmp/mycluster.cfg}, which is shown in Figure~\ref{fig:hostcfg}
+
+In step 1, the \mddozen{} is checked out from the repository. In step 2, length-2 sequence-length testcases are generated and stored in the archive location. The script \texttt{cluster-tc-gen.sh} configures the staging machine, rips the AUT and generates testcases on the staging machine. The testcases are then stored in the archive location.
+
+In step 3, the workflow script \texttt{cluster-run-testsuite.sh} is executed. This script is a Jenkins job script and is typically executed by Jenkins. However, in this example, it has been manually executed from command line. The result is the same. Testcases are transferred from the archive location to all the cluster machines. They are then executed on the cluster and results stored back in the archive location.

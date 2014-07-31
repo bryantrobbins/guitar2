@@ -1,0 +1,34 @@
+
+
+\section{Introduction}
+\label{sec:introduction}
+
+Maryland dozen is a set of twelve Java applications, a test harness, a set of tools and user-defined workflows. These form a system for evaluating and demonstrating GUITAR, its features and algorithms. This document describes Maryland dozen and provides instructions for using it.
+
+The top-level directory structure of the \mddozen{} is shown in Figure~\ref{fig:dozenlayout}. In this figure, the directory \texttt{dozen} is the root directory for the \mddozen{}. It can be checked out from the repository at:
+
+\begin{center}
+\begin{equation}
+http://svn.cs.umd.edu/repos/guitar/dozen
+\end{equation}
+\end{center}
+
+The \texttt{auts/} directory contains applications, application specific scripts and configurations. The \texttt{common/} directory contains all scripts forming the test harness. They are used for performing different testing steps on the applications. The \texttt{tools} directory contain tools such as GUITAR and scripts required to use them.
+
+Section~\ref{sec:components} describes different components of the Maryland dozen. Section~\ref{sec:workflow} describes workflows for conducting experiments. Section~\ref{sec:process} shows certain possible ways of analysing the artifacts produced by \mddozen{}.
+
+\begin{figure}
+\scriptsize{
+   \begin{lstlisting}[language=sh, showstringspaces=false, breaklines=true]
+      dozen/
+        +- auts/
+        +- common/
+        +- tools/
+        +- jenkins/
+   \end{lstlisting}
+}
+   \caption{Top-level directory structure of \mddozen{}. All directories are obtained from the repository.}
+   \label{fig:dozenlayout}
+\end{figure}
+
+

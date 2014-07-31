@@ -1,0 +1,58 @@
+%
+% Maryland dozen tools
+%
+\subsection{Tools}
+\label{sec:tools}
+
+The \mddozen{} contains tools enabling testing of the AUTs. The primary tool is GUITAR. The \texttt{common} scripts invoke GUITAR's tools using its scripts. Other tools may be included along with GUITAR. At present other tool are \textit{modified Cobertura}\footnote{https://svn.cs.umd.edu/repos/guitar/cobertura}\footnote{http://cobertura.sourceforge.net/} -- a code coverage tool, \textit{Gephi}\footnote{http://gephi.org} -- a graph visualization tool, \textit{Sikuli}\footnote{http://sikuli.org/} -- a bitmap identification tool and data analysis scripts.
+
+The layout of the tools is shown in Figure~\ref{fig:toolslayout}. The top-level directory is \texttt{tools/}, from Figure~\ref{fig:dozenlayout}.
+
+\begin{figure}
+\scriptsize{
+   \begin{lstlisting}[language=sh, showstringspaces=false, breaklines=true]
+      tools/
+        +- gephi/
+        +- scripts/
+             +- init-dir.sh
+             +- main.sh
+             +- cobertura.checkout.sh
+             +- cobertura.build.sh
+             +- gephi.checkout.sh
+             +- gephi.build.sh
+             +- guitar.checkout.sh
+             +- guitar.build.sh
+             +- script.checkout.sh
+             +- sikuli.checkout.sh
+             +- sikuli.build.sh
+        *- bin/
+             *- bin/
+             *- cobertura/
+             *- gephi/
+             *- guitar/
+                  *- dist/
+                       *- guitar/
+                            *- jfc-ripper.sh
+                            *- jfc-replayer.sh
+                       ...
+                  *- modules/
+                  *- lib/
+                  ...
+             *- scripts/
+             *- sikuli/
+
+   \end{lstlisting}
+}
+   \caption{Top-level directory structure of \texttt{tools/}. Entries with \texttt{+} are present in the \mddozen{} repository. Entries marked with \texttt{*} are obtained by scripts in \texttt{tools/scripts/}.}
+   \label{fig:toolslayout}
+\end{figure}
+
+The functions of the scripts in \texttt{tools/scripts/} is self explanatory. They checkout and build the corresponding tool into the \texttt{tools/bin/} directory.
+
+Of note, is the GUITAR tools. The GUITAR tools are present in the \texttt{tools/bin/guitar/} directory. The \texttt{guitar.checkout.sh} checks it out from the GUITAR repository\footnote{https://guitar.svn.sourceforge.net/svnroot/guitar/trunk}. The \texttt{guitar.build.sh} script builds GUITAR and places all binaries GUITAR-specific wrapper scripts in the directory \texttt{tools/bin/guitar/dist/guitar} directory.
+
+The scripts \texttt{jfc-ripper.sh}, \texttt{gui2efg.sh}, \texttt{tc-gen-sq.sh} and \texttt{jfc-replayer.sh} in this directory are used with Java based applications in the \mddozen{} (see Section~\ref{sec:commondescription}).
+
+\vspace{12pt}
+This concludes the description of the tools. These tools are deployed by the common scripts on the controller and cluster machines.
+

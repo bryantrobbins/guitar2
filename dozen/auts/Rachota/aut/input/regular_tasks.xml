@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Rachota 2.1 regular tasks - editing not recommended
+    Wed Jul 20 22:19:46 PDT 2011
+-->
+<!DOCTYPE week SYSTEM "regular_tasks.dtd">
+
+    <regular_tasks>
+        <task state="0" duration="00:00:00">
+            <priority>2</priority>
+            <description>Gym</description>
+            <keyword>idle</keyword>
+            <notification time="17:00" switch="false"/>
+            <private/>
+            <repetition frequency="0"/>
+        </task>
+    </regular_tasks>

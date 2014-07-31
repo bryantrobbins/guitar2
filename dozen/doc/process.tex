@@ -1,0 +1,164 @@
+%
+% Post processing the archived results
+%
+\section{Processing test results}
+\label{sec:process}
+
+Testcases executed on a cluster using the \mddozen{} generate test artifacts -- replay logs, oracle information, code coverage reports -- which are archived on the archive machine.
+
+These artifacts can be processed after an entire testsuite has been executed. Post processing can yield information such as number of testcases which failed, code coverage statistics. Analysis of these artifacts can also yield higher level infomration such as interaction amongst events, code coverage characteristics of events etc. These in turn can be used for iteratively generating improved testsuites.
+
+In this section, simple post processing activities are demonstrated with examples. Other post processing activities can be implemented, depending on the requirement, The examples here simply demonstrate examples.
+
+The post processing activities shown in this section do not form a part of the Maryland dozen.
+
+\subsection{Archive}
+\label{sec:archive}
+
+Figure~\ref{fig:archivelayout} shows the directory structure of the test artifacts when stored on the archive machine at the archive directory. The directory and files \texttt{auts/.../<testsuite-name>/testcases/$*$} are created when testcases are generated on the cluster and stored in the archive by the script \texttt{cluster-tc-gen-\{sq, rand\}.sh}. The directory and files \texttt{auts/.../<testsuite-name>/\{coverage, logs, oracles\}/$*$} are created during testcase execution on the cluster by \texttt{cluster-replay.sh}. When this script terminates, the content of these directory form a complete representation of the outcome of the testcase execution.
+
+\begin{figure}
+\scriptsize{
+   \begin{lstlisting}[language=sh, showstringspaces=false, breaklines=true]
+  
+      auts/
+         +- ArgoUML/
+              +- models/
+                   +- ArgoUML.EFG
+                   +- ArgoUML.GUI
+                   +- ripping-coverage/
+                        +- cobertura_ripper.ser
+                        +- cobertura_ripper.xml
+              +- testsuites/
+                   +- <testsuite_name_1>
+                        +- testcases/
+                             + <testcase_1>.tst
+                               ...
+                             + <testcase_n>.tst
+                        +- coverage/
+                             +- steps/
+                                +- <testcase_1>.tar.bz2
+                                   ...
+                                +- <testcase_n>.tar.bz2
+                        +- logs/
+                             + <testcase_1>.log
+                               ...
+                             + <testcase_n>.log
+                        +- oracles/
+                             + <testcase_1>.orc
+                               ...
+                             + <testcase_n>.orc
+                   +- <testsuite_name_2>
+                      ...
+                   +- <testsuite_name_n>
+         +- Buddi/
+            ...
+         +- RadioButton/
+   \end{lstlisting}
+}
+
+\caption{Directory layout of the test archive located on the archive machine, starting at the \texttt{auts/} level.}
+\label{fig:archivelayout}
+\end{figure}
+
+
+\subsection{Fault detection}
+\label{sec:faultdetection}
+
+There is one log file for each executed testcase in the \texttt{logs/} directory in Figure~\ref{fig:archivelayout}. The logs can be parsed to determine if a test case failed. Figure~\ref{fig:grepexception} shows a script\footnote{\url{https://svn.cs.umd.edu/repos/guitar/ecig/bin/grep-exception.sh}} which reads all the \texttt{*.log} files in the \texttt{logs/} directory and prints segments of the logs which contain the string ``exception''. This detects all testcases which crashed with a Java exception. It is a simple crash detection tool. The output of this script can be parsed\footnote{\url{https://svn.cs.umd.edu/repos/guitar/ecig/bin/exception-filter.py}} further to ignore \textit{known exceptions}. For example, GUITAR defects, component-not-found exception or exceptions which the tester is chooging to ignore.
+
+
+\begin{figure}
+   \scriptsize{
+      \begin{lstlisting}[language=sh]
+log_dir=$1
+for file in `find $log_dir -name "*.log"`
+do  
+   echo "*** $file ***"
+   grep -A 10 -B 5 -i "exception" $file
+done
+      \end{lstlisting}
+   }
+   \caption{Script \texttt{grep-exception.sh} parses all \texttt{*.log} files and extracts segments containing the string ``exception''.}
+   \label{fig:grepexception}.
+\end{figure}
+
+
+\subsection{Generate ECIG}
+\label{sec:ecig}
+
+In this example, steps are shown for processing the coverage files generated after executing a testsuite. The processing will generate new kind of test cases. The purpose of this example is to demonstrate a case of using the result of one test case execution to generate improved test cases.
+
+A tessuite of EFG-based sequence length test cases with length of 2 is executed on the cluster and results stored in the archive machine. This step is already assumed to have been completed. The coverage files from this step is present in the archive. They are processed to create an Event-Code-Interaction-Graph (ECIG)\footnote{If the execution of event $e_1$ influences the code coverage of event $e_2$, then $e_1$ is said to influence $e_2$. The ECIG will contain an edge from $e_1$ to $e_2$.} based on the EFG. The ECIG will then be used to generate ECIG based testcases.
+
+Figure~\ref{fig:ecig} shows the steps to generate ECIG-based testcases. Executing Step 1 and 2 require the \texttt{dozen/} and \texttt{ecig/}\footnote{\url{https://svn.cs.umd.edu/repos/guitar/ecig/}} repositories on the archive machine.\\
+
+\begin{smalldescription}
+   \item [Step 1] On the archive machine uncompress the coverage files obtained by executing the EFG-based sequence length test case with length of 2.
+
+   \item [Step 2] Invoke an ECIG script which reads all coverage reports, infers the \textit{ECIG} relation from the coverage reports and generates a list of ECIG event pairs.
+
+   \item [Step 3] A GUITAR script is directly executed to generate the .ECIG file based on the .EFG file. The test cases executed before Step 1 was generated based on this .EFG.
+
+   \item [Step 4] A GUITAR script is directly executed to generate all length 5 test cases from the ECIG. Generates test cases are placed in the \texttt{sq\_l\_5} directory (\texttt{-d} argument) on the controller machine. \\
+\end{smalldescription}
+
+The test cases based on the ECIG may be executed on the AUT using the cluster in the same manner as was done for EFG based test cases (Figure~\ref{fig:standardworkflow} - Step 3) after manually copying the new test cases into the archive machine.
+
+\begin{figure}
+   \scriptsize{
+   \begin{lstlisting}[language=sh]
+#
+# Step 1: Archive machine (jenkins@gandalf.cs.umd.edu)
+#
+# Uncompress coverage files.
+#
+svn checkout http://svn.cs.umd.edu/repos/guitar/dozen ~/
+svn checkout http://svn.cs.umd.edu/repos/guitar/ecig ~/
+export PATH=$PATH:~/dozen/common/
+export PATH=$PATH:~/ecig/bin/
+
+pushd auts/RadioButton/testsuites/sq_l_2/coverage/steps
+util-bunzip-untar.pl .
+popd
+
+#
+# Step 2: Archive machine (jenkins@gandalf.cs.umd.edu)
+#
+# Run coverage intersection script on coverage files
+#    to generat ECIG relations into a log file.
+# Invoke ecig/ script: ecig-e2e.pl
+#
+pushd auts/RadioButton/testsuites/sq_l_2/
+ecig-e2e.pl -c coverage/steps/ -o ecig.log -p 0 -t testcases/
+grep "Different" ecig.log.0 |
+     awk '{print $1" "$3}' > /tmp/ecig.txt
+popd
+
+#
+# Step 3: Controller machine
+#
+# Use ECIG relations to generate ECIG from existing EFG.
+# Invoke GUITAR script.
+#
+export PATH=$PATH:~/dozen/tools/bin/guitar/dist/guitar/
+pushd dozen/
+scp jenkins@gandalf.cs.umd.edu:/tmp/ecig.txt /tmp/ecig.txt
+efg2ecig.sh -i auts/ArgoUML/models/ArgoUML.EFG
+            -o auts/ArgoUML/models/ArgoUML.ECIG 
+
+#
+# Step 4: Controller machine
+#
+# Generate ECIG-based test cases from ECIG.
+# Invoke GUITAR script.
+#
+tc-gen-sq.sh -e auts/ArgoUML/models/ArgoUML.ECIG
+             -d auts/ArgoUML/testsuites/sq_l_5_ecig/testcases
+             -h auts/ArgoUML/models/ArgoUML.EFG -l 5 -m 0
+popd
+   \end{lstlisting}
+   }
+   \caption{Shows post processing coverage files to generate ECIG.}
+   \label{fig:ecig}
+\end{figure}

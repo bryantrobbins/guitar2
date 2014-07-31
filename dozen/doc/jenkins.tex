@@ -1,0 +1,17 @@
+%
+% Jenkins scripts and workflow
+%
+\subsection{Jenkins}
+\label{sec:jenkins}
+
+The \mddozen{} can be deployed using Jenkins. Jenkins job scripts are placed in the directory \texttt{jenkins/} from Figure~\ref{fig:dozenlayout}. The job scripts are \texttt{bash} scripts. They are:\\
+
+\begin{smalldescription}
+   \item [build-smoke-test.sh] Executed by Jenkins to smoke-test a GUITAR build. This script executes the basic workflow on a set of \mddozen{} AUTs.
+
+   \item [cluster-run-testsuite.sh] Executed by Jenkins to run a pre-created testsuite on an AUT using a cluster. Results and artifacts are stored in an archive location.
+
+   \item [cluster-smoke-test.sh] Runs the standard workflow on a set of AUTs using a small number of machines in a cluster.\\
+\end{smalldescription}
+
+These scripts are typically executed by Jenkins. They can also be run manually from command line.

@@ -1,0 +1,28 @@
+% This file was created with JabRef 2.10b2.
+% Encoding: UTF-8
+
+
+@InProceedings{DBLP:conf/icst/HuangCM10,
+  Title                    = {Repairing GUI Test Suites Using a Genetic Algorithm},
+  Author                   = {Si Huang and Myra B. Cohen and Atif M. Memon},
+  Booktitle                = {ICST},
+  Year                     = {2010},
+  Pages                    = {245-254},
+
+  Bibsource                = {DBLP, http://dblp.uni-trier.de},
+  Crossref                 = {DBLP:conf/icst/2010},
+  Ee                       = {http://doi.ieeecomputersociety.org/10.1109/ICST.2010.39}
+}
+
+@InProceedings{DBLP:conf/sigsoft/MemonPS10,
+  Title                    = {Community-based, collaborative testing and analysis},
+  Author                   = {Atif M. Memon and Adam A. Porter and Alan Sussman},
+  Booktitle                = {FoSER},
+  Year                     = {2010},
+  Pages                    = {239-244},
+
+  Bibsource                = {DBLP, http://dblp.uni-trier.de},
+  Crossref                 = {DBLP:conf/sigsoft/2010foser},
+  Ee                       = {http://doi.acm.org/10.1145/1882362.1882412}
+}
+

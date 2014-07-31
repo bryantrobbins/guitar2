@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.6.0_18" class="java.beans.XMLDecoder">
+ <object class="org.homeunix.thecave.buddi.model.prefs.PrefsModelBean">
+  <void property="availableVersion">
+   <string>3.4.0.11</string>
+  </void>
+  <void property="clearedFilter">
+   <string>TRANSACTION_FILTER_ALL_CLEARED</string>
+  </void>
+  <void property="currencySign">
+   <string>$</string>
+  </void>
+  <void property="dateFilter">
+   <string>TRANSACTION_FILTER_ALL_DATES</string>
+  </void>
+  <void property="dateFormat">
+   <string>yyyy/MM/dd</string>
+  </void>
+  <void property="language">
+   <string>English</string>
+  </void>
+  <void property="lastDataFiles">
+   <object class="java.util.LinkedList">
+    <void method="add">
+     <string>/root/.buddi/DefaultInput.buddi3</string>
+    </void>
+   </object>
+  </void>
+  <void property="lastVersion">
+   <string>3.2.2.10</string>
+  </void>
+  <void property="proxyServer">
+   <string></string>
+  </void>
+  <void property="reconciledFilter">
+   <string>TRANSACTION_FILTER_ALL_RECONCILED</string>
+  </void>
+  <void property="searchText">
+   <string></string>
+  </void>
+  <void property="sendCrashReports">
+   <boolean>true</boolean>
+  </void>
+  <void property="showAutoComplete">
+   <boolean>true</boolean>
+  </void>
+  <void property="showDeleted">
+   <boolean>true</boolean>
+  </void>
+  <void property="showTooltips">
+   <boolean>true</boolean>
+  </void>
+  <void property="totalPaneVisible">
+   <boolean>true</boolean>
+  </void>
+  <void property="transactionCellRenderer">
+   <string>org.homeunix.thecave.buddi.plugin.builtin.cellrenderer.DefaultTransactionCellRenderer</string>
+  </void>
+  <void property="windowLocation">
+   <void method="put">
+    <string>PREFERENCES</string>
+    <object class="java.awt.Point">
+     <int>100</int>
+     <int>100</int>
+    </object>
+   </void>
+   <void method="put">
+    <string>/root/.buddi/DefaultInput.buddi3ishan (Cash)</string>
+    <object class="java.awt.Point">
+     <int>100</int>
+     <int>100</int>
+    </object>
+   </void>
+   <void method="put">
+    <string>null</string>
+    <object class="java.awt.Point">
+     <int>100</int>
+     <int>100</int>
+    </object>
+   </void>
+   <void method="put">
+    <string>/root/.buddi/DefaultInput.buddi3</string>
+    <object class="java.awt.Point">
+     <int>100</int>
+     <int>98</int>
+    </object>
+   </void>
+   <void method="put">
+    <string>nullishan (Cash)</string>
+    <object class="java.awt.Point">
+     <int>100</int>
+     <int>100</int>
+    </object>
+   </void>
+  </void>
+  <void property="windowSize">
+   <void method="put">
+    <string>/root/.buddi/DefaultInput.buddi3ishan (Cash)</string>
+    <object class="java.awt.Dimension">
+     <int>634</int>
+     <int>474</int>
+    </object>
+   </void>
+   <void method="put">
+    <string>null</string>
+    <object class="java.awt.Dimension">
+     <int>630</int>
+     <int>470</int>
+    </object>
+   </void>
+   <void method="put">
+    <string>/root/.buddi/DefaultInput.buddi3</string>
+    <object class="java.awt.Dimension">
+     <int>844</int>
+     <int>474</int>
+    </object>
+   </void>
+   <void method="put">
+    <string>nullishan (Cash)</string>
+    <object class="java.awt.Dimension">
+     <int>634</int>
+     <int>474</int>
+    </object>
+   </void>
+  </void>
+ </object>
+</java>

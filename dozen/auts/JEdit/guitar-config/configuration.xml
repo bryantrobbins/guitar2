@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Configuration>
+	
+	<IgnoredComponents>
+
+		<!-- 
+			Components
+		-->
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>New</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Open...</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>New Macro</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>New View</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>New Plain View</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Close View</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>New Macro</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Macros</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Record Macro...</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>View</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Utilities</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Plugins</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Apply</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Help</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Stop Recording</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Save</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+	
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Save As...</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>	
+			<Component>
+				<Attributes>
+					<Property>
+                    <Name>Title</Name>
+                    <Value>Save All</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+                        <Name>Title</Name>
+                        <Value>Save a Copy As...</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+        <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Exit</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		
+			
+      <FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Print</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+		
+		<!-- 
+			Windows 
+		-->
+		<FullComponent>	
+			<Window>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Open</Value>
+					</Property>
+				</Attributes>
+			</Window>
+		</FullComponent>	
+
+		<FullComponent>	
+			<Window>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Save</Value>
+					</Property>
+				</Attributes>
+			</Window>
+		</FullComponent>	
+        
+	</IgnoredComponents>
+	
+    
+	<TerminalComponents>
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Cancel</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+		
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>No</Value>
+					</Property>				
+				</Attributes>
+			</Component>
+		</FullComponent>
+				
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>OK</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+        
+		
+		</TerminalComponents>
+	
+</Configuration>
