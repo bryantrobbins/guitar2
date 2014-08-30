@@ -5,7 +5,6 @@
     <artifactId>tool-testdata</artifactId>
     <packaging>jar</packaging>
     <version>1.0.8-SNAPSHOT</version>
-    <name>Testdata Tools</name>
     <url>http://guitar.sf.net</url>
 
   <parent>
@@ -158,13 +157,13 @@
         <!--</dependency>-->
         <dependency>
             <groupId>edu.umd.cs.guitar</groupId>
-            <artifactId>cobertura</artifactId>
-            <version>1.10</version>
+            <artifactId>tool-cobertura</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>edu.berkeley.nlp</groupId>
-            <artifactId>berkeleylm</artifactId>
-            <version>1.1.5</version>
+            <groupId>edu.umd.cs.guitar</groupId>
+            <artifactId>tool-berklm</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
