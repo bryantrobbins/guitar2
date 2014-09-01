@@ -40,7 +40,7 @@
 		</dependency>
 		<dependency>
 			<groupId>edu.umd.cs.guitar</groupId>
-			<artifactId>cobertura</artifactId>
+			<artifactId>tool-cobertura</artifactId>
 			<version>1.10</version>
 			<scope>runtime</scope>
 		</dependency>
