@@ -19,7 +19,7 @@ public class AnalyzerTests {
 		this.dbId = tdm.createDb();
 		System.out.println("Using DB " + dbId);
 
-		this.red = new Reducer(dbId);
+		this.red = new Reducer("localhost", 37017, dbId);
 		this.ann = new Analyzer(dbId);
 		
 		for (int i = 1; i <= 10; i++) {
