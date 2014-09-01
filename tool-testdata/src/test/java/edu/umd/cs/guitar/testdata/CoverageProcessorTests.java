@@ -11,7 +11,7 @@ public class CoverageProcessorTests {
 
 	@Test
 	public void testAddArtifactToExecution() {
-		TestDataManager tdm = new TestDataManager("localhost", 27017);
+		TestDataManager tdm = new TestDataManager("localhost", 37017);
 
 		String dbId = tdm.createDb();
         System.out.println("Using db id " + dbId);
