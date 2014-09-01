@@ -22,12 +22,4 @@ echo "Restoring old files into new rdata"
 docker rm restore
 docker run --name restore --volumes-from rdata -v $(pwd):/backup busybox tar xvf /backup/$archive
 
-# Start jenkins
-docker stop jenkins
-docker rm jenkins
-docker run -d --name jenkins --volumes-from rdata -p 8080:8080 -u root jenkins
-
-# Start nexus
-docker stop nexus
-docker rm nexus
-docker run -d --name nexus --volumes-from rdata -p 8081:8081 conceptnotfound/sonatype-nexus
+./start.sh

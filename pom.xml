@@ -8,6 +8,10 @@
     <name>GUITAR Parent</name>
     <description>A parent project for all GUITAR modules</description>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <modules>
         <module>tool-jemmy</module>
         <module>tool-maven-updater</module>
