@@ -156,7 +156,7 @@ public class ReducerTests {
 		}
 
 		tdm.computeCoverage(dbId, "combined");
-		Reducer red = new Reducer(dbId);
+		Reducer red = new Reducer("localhost", 37017, dbId);
 		// red.reduceSuiteByRandomCoverage("combined",
 		// "combined-coverage-reduced");
 		red.reduceSuiteByHGSCoverage("combined", "combined-coverage-reduced");
@@ -184,7 +184,7 @@ public class ReducerTests {
 		}
 
 		tdm.computeCoverage(dbId, "combined");
-		Reducer red = new Reducer(dbId);
+		Reducer red = new Reducer("localhost", 37017, dbId);
 		red.reduceSuiteByRandomCoverage("combined",
 				"combined-coverage-reduced-random");
 		red.reduceSuiteByHGSCoverage("combined",
@@ -221,7 +221,7 @@ public class ReducerTests {
 			tdm.addTestToSuite(dbId, testId, "combined");
 		}
 		
-		Reducer red = new Reducer(dbId);
+		Reducer red = new Reducer("localhost", 37017, dbId);
 
 		red.reduceSuiteByProbability("combined", "combined-reduced-prob-2", 2, 0.05);
 		Assert.assertEquals(1, tdm.getTestIdsInSuite(dbId, "combined-reduced-prob-2").size());
@@ -248,7 +248,7 @@ public class ReducerTests {
 			tdm.addTestToSuite(dbId, testId, "combined");
 		}
 
-		Reducer red = new Reducer(dbId);
+		Reducer red = new Reducer("localhost", 37017, dbId);
 		
 		red.reduceSuiteByProbability("combined", "combined-small-reduced-prob-2", 2, 0.05);
 		System.out.println(tdm.getTestIdsInSuite(dbId, "combined-small-reduced-prob-2").size());
@@ -275,7 +275,7 @@ public class ReducerTests {
 			tdm.addTestToSuite(dbId, testId, "combinedForRandom");
 		}
 		
-		Reducer red = new Reducer(dbId);
+		Reducer red = new Reducer("localhost", 37017, dbId);
 		red.reduceSuiteBySampling("combinedForRandom", "sampled", 5);
 		Assert.assertEquals(5, tdm.getTestIdsInSuite(dbId, "sampled").size());
 	}
