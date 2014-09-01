@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>edu.umd.cs.guitar</groupId>
 			<artifactId>tool-cobertura</artifactId>
-			<version>1.10</version>
+			<version>0.0.1-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
  	</dependencies>
