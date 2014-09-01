@@ -20,7 +20,7 @@ public class AnalyzerTests {
 		System.out.println("Using DB " + dbId);
 
 		this.red = new Reducer("localhost", 37017, dbId);
-		this.ann = new Analyzer("localhost", 37017, dbId);
+		this.ann = new Analyzer(dbId, "localhost", 37017);
 		
 		for (int i = 1; i <= 10; i++) {
 			String testId = "random-" + i;
