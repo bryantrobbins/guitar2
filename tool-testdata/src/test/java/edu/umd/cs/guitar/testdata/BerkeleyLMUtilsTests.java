@@ -92,71 +92,71 @@ public class BerkeleyLMUtilsTests {
 		Assert.assertEquals(5, BerkeleyLMUtils.getFunctionalMaxOrder(model, modelB));
 	}
 
-	@Test
-	public void testAreNgramsSubsumedDuplicate() throws IOException {
-		ArrayEncodedProbBackoffLm<String> model = getModelFromResource("/kneserNeyFromText.arpa");
-		ArrayEncodedProbBackoffLm<String> modelCopy = getModelFromResource("/kneserNeyFromText.arpa");
+//	@Test
+//	public void testAreNgramsSubsumedDuplicate() throws IOException {
+//		ArrayEncodedProbBackoffLm<String> model = getModelFromResource("/kneserNeyFromText.arpa");
+//		ArrayEncodedProbBackoffLm<String> modelCopy = getModelFromResource("/kneserNeyFromText.arpa");
+//
+//		Assert.assertTrue(BerkeleyLMUtils
+//				.areNgramsSubsumed(model, modelCopy, 1) == 0);
+//		Assert.assertTrue(BerkeleyLMUtils
+//				.areNgramsSubsumed(model, modelCopy, 2) == 0);
+//		Assert.assertTrue(BerkeleyLMUtils
+//				.areNgramsSubsumed(model, modelCopy, 3) == 0);
+//		Assert.assertTrue(BerkeleyLMUtils
+//				.areNgramsSubsumed(model, modelCopy, 4) == 0);
+//		Assert.assertTrue(BerkeleyLMUtils
+//				.areNgramsSubsumed(model, modelCopy, 5) == 0);
+//	}
 
-		Assert.assertTrue(BerkeleyLMUtils
-				.areNgramsSubsumed(model, modelCopy, 1) == 0);
-		Assert.assertTrue(BerkeleyLMUtils
-				.areNgramsSubsumed(model, modelCopy, 2) == 0);
-		Assert.assertTrue(BerkeleyLMUtils
-				.areNgramsSubsumed(model, modelCopy, 3) == 0);
-		Assert.assertTrue(BerkeleyLMUtils
-				.areNgramsSubsumed(model, modelCopy, 4) == 0);
-		Assert.assertTrue(BerkeleyLMUtils
-				.areNgramsSubsumed(model, modelCopy, 5) == 0);
-	}
-
-	@Test
-	public void testAreNgramsSubsumedMismatch() throws IOException {
-		TestDataManager tdm = new TestDataManager("localhost", 37017);
-		String dbId = tdm.createDb();
-
-		ArrayEncodedProbBackoffLm<String> model = getModelFromResource("/kneserNeyFromText.arpa");
-		ArrayEncodedProbBackoffLm<String> modelB = getModelFromTestCases(tdm,
-				dbId);
-		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 1) == 0);
-		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 2) == 0);
-		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 3) == 0);
-		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 4) == 0);
-		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 5) == 0);
-
-	}
-
-	@Test
-	public void testAreNgramsSubsumedWithinTCM() throws IOException {
-		TestDataManager tdm = new TestDataManager("localhost", 37017);
-		String dbId = tdm.createDb();
-		ArrayEncodedProbBackoffLm<String> model = getModelFromTestCases(tdm,
-				dbId);
-
-		boolean achieved = false;
-		int number = -1;
-		int order = 2;
-
-		for (int i = 10; i >= 1; i--) {
-			tdm.addTestToSuite(dbId, "random-" + i, "candidate");
-			tdm.computeModel(dbId, "candidate", 2);
-			ArrayEncodedProbBackoffLm<String> candidate = tdm.getNgramModel(
-					dbId, "candidate", TestDataManagerDefaults.KEY_MODEL);
-			if (BerkeleyLMUtils.areNgramsSubsumed(model, candidate, 1) == 0) {
-				achieved = true;
-				number = i;
-				break;
-			}
-		}
-
-		if (achieved) {
-			Assert.assertTrue(number == 2);
-		} else {
-			Assert.fail("Model N-grams never subsumed");
-		}
-		
-		
-		
-	}
+//	@Test
+//	public void testAreNgramsSubsumedMismatch() throws IOException {
+//		TestDataManager tdm = new TestDataManager("localhost", 37017);
+//		String dbId = tdm.createDb();
+//
+//		ArrayEncodedProbBackoffLm<String> model = getModelFromResource("/kneserNeyFromText.arpa");
+//		ArrayEncodedProbBackoffLm<String> modelB = getModelFromTestCases(tdm,
+//				dbId);
+//		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 1) == 0);
+//		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 2) == 0);
+//		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 3) == 0);
+//		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 4) == 0);
+//		Assert.assertFalse(BerkeleyLMUtils.areNgramsSubsumed(model, modelB, 5) == 0);
+//
+//	}
+//
+//	@Test
+//	public void testAreNgramsSubsumedWithinTCM() throws IOException {
+//		TestDataManager tdm = new TestDataManager("localhost", 37017);
+//		String dbId = tdm.createDb();
+//		ArrayEncodedProbBackoffLm<String> model = getModelFromTestCases(tdm,
+//				dbId);
+//
+//		boolean achieved = false;
+//		int number = -1;
+//		int order = 2;
+//
+//		for (int i = 10; i >= 1; i--) {
+//			tdm.addTestToSuite(dbId, "random-" + i, "candidate");
+//			tdm.computeModel(dbId, "candidate", 2);
+//			ArrayEncodedProbBackoffLm<String> candidate = tdm.getNgramModel(
+//					dbId, "candidate", TestDataManagerDefaults.KEY_MODEL);
+//			if (BerkeleyLMUtils.areNgramsSubsumed(model, candidate, 1) == 0) {
+//				achieved = true;
+//				number = i;
+//				break;
+//			}
+//		}
+//
+//		if (achieved) {
+//			Assert.assertTrue(number == 2);
+//		} else {
+//			Assert.fail("Model N-grams never subsumed");
+//		}
+//
+//
+//
+//	}
 
 	@Test
 	public void testDoesSequenceAddNewNgrams() throws IOException {
