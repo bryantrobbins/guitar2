@@ -23,52 +23,6 @@ then
 fi
 
 #
-# Checkout Sikuli
-#
-# $script_root_dir/sikuli.checkout.sh
-#if [ $ret -ne 0 ]
-# then
-#    echo FAILED checkout Sikuli $ret
-#    exit 1
-# fi
-
-#
-# Build Sikuli
-#
-# $script_root_dir/sikuli.build.sh
-# if [ $ret -ne 0 ]
-# then
-#    echo FAILED build Sikuli $ret
-#    exit 1
-# fi
-
-#
-# Check out GUITAR and necessary scripts
-# checkout_type is one of "tag" or "num"
-#
-
-echo $guitar_dir
-$script_root_dir/guitar.local.sh
-
-ret=$?
-if [ $ret -ne 0 ]
-then
-   echo FAILED checkout GUITAR $ret
-   exit 1
-fi
-
-#
-# Build GUITAR 
-#
-$script_root_dir/guitar.build.sh
-ret=$?
-if [ $ret -ne 0 ]
-then
-   echo FAILED build GUITAR $ret
-   exit 1
-fi
-
-#
 # check out cobertura and necessary scripts 
 #
 $script_root_dir/cobertura.checkout.sh
