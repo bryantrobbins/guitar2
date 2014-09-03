@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus'
+def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
 
 configurations {
 	cobertura
