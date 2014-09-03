@@ -1,13 +1,15 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
+def loc = nexusLocation == null ? nexus : nexusLocation
+
 configurations {
 	cobertura
 }
 
 repositories {
     maven {
-          url "http://" + nexusLocation + "/nexus/content/groups/public"
+          url "http://" + loc + "/nexus/content/groups/public"
     }
 }
 
@@ -23,7 +25,8 @@ task hello << {
 	println "Hello Gradle world"
 }
 
-task cobertura-instrument(type: JavaExec) {
+task coberturaInstrument(type: JavaExec) {
 	classpath configurations.cobertura
 	main = 'net.sourceforge.cobertura.instrument.Main'
+	args '--datafile', cobertura_data_file_clean, '--destination', aut_inst_dir, aut_cov_bin_list
 }
