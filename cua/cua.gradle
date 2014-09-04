@@ -1,0 +1,32 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
+
+configurations {
+	cobertura
+}
+
+repositories {
+    maven {
+          url "http://" + loc + "/nexus/content/groups/public"
+    }
+}
+
+dependencies {
+    cobertura group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
+}
+
+repositories {
+    mavenCentral()
+}
+
+task hello << {
+	println "Hello Gradle world"
+}
+
+task instrument(type: JavaExec) {
+	classpath configurations.cobertura
+	main = 'net.sourceforge.cobertura.instrument.Main'
+	args '--datafile', cobertura_data_file_clean, '--destination', aut_inst_dir, aut_cov_bin_list
+}

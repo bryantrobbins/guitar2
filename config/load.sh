@@ -21,5 +21,5 @@ docker run -d --name rdata -v /var/jenkins_home -v /data/db -v /nexus busybox tr
 echo "Restoring old files into new rdata"
 docker rm restore
 docker run --name restore --volumes-from rdata -v $(pwd):/backup busybox tar xvf /backup/$archive
+docker rm restore
 
-./start.sh

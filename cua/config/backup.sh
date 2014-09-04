@@ -16,7 +16,7 @@ fi
 local=`pwd`
 echo "Backing up to $archive"
  
-echo "Exporting data current rdata container"
+echo "Exporting data current cuadata container"
 docker rm backup
-docker run --name backup --volumes-from rdata -v $local:/backup busybox tar cvf /backup/$archive var/jenkins_home nexus
+docker run --name backup --volumes-from cuadata -v $local:/backup busybox tar cvf /backup/$archive var/jenkins_home nexus
 docker rm backup
