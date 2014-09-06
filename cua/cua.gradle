@@ -1,32 +1,25 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'groovy'
 
 def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
 
-configurations {
-	cobertura
-}
-
 repositories {
+    mavenCentral()
     maven {
           url "http://" + loc + "/nexus/content/groups/public"
     }
 }
 
 dependencies {
-    cobertura group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
-}
-
-repositories {
-    mavenCentral()
+    compile 'edu.umd.cs.guitar:tool-testdata:1.0.8-SNAPSHOT'
+		compile 'org.codehaus.groovy:groovy-all:2.3.6'
 }
 
 task hello << {
 	println "Hello Gradle world"
 }
 
-task instrument(type: JavaExec) {
-	classpath configurations.cobertura
-	main = 'net.sourceforge.cobertura.instrument.Main'
-	args '--datafile', cobertura_data_file_clean, '--destination', aut_inst_dir, aut_cov_bin_list
+task runScript (dependsOn: 'classes', type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'edu.umd.cs.guitar.testdata.weblog.WeblogDataHandler'
+		args 'localhost', '27017', 'true', 'weblog_inputs', 'keywords.ini', 'Keywords_7'
 }
