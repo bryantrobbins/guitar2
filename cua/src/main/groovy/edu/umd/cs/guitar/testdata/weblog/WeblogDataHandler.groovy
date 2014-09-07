@@ -485,6 +485,8 @@ class WeblogDataHandler {
 			rootDir = new File(args[5])
 		}
 
+		println "Using db " + dbId + " at " + host + ":" + port
+
 		WeblogDataHandler handler = new WeblogDataHandler(host, port, dbId);
 
 		if(resetData){
