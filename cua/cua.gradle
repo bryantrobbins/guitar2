@@ -29,3 +29,9 @@ task runScript (dependsOn: 'classes', type: JavaExec) {
     main = 'edu.umd.cs.guitar.testdata.weblog.WeblogDataHandler'
 		args host, port, reset, db, keywords, input
 }
+
+task runInitData (dependsOn: 'classes', type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'edu.umd.cs.guitar.testdata.weblog.InitData'
+		args host, port, db, keywords, input
+}
