@@ -533,7 +533,7 @@ class InitData {
 		int port = Integer.parseInt(args[1])
 		def dbId = args[2] + "_" + System.currentTimeMillis()
 		def config = new File(args[3])
-		rootDir = new File(args[4])
+		def rootDir = new File(args[4])
 
 		InitData handler = new InitData(host, port, dbId);
 
