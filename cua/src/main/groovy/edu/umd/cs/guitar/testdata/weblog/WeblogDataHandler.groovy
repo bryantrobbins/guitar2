@@ -163,6 +163,9 @@ class WeblogDataHandler {
 			int nTrain = (int) Math.floor(0.9*nTotal)
 			int nTest = nTotal - nTrain
 
+                        
+                       // println "nTotal ${nTotal} nTrain ${nTrain} nTest ${nTest}"
+
 			// Determine total keyword count
 			int sizeTotal = 0
 			for(String session : categorySessions){
@@ -174,11 +177,11 @@ class WeblogDataHandler {
 			if(nTotal < 2){
 				schemeList.remove(category)
 			}
-			else if(sizeTotal < 80){
+			else if(sizeTotal < 300){
 				schemeList.remove(category)
 			}
 			else{
-
+                         
 				Collections.shuffle(categorySessions, new Random())
 
 				categorySessions.eachWithIndex { sess, ix ->
@@ -191,12 +194,13 @@ class WeblogDataHandler {
 				}
 				
 				println "${category} adds ${loader.getTestIdsInSuite(dbId, category + "_test").size()} test sessions"
-			}
+		      	}
 		}
 		
 		println "${scheme} has ${schemeList.size()} categories"
 		for(String category : schemeList){
 			println category
+		
 		}
 	}
 
@@ -219,6 +223,8 @@ class WeblogDataHandler {
 			int nTrain = (int) Math.floor(0.9*nTotal)
 			int nTest = nTotal - nTrain
 
+
+                        println "nTotal ${nTotal} nTrain ${nTrain} nTest ${nTest}"
 			// Determine total keyword count
 			int sizeTotal = 0
 			for(String session : categorySessions){
@@ -249,6 +255,7 @@ class WeblogDataHandler {
 		println "${scheme} has ${schemeList.size()} categories"
 		for(String category : schemeList){
 			println category
+			
 		}
 	}
 
@@ -311,16 +318,23 @@ class WeblogDataHandler {
 		return "NOGROUP"
 	}
 
-	public float categorizeStrings(String scheme, int modelOrder, List<String> stringsToCategorize, List<String> actualGroups, String method, float threshold, String modelChoice){
+	public float categorizeStrings(String scheme, int modelOrder, List<String> stringsToCategorize, List<String> actualGroups, String method, float threshold, String modelChoice, boolean mine){
 		int correct = 0
+		int tp = 0
+		int fp = 0
+		float val_tp, val_fp = 0
+		int incorrect = 0
 		int total = 0
 		List groups = getTrainingGroupsInScheme(scheme)
-		println scheme
-		println groups
+		//println scheme
+		//println groups
 
 		stringsToCategorize.eachWithIndex { str, ix ->
 
 			String guess = "NOGROUP"
+			
+			String group = actualGroups.get(ix)
+			
 			if(method.equals("MULTI_STORED")){
 				guess = getAnalyzer().categorizeStoredSequence(str, groups, modelOrder, WeblogProcessor.class, false)
 			}
@@ -329,23 +343,68 @@ class WeblogDataHandler {
 			}
 			else if(method.equals("BINARY_RAW")){
 				guess = getAnalyzer().acceptRawSequenceGivenModel(str, modelChoice, modelOrder, WeblogProcessor.class, false, threshold)
-			}
+				
+			      	
+		 		if(guess.equals("false") && group.equals("false")){
+					println "True Positive guess= ${guess}, group= ${group}"
+					tp++
+				}
 
-			String group = actualGroups.get(ix)
+				if(guess.equals("true") && group.equals("false")){
+					println "False Positive guess= ${guess}, group= ${group}"
+					fp++
 
-			if(guess.equals(group)){
-				correct++
+				}
+
 				total++
 			}
-			else{
-				total++
-				println "WRONG: Had session ${str}  as ${guess} but is ${group}"
-			}
+
+			
+			
+			if(method.equals("MULTI_RAW") || method.equals("MULTI_STORED")){
+  
+              			if(guess.equals(group)){
+	 				correct++
+					total++
+					println "RIGHT: guess is ${guess} and group is ${group}"
+				}
+				else
+				{		
+					total++
+			       	 	println "WRONG: guess is  ${guess} but is ${group}"
+				}
+		
+			//	return(correct * 1.0) / total	
+                    	}
+		//	if(method.equals("BINARY_RAW")){
+			
+		     
 		}
 
-		println "Got ${correct} out of ${total}"
-
-		return (correct * 1.0) / total
+               
+		if(method.equals("BINARY_RAW")){
+   			if(mine == false){
+				val_tp = (tp * 1.0)/total
+				val_fp = (fp * 1.0)/total
+			  	println "True Positive ${val_tp} and False Positive ${val_fp}"
+				//println "True positive rate ${val_tp}"
+				return val_tp
+			}
+			else if (mine == true){
+				val_fp = (fp * 1.0)/total
+				//println "False positive  rate ${val_fp}"
+				return val_fp
+			}
+		}
+                else {
+			println "Got ${correct} out of ${total}"
+			return(correct * 1.0) / total
+		}
+	//	if(method.equals("BINARY_RAW")){
+		//	println "True Positive - Got ${correct} out of ${total}"
+		//	println "False Positive - Got ${incorrect} out of ${total}"
+               // }
+	//	return (correct * 1.0) / total
 	}
 
 	public float categorizeSessions(String scheme, int modelOrder){
@@ -364,7 +423,7 @@ class WeblogDataHandler {
 
 		println "Testing ${trials.size()} sessions"
 
-		return categorizeStrings(scheme, modelOrder, trials, actual, "MULTI_STORED", 0, null)
+		return categorizeStrings(scheme, modelOrder, trials, actual, "MULTI_STORED", 0, null, false)
 	}
 
 	public float categorizeSessionNgramsAgainstOthers(String scheme, String myGroup, int modelOrder, int ngramOrder, float threshold, boolean mine){
@@ -452,7 +511,7 @@ class WeblogDataHandler {
 		}
 
 		// Now we have the ngrams and their actual categories
-		return categorizeStrings(scheme, modelOrder, ngramsToCategorize, ngramsActualGroups, "BINARY_RAW", threshold, myGroup)
+		return categorizeStrings(scheme, modelOrder, ngramsToCategorize, ngramsActualGroups, "BINARY_RAW", threshold, myGroup, mine)
 	}
 
 	public void saveConfiguration(File saveLoc){
@@ -485,8 +544,6 @@ class WeblogDataHandler {
 			rootDir = new File(args[5])
 		}
 
-		println "Using db " + dbId + " at " + host + ":" + port
-
 		WeblogDataHandler handler = new WeblogDataHandler(host, port, dbId);
 
 		if(resetData){
@@ -502,23 +559,34 @@ class WeblogDataHandler {
 		float score;
 
 		// RQ1 - Categorize by role on same data that trained models
-		score = handler.categorizeSessions("ROLE", 4)
-		println "RQ1, accuracy=${score}"
+         	
+	//	 for(int n=2; n<=6; n++){
+	//		score = handler.categorizeSessions("ROLE",n)
+	//		println "RQ1, N=${n}, accuracy=${score}"
+	//	}
 
-		// RQ2 - See if role-based models can accept/reject smaller snippets
-		// For each role
-		int modelOrder = 9
+		 //RQ2 - See if role-based models can accept/reject smaller snippets For each role
+	/*
+         	int modelOrder = 9
 		for(String role : handler.getTrainingGroupsInScheme("ROLE")){
-			for(int o = 2; o<=9; o++){
-				score = handler.categorizeSessionNgramsAgainstOthers("ROLE", role, modelOrder, o, -0.6, false)
-				println "RQ2, role=${role}, length=${o}, negative, accuracy=${score}"
-				score = handler.categorizeSessionNgramsAgainstOthers("ROLE", role, modelOrder, o, -0.6, true)
-				println "RQ2, role=${role}, length=${o}, positive, accuracy=${score}"
-			}
+	//		for(int o = 2; o<=9; o++){
+			 	int o = 4;
+				// Represents True Positive (guess = false && group = false)
+		        	score = handler.categorizeSessionNgramsAgainstOthers("ROLE", role, modelOrder, o, -0.6, false)
+				println "RQ2, role=${role}, length=${o}, negative, True positive rate=${score}"
+				
+				// Represnts False Positive (guess - false && group = true)
+                        // 	score = handler.categorizeSessionNgramsAgainstOthers("ROLE", role, modelOrder, o, -0.6, true)
+	                //	println "RQ2, role=${role}, length=${o}, positive, False positive rate=${score}"
+         //		}
 		}
-
+              */ 
 		// RQ3 - User-specific profiles
-		score = handler.categorizeSessions("USER", 5)
-		println "RQ3, accuracy=${score}"
+             // for(int n=2; n<=4; n++){
+	        score = handler.categorizeSessions("USER",2)
+        	println "RQ3, N=2, accuracy=${score}"
+	      
 	}
 }
+
+

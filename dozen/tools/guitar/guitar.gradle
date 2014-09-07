@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
+
+configurations {
+	ripper
+}
+
+repositories {
+    mavenCentral()
+    maven {
+          url "http://" + loc + "/nexus/content/groups/public"
+    }
+}
+
+dependencies {
+    ripper group: 'edu.umd.cs.guitar', name: 'gui-ripper-jfc', version: '0.0.1-SNAPSHOT'
+}
+
+task hello << {
+	println "Hello Gradle world to " + nameProp
+}
+
+task rip(type: JavaExec) {
+	classpath configurations.ripper
+	main = 'edu.umd.cs.guitar.ripper.JFCRipperMain'
+	args 
+}
