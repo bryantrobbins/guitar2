@@ -15,7 +15,7 @@ docker rm cuadata
  
 # Start new data container
 echo "Starting new  cuadata container"
-docker run -d --name cuadata -v /var/jenkins_home -v /nexus busybox true
+docker run -d --name cuadata -v /var/jenkins_home -v /nexus -v /db/data busybox true
  
 # Copy in files from old data container
 echo "Restoring old files into new cuadata"

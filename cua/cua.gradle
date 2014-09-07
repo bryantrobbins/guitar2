@@ -1,6 +1,12 @@
 apply plugin: 'groovy'
 
 def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
+def host = hasProperty('mongoHost') ? mongoHost : 'localhost'
+def port = hasProperty('mongoPort') ? mongoPort : '27017'
+def reset = hasProperty('resetData') ? resetData : 'true'
+def db = hasProperty('dbId') ? dbId : 'weblog_inputs'
+def keywords = hasProperty('keywordFile') ? keywordFile : 'keywords.ini'
+def input = hasProperty('inputDir') ? inputDir : 'Keywords'
 
 repositories {
     mavenCentral()
@@ -21,5 +27,5 @@ task hello << {
 task runScript (dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'edu.umd.cs.guitar.testdata.weblog.WeblogDataHandler'
-		args 'localhost', '27017', 'true', 'weblog_inputs', 'keywords.ini', 'Keywords_7'
+		args host, port, reset, db, keywords, input
 }
