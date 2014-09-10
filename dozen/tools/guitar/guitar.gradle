@@ -25,5 +25,6 @@ task hello << {
 task rip(type: JavaExec) {
 	classpath configurations.ripper
 	main = 'edu.umd.cs.guitar.ripper.JFCRipperMain'
+	jvmargs 
 	args 
 }
