@@ -13,6 +13,10 @@ import edu.berkeley.nlp.lm.ArrayEncodedProbBackoffLm;
 import edu.berkeley.nlp.lm.collections.Iterators;
 import groovy.io.FileType
 
+import com.mongodb.BasicDBObject
+import com.mongodb.DBCollection
+import com.mongodb.MongoClient
+
 class InitData {
 	private ConfigData config
 	private TestDataManager loader
@@ -259,264 +263,15 @@ class InitData {
 		}
 	}
 
-	public void loadDataFromConfig(File configLoc){
+	public void saveConfiguration(File saveLoc, host, port, db){
 		Gson gson = new Gson()
+		def data = gson.toJson(config)
+		saveLoc.withWriter{ it << data }
 
-		configLoc.withReader {
-			this.config = gson.fromJson(it.readLine(), ConfigData.class)
-		}
-	}
+		MongoClient client = new MongoClient(host, port);
+		BasicDBObject doc = new BasicDBObject("id", db).append("data", data)
 
-	public void eachSession(Closure clos){
-		config.getSessions().each { clos(it) }
-	}
-
-	public void eachSessionInGroup(String group, Closure clos){
-		def groupSessions = loader.getTestIdsInSuite(dbId, group)
-		groupSessions.each { clos(it) }
-	}
-
-	public Analyzer getAnalyzer(){
-		return analyzer
-	}
-
-	public List<String> getGroups(){
-		return config.getGroups()
-	}
-
-	public List<String> getTrainingGroupsInScheme(String scheme){
-		List ret = []
-
-		for(String group : config.getSchemes().get(scheme)){
-			ret.add(group + "_train")
-		}
-
-		return ret
-	}
-
-	public String getTestGroupFromTrainingGroup(String trainingGroup){
-		List pieces = trainingGroup.split("_")[0..-2]
-		String testGroup = ""
-		for(String piece : pieces){
-			testGroup += piece + "_"
-		}
-
-		return testGroup + "test"
-
-	}
-
-	public String getMatchingGroup(String sess, List groups){
-		for(String group : groups){
-			// We have test groups in the test suite, training groups in the training suite
-			// Need to perform some conversion here to account for that
-			String testGroup = getTestGroupFromTrainingGroup(group)
-			if(loader.getTestIdsInSuite(dbId, testGroup).contains(sess)){
-				return group
-			}
-		}
-
-		return "NOGROUP"
-	}
-
-	public float categorizeStrings(String scheme, int modelOrder, List<String> stringsToCategorize, List<String> actualGroups, String method, float threshold, String modelChoice, boolean mine){
-		int correct = 0
-		int tp = 0
-		int fp = 0
-		float val_tp, val_fp = 0
-		int incorrect = 0
-		int total = 0
-		List groups = getTrainingGroupsInScheme(scheme)
-		//println scheme
-		//println groups
-
-		stringsToCategorize.eachWithIndex { str, ix ->
-
-			String guess = "NOGROUP"
-			
-			String group = actualGroups.get(ix)
-			
-			if(method.equals("MULTI_STORED")){
-				guess = getAnalyzer().categorizeStoredSequence(str, groups, modelOrder, WeblogProcessor.class, false)
-			}
-			else if(method.equals("MULTI_RAW")){
-				guess = getAnalyzer().categorizeRawSequence(str, groups, modelOrder, WeblogProcessor.class, false)
-			}
-			else if(method.equals("BINARY_RAW")){
-				guess = getAnalyzer().acceptRawSequenceGivenModel(str, modelChoice, modelOrder, WeblogProcessor.class, false, threshold)
-				
-			      	
-		 		if(guess.equals("false") && group.equals("false")){
-					println "True Positive guess= ${guess}, group= ${group}"
-					tp++
-				}
-
-				if(guess.equals("true") && group.equals("false")){
-					println "False Positive guess= ${guess}, group= ${group}"
-					fp++
-
-				}
-
-				total++
-			}
-
-			
-			
-			if(method.equals("MULTI_RAW") || method.equals("MULTI_STORED")){
-  
-              			if(guess.equals(group)){
-	 				correct++
-					total++
-					println "RIGHT: guess is ${guess} and group is ${group}"
-				}
-				else
-				{		
-					total++
-			       	 	println "WRONG: guess is  ${guess} but is ${group}"
-				}
-		
-			//	return(correct * 1.0) / total	
-                    	}
-		//	if(method.equals("BINARY_RAW")){
-			
-		}
-
-               
-		if(method.equals("BINARY_RAW")){
-   			if(mine == false){
-				val_tp = (tp * 1.0)/total
-				val_fp = (fp * 1.0)/total
-			  	println "True Positive ${val_tp} and False Positive ${val_fp}"
-				//println "True positive rate ${val_tp}"
-				return val_tp
-			}
-			else if (mine == true){
-				val_fp = (fp * 1.0)/total
-				//println "False positive  rate ${val_fp}"
-				return val_fp
-			}
-		}
-                else {
-			println "Got ${correct} out of ${total}"
-			return(correct * 1.0) / total
-		}
-	//	if(method.equals("BINARY_RAW")){
-		//	println "True Positive - Got ${correct} out of ${total}"
-		//	println "False Positive - Got ${incorrect} out of ${total}"
-               // }
-	//	return (correct * 1.0) / total
-	}
-
-	public float categorizeSessions(String scheme, int modelOrder){
-		// Need to build list of actual groups
-		def groups = getTrainingGroupsInScheme(scheme)
-		List trials = []
-		List actual = []
-
-		for(String group : groups){
-			String testGroup = getTestGroupFromTrainingGroup(group)
-			eachSessionInGroup(testGroup){ sess ->
-				actual.add(group)
-				trials.add(sess)
-			}
-		}
-
-		println "Testing ${trials.size()} sessions"
-
-		return categorizeStrings(scheme, modelOrder, trials, actual, "MULTI_STORED", 0, null, false)
-	}
-
-	public float categorizeSessionNgramsAgainstOthers(String scheme, String myGroup, int modelOrder, int ngramOrder, float threshold, boolean mine){
-		// Get ngrams of ngramOrder from global suite
-		List ngramsToCategorize = []
-		List ngramsActualGroups = []
-
-		def groups = getTrainingGroupsInScheme(scheme)
-
-		WeblogProcessor proc = WeblogProcessor.class.newInstance()
-
-		if(!mine){
-			for(String group : groups){
-				if(!group.equals(myGroup)){
-					String testGroup = getTestGroupFromTrainingGroup(group)
-
-					// Add training data from other groups, as it was not used to build this model
-					eachSessionInGroup(group){ sessId ->
-						List<Object> aList = new ArrayList<Object>();
-						aList.add(loader.getTestArtifact(dbId, sessId, proc));
-						String line = proc.getIterator(aList).next();
-						String[] words = line.split(" ")
-
-						// Add the ngrams of the words array as something to be categorized
-						for(int start = 0; start<words.length-ngramOrder; start++){
-							int end = start + ngramOrder;
-							String toAdd = ""
-							for(int i = start; i<=end; i++){
-								toAdd += words[i]
-								if(i != end){
-									toAdd += " "
-								}
-							}
-							ngramsToCategorize.add(toAdd)
-							ngramsActualGroups.add(false)
-						}
-					}
-					// Add test data from other groups
-					eachSessionInGroup(testGroup){ sessId ->
-						List<Object> aList = new ArrayList<Object>();
-						aList.add(loader.getTestArtifact(dbId, sessId, proc));
-						String line = proc.getIterator(aList).next();
-						String[] words = line.split(" ")
-
-						// Add the ngrams of the words array as something to be categorized
-						for(int start = 0; start<words.length-ngramOrder; start++){
-							int end = start + ngramOrder;
-							String toAdd = ""
-							for(int i = start; i<=end; i++){
-								toAdd += words[i]
-								if(i != end){
-									toAdd += " "
-								}
-							}
-							ngramsToCategorize.add(toAdd)
-							ngramsActualGroups.add(false)
-						}
-					}
-				}
-			}
-		}
-
-		else{
-			// We can also add the test data from our own group
-			eachSessionInGroup(myGroup){ sessId ->
-				List<Object> aList = new ArrayList<Object>();
-				aList.add(loader.getTestArtifact(dbId, sessId, proc));
-				String line = proc.getIterator(aList).next();
-				String[] words = line.split(" ")
-
-				// Add the ngrams of the words array as something to be categorized
-				for(int start = 0; start<words.length-ngramOrder; start++){
-					int end = start + ngramOrder;
-					String toAdd = ""
-					for(int i = start; i<=end; i++){
-						toAdd += words[i]
-						if(i != end){
-							toAdd += " "
-						}
-					}
-					ngramsToCategorize.add(toAdd)
-					ngramsActualGroups.add(true)
-				}
-			}
-		}
-
-		// Now we have the ngrams and their actual categories
-		return categorizeStrings(scheme, modelOrder, ngramsToCategorize, ngramsActualGroups, "BINARY_RAW", threshold, myGroup, mine)
-	}
-
-	public void saveConfiguration(File saveLoc){
-		Gson gson = new Gson()
-
-		saveLoc.withWriter{ it << gson.toJson(config) }
+		DBCollection coll = client.getDB(db).getCollection("weblog_config_objects").insert(doc)
 	}
 
 	public static void main(args){
@@ -524,7 +279,7 @@ class InitData {
 		 *  Arguments: 
 		 *  args[0] : MongoDB host
 		 *  args[1] : MongoDB port
-		 *  args[2] : Database ID for Mongo; if reset true, add timestamp tag and use as DB for saving data. If reset NOT true, use as DB directly
+		 *  args[2] : Database ID for Mongo
 		 *  args[3] : Path to save config file
 		 *  args[4] : root directory of Keyword files
 		 */
@@ -539,6 +294,6 @@ class InitData {
 
 		println "Loading data from location ${rootDir} into database ${dbId}"
 		handler.loadDataFromDisk(rootDir)
-		handler.saveConfiguration(config)
+		handler.saveConfiguration(config, host, port, dbId)
 	}
 }
