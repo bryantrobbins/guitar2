@@ -538,7 +538,6 @@ class WeblogDataHandler {
 		def config = new File(args[4])
 		def rootDir = "UNSET"
 
-
 		if(resetData){
 			dbId += "_" + System.currentTimeMillis()
 			rootDir = new File(args[5])
@@ -561,4 +560,3 @@ class WeblogDataHandler {
 		score = handler.categorizeSessions("ROLE",n)
 		println "RQ1, N=${n}, accuracy=${score}"
 }
-
