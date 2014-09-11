@@ -525,35 +525,19 @@ class WeblogDataHandler {
 		 *  Arguments: 
 		 *  args[0] : MongoDB host
 		 *  args[1] : MongoDB port
-		 *  args[2] : "true" for resetting data from disk
-		 *  args[3] : Database ID for Mongo; if reset true, add timestamp tag and use as DB for saving data. If reset NOT true, use as DB directly
-		 *  args[4] : Path to config file; if reset true, this is used to save file; otherwise, used to load file
-		 *  args[5] : root directory of Keyword files to use if reset true
+		 *  args[2] : Database ID for Mongo; if reset true, add timestamp tag and use as DB for saving data. If reset NOT true, use as DB directly
+		 *  args[3] : Path to config file; if reset true, this is used to save file; otherwise, used to load file
 		 */
 
 		def host = args[0]
 		int port = Integer.parseInt(args[1])
-		boolean resetData = args[2].equals("true") ? true : false
-		def dbId = args[3]
-		def config = new File(args[4])
-		def rootDir = "UNSET"
-
-		if(resetData){
-			dbId += "_" + System.currentTimeMillis()
-			rootDir = new File(args[5])
-		}
+		def dbId = args[2]
+		def config = new File(args[3])
 
 		WeblogDataHandler handler = new WeblogDataHandler(host, port, dbId);
 
-		if(resetData){
-			println "Loading data from location ${rootDir} into database ${dbId}"
-			handler.loadDataFromDisk(rootDir)
-			handler.saveConfiguration(config)
-		}
-		else{
-			println "Use configuration from ${config}"
-			handler.loadDataFromConfig(config)
-		}
+		println "Use configuration from ${config}"
+		handler.loadDataFromConfig(config)
 
 		float score;
 		def n=2;
