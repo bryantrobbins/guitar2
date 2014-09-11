@@ -267,6 +267,10 @@ class WeblogDataHandler {
 		}
 	}
 
+	public void loadDataFromDb(String dbId){
+		
+	}
+
 	public void eachSession(Closure clos){
 		config.getSessions().each { clos(it) }
 	}
@@ -525,8 +529,8 @@ class WeblogDataHandler {
 		 *  Arguments: 
 		 *  args[0] : MongoDB host
 		 *  args[1] : MongoDB port
-		 *  args[2] : Database ID for Mongo; if reset true, add timestamp tag and use as DB for saving data. If reset NOT true, use as DB directly
-		 *  args[3] : Path to config file; if reset true, this is used to save file; otherwise, used to load file
+		 *  args[2] : Database ID for Mongo
+		 *  args[3] : Path to config file
 		 */
 
 		def host = args[0]

@@ -91,7 +91,7 @@ class InitData {
 			def userSuite = parts[3].replace(".", "_") + "_suite"
 			
 			// Save any new suite IDs we may have encountered
-			if(!groups.contains(dateSuite)){
+			if(!config.getGroups().contains(dateSuite)){
 				loader.clearTestSuite(dbId, dateSuite)
 				loader.clearTestSuite(dbId, dateSuite +"_train")
 				loader.clearTestSuite(dbId, dateSuite +"_test")
@@ -99,7 +99,7 @@ class InitData {
 				config.getSchemes().get("DATE").add(dateSuite)
 			}
 
-			if(!groups.contains(roleSuite)){
+			if(!config.getGroups().contains(roleSuite)){
 				loader.clearTestSuite(dbId, roleSuite)
 				loader.clearTestSuite(dbId, roleSuite +"_train")
 				loader.clearTestSuite(dbId, roleSuite +"_test")
@@ -107,7 +107,7 @@ class InitData {
 				config.getSchemes().get("ROLE").add(roleSuite)
 			}
 
-			if(!groups.contains(userSuite)){
+			if(!config.getGroups().contains(userSuite)){
 				loader.clearTestSuite(dbId, userSuite)
 				loader.clearTestSuite(dbId, userSuite +"_train")
 				loader.clearTestSuite(dbId, userSuite +"_test")
