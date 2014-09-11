@@ -561,8 +561,8 @@ class WeblogDataHandler {
 		// RQ1 - Categorize by role on same data that trained models
          	
 	//	 for(int n=2; n<=6; n++){
-	//		score = handler.categorizeSessions("ROLE",n)
-	//		println "RQ1, N=${n}, accuracy=${score}"
+			score = handler.categorizeSessions("ROLE",n)
+			println "RQ1, N=${n}, accuracy=${score}"
 	//	}
 
 		 //RQ2 - See if role-based models can accept/reject smaller snippets For each role
@@ -583,8 +583,8 @@ class WeblogDataHandler {
               */ 
 		// RQ3 - User-specific profiles
              // for(int n=2; n<=4; n++){
-	        score = handler.categorizeSessions("USER",2)
-        	println "RQ3, N=2, accuracy=${score}"
+//	        score = handler.categorizeSessions("USER",2)
+ //       	println "RQ3, N=2, accuracy=${score}"
 	      
 	}
 }
