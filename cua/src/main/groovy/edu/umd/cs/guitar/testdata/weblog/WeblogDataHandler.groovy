@@ -267,8 +267,10 @@ class WeblogDataHandler {
 		}
 	}
 
-	public void loadDataFromDb(String dbId){
-		
+	public void loadDataFromDb(host, port, db){
+		MongoClient client = new MongoClient(host, port);
+    BasicDBObject doc = new BasicDBObject("id", db)
+    this.config = client.getDB(db).getCollection("weblog_config_objects").find(doc).next().get("data")
 	}
 
 	public void eachSession(Closure clos){
@@ -518,12 +520,6 @@ class WeblogDataHandler {
 		return categorizeStrings(scheme, modelOrder, ngramsToCategorize, ngramsActualGroups, "BINARY_RAW", threshold, myGroup, mine)
 	}
 
-	public void saveConfiguration(File saveLoc){
-		Gson gson = new Gson()
-
-		saveLoc.withWriter{ it << gson.toJson(config) }
-	}
-
 	public static void main(args){
 		/*
 		 *  Arguments: 
@@ -541,7 +537,7 @@ class WeblogDataHandler {
 		WeblogDataHandler handler = new WeblogDataHandler(host, port, dbId);
 
 		println "Use configuration from ${config}"
-		handler.loadDataFromConfig(config)
+		handler.loadDataFromDb(host, port, db)
 
 		float score;
 		def n=2;
