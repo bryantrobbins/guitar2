@@ -541,7 +541,6 @@ class WeblogDataHandler {
 
 		WeblogDataHandler handler = new WeblogDataHandler(host, port, dbId);
 
-		println "Use configuration from ${config}"
 		handler.loadDataFromDb(host, port, dbId)
 
 		float score;
