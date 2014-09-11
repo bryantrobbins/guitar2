@@ -559,4 +559,5 @@ class WeblogDataHandler {
 		def n=2;
 		score = handler.categorizeSessions("ROLE",n)
 		println "RQ1, N=${n}, accuracy=${score}"
+	}
 }
