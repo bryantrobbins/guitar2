@@ -24,7 +24,7 @@ task hello << {
 	println "Hello Gradle world"
 }
 
-task runRQ2 (dependsOn: 'classes', type: JavaExec) {
+task runRQ1 (dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'edu.umd.cs.guitar.testdata.weblog.WeblogDataHandler'
 		args host, port, db
