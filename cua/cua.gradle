@@ -31,12 +31,6 @@ task runRQ2 (dependsOn: 'classes', type: JavaExec) {
 }
 
 task runInitData (dependsOn: 'classes', type: JavaExec) {
-		db += "_" + System.currentTimeMillis()
-
-		new File("db.log").withWriter { out ->
-			out.writeLine(db)
-    }
-
     classpath = sourceSets.main.runtimeClasspath
     main = 'edu.umd.cs.guitar.testdata.weblog.InitData'
 		args host, port, db, keywords, input
