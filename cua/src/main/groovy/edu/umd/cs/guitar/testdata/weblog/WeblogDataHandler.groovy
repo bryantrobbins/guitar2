@@ -557,36 +557,8 @@ class WeblogDataHandler {
 		}
 
 		float score;
-
-		// RQ1 - Categorize by role on same data that trained models
-         	
-	//	 for(int n=2; n<=6; n++){
-			score = handler.categorizeSessions("ROLE",n)
-			println "RQ1, N=${n}, accuracy=${score}"
-	//	}
-
-		 //RQ2 - See if role-based models can accept/reject smaller snippets For each role
-	/*
-         	int modelOrder = 9
-		for(String role : handler.getTrainingGroupsInScheme("ROLE")){
-	//		for(int o = 2; o<=9; o++){
-			 	int o = 4;
-				// Represents True Positive (guess = false && group = false)
-		        	score = handler.categorizeSessionNgramsAgainstOthers("ROLE", role, modelOrder, o, -0.6, false)
-				println "RQ2, role=${role}, length=${o}, negative, True positive rate=${score}"
-				
-				// Represnts False Positive (guess - false && group = true)
-                        // 	score = handler.categorizeSessionNgramsAgainstOthers("ROLE", role, modelOrder, o, -0.6, true)
-	                //	println "RQ2, role=${role}, length=${o}, positive, False positive rate=${score}"
-         //		}
-		}
-              */ 
-		// RQ3 - User-specific profiles
-             // for(int n=2; n<=4; n++){
-//	        score = handler.categorizeSessions("USER",2)
- //       	println "RQ3, N=2, accuracy=${score}"
-	      
-	}
+		def n=2;
+		score = handler.categorizeSessions("ROLE",n)
+		println "RQ1, N=${n}, accuracy=${score}"
 }
-
 
