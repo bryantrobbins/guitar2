@@ -13,6 +13,10 @@ import edu.berkeley.nlp.lm.ArrayEncodedProbBackoffLm;
 import edu.berkeley.nlp.lm.collections.Iterators;
 import groovy.io.FileType
 
+import com.mongodb.BasicDBObject
+import com.mongodb.DBCollection
+import com.mongodb.MongoClient
+
 class WeblogDataHandler {
 	private ConfigData config
 	private TestDataManager loader
@@ -268,9 +272,11 @@ class WeblogDataHandler {
 	}
 
 	public void loadDataFromDb(host, port, db){
+		Gson gson = new Gson()
 		MongoClient client = new MongoClient(host, port);
     BasicDBObject doc = new BasicDBObject("id", db)
-    this.config = client.getDB(db).getCollection("weblog_config_objects").find(doc).next().get("data")
+    String json = client.getDB(db).getCollection("weblog_config_objects").find(doc).next().get("data")
+    this.config = gson.fromJson(json, ConfigData.class)
 	}
 
 	public void eachSession(Closure clos){
