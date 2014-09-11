@@ -531,7 +531,7 @@ class InitData {
 
 		def host = args[0]
 		int port = Integer.parseInt(args[1])
-		def dbId = args[2] + "_" + System.currentTimeMillis()
+		def dbId = args[2]
 		def config = new File(args[3])
 		def rootDir = new File(args[4])
 
