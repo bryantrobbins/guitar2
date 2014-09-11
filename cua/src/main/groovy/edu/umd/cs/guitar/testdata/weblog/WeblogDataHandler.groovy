@@ -538,7 +538,6 @@ class WeblogDataHandler {
 		def host = args[0]
 		int port = Integer.parseInt(args[1])
 		def dbId = args[2]
-		def config = new File(args[3])
 
 		WeblogDataHandler handler = new WeblogDataHandler(host, port, dbId);
 

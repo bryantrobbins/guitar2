@@ -27,7 +27,7 @@ task hello << {
 task runRQ2 (dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'edu.umd.cs.guitar.testdata.weblog.WeblogDataHandler'
-		args host, port, db, keywords
+		args host, port, db
 }
 
 task runInitData (dependsOn: 'classes', type: JavaExec) {
