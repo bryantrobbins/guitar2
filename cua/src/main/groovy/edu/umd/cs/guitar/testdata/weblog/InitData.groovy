@@ -271,7 +271,7 @@ class InitData {
 		MongoClient client = new MongoClient(host, port);
 		BasicDBObject doc = new BasicDBObject("id", db).append("data", data)
 
-		DBCollection coll = client.getDB(db).getCollection("weblog_config_objects").insert(doc)
+		client.getDB(db).getCollection("weblog_config_objects").insert(doc)
 	}
 
 	public static void main(args){
