@@ -3,7 +3,7 @@ MAINTAINER Bryan Robbins <bryantrobbins@gmail.com>
 
 RUN apt-get update && apt-get clean
 RUN apt-get install --no-install-recommends openjdk-7-jdk -y
-RUN apt-get install ant wget unzip bunzip2 -y
+RUN apt-get install ant wget unzip bzip2 -y
 RUN wget https://services.gradle.org/distributions/gradle-2.1-bin.zip
 RUN unzip gradle-2.1-bin.zip
 RUN mv gradle-2.1 gradle
