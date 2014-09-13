@@ -2,6 +2,16 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
+def tmp_home_val = hasProperty('tmp_home') ? tmp_home : ''
+def cobertura_ripping_file_val = hasProperty('cobertura_ripping_file') ? cobertura_ripping_file : ''
+def aut_bin_val = hasProperty('aut_bin') ? aut_bin : ''
+def aut_inst_val = hasProperty('aut_inst') ? aut_inst : ''
+def aut_mainclass_val = hasProperty('aut_mainclass') ? aut_mainclass : ''
+def aut_gui_file_val = hasProperty('aut_gui_file') ? aut_gui_file : ''
+def aut_initial_waiting_time_val = hasProperty('aut_initial_waiting_time') ? aut_initial_waiting_time : ''
+def aut_configuration_file_val = hasProperty('aut_configuration_file') ? aut_configuration_file : ''
+def aut_ripper_delay_val = hasProperty('aut_ripper_delay') ? aut_ripper_delay : ''
+def aut_arguments_val = hasProperty('aut_arguments') ? aut_arguments : ''
 
 configurations {
 	ripper
@@ -16,15 +26,22 @@ repositories {
 
 dependencies {
     ripper group: 'edu.umd.cs.guitar', name: 'gui-ripper-jfc', version: '0.0.1-SNAPSHOT'
+    ripper group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
+		ripper files(aut_bin_val)
+		ripper files(aut_inst_val)
 }
 
 task hello << {
-	println "Hello Gradle world to " + nameProp
+	println "Hello World"
 }
 
 task rip(type: JavaExec) {
 	classpath configurations.ripper
 	main = 'edu.umd.cs.guitar.ripper.JFCRipperMain'
-	jvmargs 
-	args 
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	systemProperty "user.home", tmp_home_val
+	systemProperty "net.sourceforge.cobertura.datafile", cobertura_ripping_file_val
+	systemProperty "log4j.configuration", "log/guitar-clean.glc"
+	args "-c", aut_mainclass_val, "-g", aut_gui_file_val, "-i", aut_initial_waiting_time_val, "-cf", aut_configuration_file_val, "-d", aut_ripper_delay_val, "a", aut_arguments_val
 }

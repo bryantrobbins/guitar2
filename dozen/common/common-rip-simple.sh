@@ -68,25 +68,6 @@ exec_cmd "mkdir -p $model_dir"
 exec_cmd "mkdir -p $tmp_home"
 exec_cmd "mkdir -p $ripper_coverage_dir"
 
-# Setup java command line parameters
-export JAVA_CMD_PREFIX="java -Duser.home=$tmp_home -Xms64m -Xmx768m  -Dnet.sourceforge.cobertura.datafile=$cobertura_ripping_file -Dlog4j.configuration=log/guitar-clean.glc" 
-
-cmd="$cmd_jfcripper -cp $classpath $ripper_launcher -c $aut_mainclass -g $aut_gui_file -i $aut_initial_waitting_time  -cf $aut_configuration_file -d $aut_ripper_delay"
-
-if [ ! -z $aut_arguments ] 		
-then
-   cmd="$cmd -a $aut_arguments"	
-fi
-
-if [ ! -z $aut_arguments2 ]
-then
-   cmd="$cmd:$aut_arguments2"
-fi
-
-if $reg_title_match; then
-   cmd="$cmd -r"
-fi
-
 echo Cleaning up $aut_name
 cleanup
 if [ ! -z $aut_model_data_dir ] && [ -e $aut_model_data_dir ]
@@ -106,6 +87,9 @@ echo "Sleeping for 1s"
 sleep 1
 
 pushd $tmp_home
+cmd_ripper="gradle -b $guitar_dir/guitar.gradle"
+cmd="$cmd_ripper -Ptmp_home=$tmp_home -Pcobertura_ripping_file=$cobertura_ripping_file -Paut_bin=$aut_bin -Paut_inst=$aut_inst -Paut_mainclass=$aut_mainclass -Paut_gui_file=$aut_gui_file -Paut_initial_waiting_time=$aut_initial_waiting_time -Paut_configuration_file=$aut_configuration_file -Paut_ripper_delay=$aut_ripper_delay -Paut_arguments=$aut_arguments"
+exec_cmd "$cmd"
 $cmd 2>&1 | tee $ripper_log_file
 ret=$?
 popd
