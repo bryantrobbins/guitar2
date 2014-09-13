@@ -3,6 +3,7 @@ MAINTAINER Bryan Robbins <bryantrobbins@gmail.com>
 
 RUN apt-get update && apt-get clean
 RUN apt-get install --no-install-recommends openjdk-7-jdk -y
+RUN apt-get install ant wget bunzip2 -y
 
 RUN mkdir jslave
 RUN mkdir jslave/home
