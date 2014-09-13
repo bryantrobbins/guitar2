@@ -3,7 +3,11 @@ MAINTAINER Bryan Robbins <bryantrobbins@gmail.com>
 
 RUN apt-get update && apt-get clean
 RUN apt-get install --no-install-recommends openjdk-7-jdk -y
-RUN apt-get install ant wget bunzip2 -y
+RUN apt-get install ant wget unzip bunzip2 -y
+RUN wget https://services.gradle.org/distributions/gradle-2.1-bin.zip
+RUN unzip gradle-2.1-bin.zip
+RUN mv gradle-2.1 gradle
+ENV PATH $PATH:/gradle/bin
 
 RUN mkdir jslave
 RUN mkdir jslave/home
@@ -11,4 +15,4 @@ ADD swarm.jar /jslave/swarm.jar
 
 EXPOSE 22
 WORKDIR jslave
-CMD    ["java", "-Xmx256m", "-jar", "swarm.jar", "-master", "http://jenkins:8080", "-username", "admin", "-password", "amalga84go", "-labels", "basic", "-executors", "1", "-fsroot", "/jslave/home"]
+CMD    ["java", "-jar", "swarm.jar", "-master", "http://jenkins:8080", "-username", "admin", "-password", "amalga84go", "-labels", "basic", "-executors", "1", "-fsroot", "/jslave/home"]
