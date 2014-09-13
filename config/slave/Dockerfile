@@ -1,9 +1,16 @@
 FROM ubuntu:12.04
 MAINTAINER Bryan Robbins <bryantrobbins@gmail.com>
 
+# Get latest packages
 RUN apt-get update && apt-get clean
+
+# Needed for Jenkins
 RUN apt-get install --no-install-recommends openjdk-7-jdk -y
-RUN apt-get install ant wget unzip bzip2 -y
+
+# Needed for Jenkins jobs
+RUN apt-get install ant wget unzip bzip2 xvfb -y
+
+# Install Gradle
 RUN wget https://services.gradle.org/distributions/gradle-2.1-bin.zip
 RUN unzip gradle-2.1-bin.zip
 RUN mv gradle-2.1 gradle
