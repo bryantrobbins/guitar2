@@ -62,7 +62,7 @@ task convert(type: JavaExec) {
 	main = 'edu.umd.cs.guitar.graph.GUIStructure2GraphConverter'
 	minHeapSize "64m"
 	maxHeapSize "768m"
-	args "-g", aut_gui_file_val, "-e", aut_efg_file_val, "EFGConverter"
+	args "-p", "EFGConverter", "-g", aut_gui_file_val, "-e", aut_efg_file_val
 }
 
 task generate_sl2(type: JavaExec) {
@@ -70,6 +70,6 @@ task generate_sl2(type: JavaExec) {
 	main = 'edu.umd.cs.guitar.testcase.TestCaseGenerator'
 	minHeapSize "64m"
 	maxHeapSize "768m"
-	args "-g", aut_gui_file_val, "-e", aut_efg_file_val, "EFGConverter"
+	args "-p", "EFGConverter", "-g", aut_gui_file_val, "-e", aut_efg_file_val
 }
 
