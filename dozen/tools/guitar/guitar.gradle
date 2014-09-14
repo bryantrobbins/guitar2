@@ -43,5 +43,5 @@ task rip(type: JavaExec) {
 	systemProperty "user.home", tmp_home_val
 	systemProperty "net.sourceforge.cobertura.datafile", cobertura_ripping_file_val
 	systemProperty "log4j.configuration", "log/guitar-clean.glc"
-	args "-c", aut_mainclass_val, "-g", aut_gui_file_val, "-i", aut_initial_waiting_time_val, "-cf", aut_configuration_file_val, "-d", aut_ripper_delay_val, "a", aut_arguments_val
+	args "-c", aut_mainclass_val, "-g", aut_gui_file_val, "-i", aut_initial_waiting_time_val, "-cf", aut_configuration_file_val, "-d", aut_ripper_delay_val, "-a", aut_arguments_val
 }
