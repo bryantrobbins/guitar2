@@ -46,7 +46,7 @@ exec_cmd "rm -rf $aut_src_dir/*"
 pushd $aut_src_dir
 
 # Download the application 
-exec_cmd "wget http://sourceforge.net/projects/jabref/files/jabref/2.10/JabRef-2.10-src.tar.bz2"
+exec_cmd "cp /sources/JabRef-2.10-src.tar.bz2 ."
 
 # bunzip
 exec_cmd "bunzip2  *.bz2 "
