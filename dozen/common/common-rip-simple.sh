@@ -96,11 +96,6 @@ ret=$?
 popd
 
 #--------------------------
-# Cobertura post-process
-#--------------------------
-exec_cmd "$cmd_cobertura_report $cobertura_ripping_file"
-
-#--------------------------
 # Cleanup
 #--------------------------
 if [ -e nohup.out ]
@@ -115,7 +110,6 @@ if [ -e log_widget.xml ]
 then
    exec_cmd "rm -f log_widget.xml"	
 fi
-exec_cmd "killall -9 firefox-bin"
 exec_cmd "rm -rf $tmp_home"
 
 echo "*** DONE $aut_name ***"
