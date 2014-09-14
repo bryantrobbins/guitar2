@@ -1,7 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
+# Dependency path arg
 def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
+
+# Ripper args
 def tmp_home_val = hasProperty('tmp_home') ? tmp_home : ''
 def cobertura_ripping_file_val = hasProperty('cobertura_ripping_file') ? cobertura_ripping_file : ''
 def aut_bin_val = hasProperty('aut_bin') ? aut_bin : ''
@@ -13,8 +16,15 @@ def aut_configuration_file_val = hasProperty('aut_configuration_file') ? aut_con
 def aut_ripper_delay_val = hasProperty('aut_ripper_delay') ? aut_ripper_delay : ''
 def aut_arguments_val = hasProperty('aut_arguments') ? aut_arguments : ''
 
+# Converter args
+def aut_gui_file_val = hasProperty('aut_gui_file') ? aut_gui_file : ''
+def aut_efg_file_val = hasProperty('aut_efg_file') ? aut_efg_file : ''
+
+# Generator args
+
 configurations {
 	ripper
+	converter
 }
 
 repositories {
@@ -29,6 +39,7 @@ dependencies {
     ripper group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
 		ripper files(aut_bin_val)
 		ripper files(aut_inst_val)
+    converter group: 'edu.umd.cs.guitar', name: 'guistructure2graph-efg', version: '0.0.1-SNAPSHOT'
 }
 
 task hello << {
@@ -45,3 +56,12 @@ task rip(type: JavaExec) {
 	systemProperty "log4j.configuration", "log/guitar-clean.glc"
 	args "-c", aut_mainclass_val, "-g", aut_gui_file_val, "-i", aut_initial_waiting_time_val, "-cf", aut_configuration_file_val, "-d", aut_ripper_delay_val, "-a", aut_arguments_val
 }
+
+task convert(type: JavaExec) {
+	classpath configurations.converter
+	main = 'edu.umd.cs.guitar.graph.GUIStructure2GraphConverter'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	args "-g", aut_gui_file_val, "-e", aut_efg_file_val, EFGConverter
+}
+
