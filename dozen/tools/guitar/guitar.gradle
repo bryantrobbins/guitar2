@@ -19,12 +19,15 @@ def aut_gui_file_val = hasProperty('aut_gui_file') ? aut_gui_file : ''
 // Additional converter args
 def aut_efg_file_val = hasProperty('aut_efg_file') ? aut_efg_file : ''
 
-// Generator args
+// Additional generator args
+def length_val = hasProperty('length') ? aut_efg_file : '2'
+def testcases_dir_val = hasProperty('testcases_dir') ? testcases_dir : ''
+
 
 configurations {
 	ripper
 	converter
-	sl2
+	generate_sl
 }
 
 repositories {
@@ -40,6 +43,7 @@ dependencies {
 		ripper files(aut_bin_val)
 		ripper files(aut_inst_val)
     converter group: 'edu.umd.cs.guitar', name: 'guistructure2graph-efg', version: '0.0.1-SNAPSHOT'
+    generate_sl group: 'edu.umd.cs.guitar', name: 'testcase-generator-sequence-length', version: '0.0.1-SNAPSHOT'
 }
 
 task hello << {
@@ -65,11 +69,11 @@ task convert(type: JavaExec) {
 	args "-p", "EFGConverter", "-g", aut_gui_file_val, "-e", aut_efg_file_val
 }
 
-task generate_sl2(type: JavaExec) {
-	classpath configurations.sl2
+task generate_sl(type: JavaExec) {
+	classpath configurations.generate_sl
 	main = 'edu.umd.cs.guitar.testcase.TestCaseGenerator'
 	minHeapSize "64m"
 	maxHeapSize "768m"
-	args "-p", "EFGConverter", "-g", aut_gui_file_val, "-e", aut_efg_file_val
+	args "-p", "SequenceLengthCoverage", "-m", "0", "-e", aut_efg_file_val, "-l", length_val, "-d", testcases_dir_val
 }
 
