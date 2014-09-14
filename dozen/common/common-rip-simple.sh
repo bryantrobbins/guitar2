@@ -90,7 +90,6 @@ sleep 1
 pushd $tmp_home
 cmd_ripper="gradle -b $guitar_dir/guitar.gradle"
 cmd="$cmd_ripper -Ptmp_home=$tmp_home -Pcobertura_ripping_file=$cobertura_ripping_file -Paut_bin=$aut_bin_dir -Paut_inst=$aut_inst_dir -Paut_mainclass=$aut_mainclass -Paut_gui_file=$aut_gui_file -Paut_initial_waiting_time=$aut_initial_waitting_time -Paut_configuration_file=$aut_configuration_file -Paut_ripper_delay=$aut_ripper_delay -Paut_arguments=$aut_arguments rip"
-exec_cmd "$cmd"
 $cmd 2>&1 | tee $ripper_log_file
 ret=$?
 popd
