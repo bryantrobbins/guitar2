@@ -52,7 +52,7 @@ exec_cmd "mkdir $testcases_dir"
 #--------------
 # Generate test cases 
 #--------------
-exec_cmd "$cmd_tc_gen -Paut_efg_file=$aut_efg_file -Plength=$length -Ptestcases_dir=$testcases_dir"
+exec_cmd "$cmd_tc_gen -Paut_efg_file=$aut_efg_file -Plength=$length -Ptestcases_dir=$testcases_dir generate_sl"
 exec_cmd "rm -f *.log"
 
 #--------------
