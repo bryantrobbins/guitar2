@@ -93,7 +93,7 @@ then
    exit $ret
 fi
 
-# Save data to TestDataManager
+# Save data to edu.umd.cs.guitar.main.TestDataManager
 save_cmd="$GUITAR_HOME/common-save-replay.groovy $dbId $testId $execId $model_dir/${testId}.ser $model_dir/${testId}.log"
 echo $save_cmd
 eval $save_cmd
