@@ -3,9 +3,9 @@
 archive=$1
  
 if [ -z "$archive" ]; then
-  echo "No archive provided."
-  echo "Usage: $0 archive.tar"
-  exit
+  now=`date +%s`
+  archive="backup.$now.tar"
+  echo "No archive provided. Using default of $archive"
 fi
  
 if [ -e "$archive" ]; then
@@ -18,5 +18,5 @@ echo "Backing up to $archive"
  
 echo "Exporting data current cuadata container"
 docker rm backup
-docker run --name backup --volumes-from cuadata -v $local:/backup busybox tar cvf /backup/$archive var/jenkins_home nexus db/data
+docker run --name backup --volumes-from cuadata -v $local:/backup busybox tar cvf /backup/$archive var/jenkins_home nexus db/data sources
 docker rm backup
