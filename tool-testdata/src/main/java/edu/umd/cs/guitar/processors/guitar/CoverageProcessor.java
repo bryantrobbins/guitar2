@@ -1,5 +1,6 @@
 package edu.umd.cs.guitar.processors.guitar;
 
+import com.mongodb.DB;
 import edu.umd.cs.guitar.artifacts.GridFSFileProcessor;
 import edu.umd.cs.guitar.util.CoberturaUtils;
 import net.sourceforge.cobertura.coveragedata.ProjectData;
@@ -7,6 +8,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -27,9 +29,11 @@ public class CoverageProcessor extends GridFSFileProcessor<ProjectData> {
 
     /**
      * Constructor to initialize superclass.
+     *
+     * @param db the DB instance to use for binary file storage
      */
-    public CoverageProcessor() {
-        super(ProjectData.class);
+    public CoverageProcessor(final DB db) {
+        super(db);
     }
 
     @Override
@@ -41,6 +45,14 @@ public class CoverageProcessor extends GridFSFileProcessor<ProjectData> {
             logger.error("Error loading coverage object from byte array", e);
             return null;
         }
+    }
+
+    @Override
+    public byte[] byteArrayFromObject(final ProjectData object) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        CoberturaUtils.saveCoverageData(object, baos);
+
+        return baos.toByteArray();
     }
 
     @Override

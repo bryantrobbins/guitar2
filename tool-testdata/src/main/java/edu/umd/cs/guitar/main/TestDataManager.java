@@ -104,6 +104,15 @@ public final class TestDataManager {
     }
 
     /**
+     * Get DB instance for this Manager.
+     *
+     * @return the DB instance
+     */
+    public DB getDb() {
+        return db;
+    }
+
+    /**
      * Create a new test entry, generating and returning a unique test ID.
      *
      * @return the unique id of the test

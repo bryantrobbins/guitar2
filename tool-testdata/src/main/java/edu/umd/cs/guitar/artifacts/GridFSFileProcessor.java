@@ -1,6 +1,5 @@
 package edu.umd.cs.guitar.artifacts;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mongodb.DB;
 import com.mongodb.gridfs.GridFS;
@@ -11,10 +10,8 @@ import org.apache.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -81,22 +78,18 @@ public abstract class GridFSFileProcessor<T> implements ArtifactProcessor<T> {
 
     @Override
     public final T objectFromJson(final String json) {
-        // Parse the handle out of the json
-        JsonElement je = parser.parse(json);
-        String handle = je.getAsJsonObject().get(GRID_FS_KEY).getAsString();
-
         // GridFS object
-        GridFS gfsCoverage = new GridFS(db, GRID_BINARY_COLLECTION);
+        GridFS gfsBinary = new GridFS(db, GRID_BINARY_COLLECTION);
 
         // Coverage object from GridFS
-        GridFSDBFile binaryOutput = gfsCoverage.findOne(handle);
+        GridFSDBFile binaryOutput = gfsBinary.findOne(json);
 
         // Prepare output stream
         ByteArrayOutputStream binaryStreamOut = new ByteArrayOutputStream();
         try {
             binaryOutput.writeTo(binaryStreamOut);
         } catch (IOException e) {
-            logger.error("Error while trying to write to GridFS", e);
+            logger.error("Error while trying to write out of GridFS", e);
         }
 
         // Convert to desired object
@@ -108,10 +101,32 @@ public abstract class GridFSFileProcessor<T> implements ArtifactProcessor<T> {
      *
      * @param options Set of key/value mapping used as input to the process
      *                of constructing an artifact
-     * @return the object
+     * @return the object, or null if error has occurred
      */
     public final T objectFromOptions(final Map<String, String> options) {
-        return objectFromJson(jsonFromOptions(options));
+        FileInputStream fis = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try {
+            fis = new FileInputStream(options.get(FILE_PATH_OPTION));
+            int b = fis.read();
+            while (b != -1) {
+                baos.write(b);
+                b = fis.read();
+            }
+        } catch (IOException e) {
+            logger.error("Could not read object", e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error("Could not close the file stream", e);
+                }
+            }
+        }
+
+        return objectFromByteArray(baos.toByteArray());
     }
 
     /**
@@ -123,28 +138,19 @@ public abstract class GridFSFileProcessor<T> implements ArtifactProcessor<T> {
      */
     public abstract T objectFromByteArray(final byte[] data);
 
+    /**
+     * This method needs to be overriden by the subclass to produce the
+     * desired array of bytes from a given instance of the object.
+     *
+     * @param object the object to be converted to bytes
+     * @return the byte array
+     */
+    public abstract byte[] byteArrayFromObject(T object);
+
+
     @Override
     public final String jsonFromOptions(final Map<String, String> options) {
-        File binaryFile = new File(options.get(FILE_PATH_OPTION));
-        String binaryFileId = "binary_object_" + ID.incrementAndGet();
-
-        GridFS binaryCollection = new GridFS(db, GRID_BINARY_COLLECTION);
-        GridFSInputFile gfsFile = null;
-        try {
-            gfsFile = binaryCollection.createFile(binaryFile);
-        } catch (IOException e) {
-            logger.error("Could not create file from " + binaryFile
-                    + " in GridFS.", e);
-        }
-
-        if (gfsFile == null) {
-            return null;
-        }
-
-        gfsFile.setFilename(binaryFileId);
-        gfsFile.save();
-
-        return binaryFileId;
+        return jsonFromObject(objectFromOptions(options));
     }
 
     /**
@@ -155,41 +161,22 @@ public abstract class GridFSFileProcessor<T> implements ArtifactProcessor<T> {
      * primary MongoDB document store)
      */
     public final String jsonFromObject(final T object) {
-        ObjectOutputStream oos = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
         try {
-            oos = new ObjectOutputStream(baos);
+            baos.write(byteArrayFromObject(object));
         } catch (IOException e) {
-            logger.error("Could not create output stream during json "
-                    + "conversion", e);
-        }
-        try {
-            if (oos == null) {
-                return null;
-            }
-            oos.writeObject(object);
-        } catch (IOException e) {
-            logger.error("Could not write object to outputstream", e);
+            logger.error("Could not write object bytes to stream", e);
         }
 
         // Now we have an output stream to work with,
         // but GridFS needs an input stream!
         ByteArrayInputStream bais = new ByteArrayInputStream(baos
                 .toByteArray());
-        ObjectInputStream ois = null;
-
-        try {
-            ois = new ObjectInputStream(bais);
-        } catch (IOException e) {
-            logger.error("Error reading object from stream", e);
-        }
 
         String binaryFileId = "binary_object_" + ID.incrementAndGet();
         GridFS binaryCollection = new GridFS(db, GRID_BINARY_COLLECTION);
 
-        GridFSInputFile gfsFile = null;
-        gfsFile = binaryCollection.createFile(ois);
+        GridFSInputFile gfsFile = binaryCollection.createFile(bais);
 
         if (gfsFile == null) {
             return null;
