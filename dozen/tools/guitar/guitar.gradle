@@ -28,6 +28,7 @@ configurations {
 	ripper
 	converter
 	generate_sl
+	save
 }
 
 repositories {
@@ -44,6 +45,7 @@ dependencies {
 		ripper files(aut_inst_val)
     converter group: 'edu.umd.cs.guitar', name: 'guistructure2graph-efg', version: '0.0.1-SNAPSHOT'
     generate_sl group: 'edu.umd.cs.guitar', name: 'testcase-generator-sequence-length', version: '0.0.1-SNAPSHOT'
+    save group: 'edu.umd.cs.guitar', name: 'tool-testdata', version: '0.0.1-SNAPSHOT'
 }
 
 task hello << {
@@ -75,5 +77,21 @@ task generate_sl(type: JavaExec) {
 	minHeapSize "64m"
 	maxHeapSize "768m"
 	args "-p", "SequenceLengthCoverage", "-m", "0", "-e", aut_efg_file_val, "-l", length_val, "-d", testcases_dir_val
+}
+
+task saveSuiteFiles(type: JavaExec) {
+	classpath configurations.save
+	main = 'edu.umd.cs.guitar.processors.guitar.main.SaveSuiteInput'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	args "-h", "mongo", "-p", "27017", "-d", db_id_val, "-s", suite_id_val, "-e", aut_efg_file_val, "-g", aut_gui_file_val, "-r", aut_ripper_coverage_file_val
+}
+
+task saveTestCaseFiles(type: JavaExec) {
+	classpath configurations.save
+	main = 'edu.umd.cs.guitar.processors.guitar.main.SaveTestCaseInput'
+	minHeapSize "64m"
+	maxHeapSize "768m"
+	args "-h", "mongo", "-p", "27017", "-d", db_id_val, "-s", suite_id_val, "-t", test_case_file_val
 }
 
