@@ -1,7 +1,7 @@
 package edu.umd.cs.guitar.processors.guitar;
 
 import edu.umd.cs.guitar.artifacts.GsonFileProcessor;
-import edu.umd.cs.guitar.processors.log.TextObject;
+import edu.umd.cs.guitar.processors.applog.TextObject;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
