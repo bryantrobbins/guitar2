@@ -144,16 +144,31 @@ public final class TestDataManager {
         // Generate unique ID for suite
         String suiteId = generateId();
 
+        createNewSuite(suiteId);
+
+        // Send it back for posterity
+        return suiteId;
+    }
+
+
+    /**
+     * Create a new test suite entry given a suite id. Any existing test
+     * cases associated with the same suite name will be cleared.
+     *
+     * @param suiteId the unique ID for this suite
+     */
+    public void createNewSuite(final String suiteId) {
+
         // Create DBObject
         BasicDBObject basicDBObject = new BasicDBObject()
                 .append(TestDataManagerKeys.SUITE_ID, suiteId);
 
-        // Insert object in tests table
+        // Insert object in suites table
         MongoUtils.addItemToCollection(db, TestDataManagerCollections.SUITES,
                 basicDBObject);
 
-        // Return testId
-        return suiteId;
+        // Clear any existing entries in suite-specific table
+        resetTestSuite(suiteId);
     }
 
 
@@ -237,4 +252,38 @@ public final class TestDataManager {
 
         return getArtifactById(id, processor);
     }
+
+    /**
+     * Add an existing test case to an existing test suite.
+     *
+     * @param testId  the test to be added to a suite
+     * @param suiteId the suite to which test should be added
+     */
+
+    public void addTestCaseToSuite(final String testId, final String suiteId) {
+
+        // Create DBObject
+        BasicDBObject basicDBObject = new BasicDBObject()
+                .append(TestDataManagerKeys.TEST_ID, testId);
+
+        // Insert object in suite-specific table
+        MongoUtils.addItemToCollection(db, TestDataManagerCollections
+                        .idsInSuite(suiteId),
+                basicDBObject);
+    }
+
+    /**
+     * Remove any currently associated test cases from a suite. Note: this only
+     * removes the association of the test case with the suite. It does not
+     * actually remove the test cases from the DB.
+     *
+     * @param suiteId the suite to be cleared
+     */
+
+    public void resetTestSuite(final String suiteId) {
+        MongoUtils.removeAllItemsFromCollection(getDb(),
+                TestDataManagerCollections.idsInSuite(suiteId));
+
+    }
+
 }
