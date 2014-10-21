@@ -44,7 +44,7 @@ public class GridFSFileProcessorTest {
         String json = proc.jsonFromObject(object);
 
         CustomBinaryObject savedObject = proc.objectFromJson(json);
-        Assert.assertEquals("Object do not match", object, savedObject);
+        Assert.assertEquals("Objects do not match", object, savedObject);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class GridFSFileProcessorTest {
 
         CustomBinaryObject savedObject = proc.objectFromOptions(options);
 
-        Assert.assertEquals(object, savedObject);
+        Assert.assertEquals("Objects do not match", object, savedObject);
     }
 
     @Test
