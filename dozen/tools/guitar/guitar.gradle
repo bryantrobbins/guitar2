@@ -29,6 +29,11 @@ def suite_id_val = hasProperty('suite_id') ? suite_id : ''
 def aut_ripper_coverage_file_val = hasProperty('aut_ripper_coverage_file') ? aut_ripper_coverage_file : ''
 def test_case_file_val = hasProperty('test_case_file') ? test_case_file : ''
 
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 configurations {
 	ripper
 	converter
