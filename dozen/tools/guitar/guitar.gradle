@@ -23,6 +23,11 @@ def aut_efg_file_val = hasProperty('aut_efg_file') ? aut_efg_file : ''
 def length_val = hasProperty('length') ? length : '2'
 def testcases_dir_val = hasProperty('testcases_dir') ? testcases_dir : ''
 
+// Additional save args
+def db_id_val = hasProperty('db_id') ? db_id : ''
+def suite_id_val = hasProperty('suite_id') ? suite_id : ''
+def aut_ripper_coverage_file_val = hasProperty('aut_ripper_coverage_file') ? aut_ripper_coverage_file : ''
+def test_case_file_val = hasProperty('test_case_file') ? test_case_file : ''
 
 configurations {
 	ripper
