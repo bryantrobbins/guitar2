@@ -78,7 +78,7 @@ public final class SaveTestCaseInput {
 
         // Create test case
         String[] splits = cmd.getOptionValue("t").split("/");
-        String testId = splits[splits.length - 1];
+        String testId = splits[splits.length - 1].split("\\.")[0];
         testDataManager.createNewTest(testId);
 
         // Add test case to suite
