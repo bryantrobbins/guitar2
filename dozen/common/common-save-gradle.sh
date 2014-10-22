@@ -26,6 +26,8 @@ testcases_dir=$testsuite_dir/$testcases_dir_name
 
 suite_id="amalga_${aut_name}_${testsuite_name}"
 
+db_id=$3
+
 #--------------
 # Save suite-level artifacts
 #--------------
