@@ -122,6 +122,20 @@ public final class TestDataManager {
         // Generate unique ID for test
         String testId = generateId();
 
+        // Create the test
+        createNewTest(testId);
+
+        // Return testId
+        return testId;
+    }
+
+    /**
+     * Create a new test entry given a unique id for the test. id only needs
+     * to be unique across current DB instance.
+     *
+     * @param testId the test id
+     */
+    public void createNewTest(final String testId) {
         // Create DBObject
         BasicDBObject basicDBObject = new BasicDBObject()
                 .append(TestDataManagerKeys.TEST_ID, testId);
@@ -129,9 +143,6 @@ public final class TestDataManager {
         // Insert object in tests table
         MongoUtils.addItemToCollection(db, TestDataManagerCollections.TESTS,
                 basicDBObject);
-
-        // Return testId
-        return testId;
     }
 
     /**

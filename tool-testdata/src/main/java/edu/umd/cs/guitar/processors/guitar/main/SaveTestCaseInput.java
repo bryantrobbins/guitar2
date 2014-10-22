@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by bryan on 10/21/14.
@@ -32,6 +33,11 @@ public final class SaveTestCaseInput {
             LogManager.getLogger(SaveTestCaseInput.class);
 
     /**
+     * A counter for test ids.
+     */
+    private static AtomicLong nextId;
+
+    /**
      * This override hides the default public constructor.
      */
     private SaveTestCaseInput() {
@@ -44,6 +50,7 @@ public final class SaveTestCaseInput {
      * @param args command line arguments.
      */
     public static void main(final String[] args) {
+        nextId.set(1);
 
         // Build and parse cmd line options
 
@@ -76,7 +83,8 @@ public final class SaveTestCaseInput {
         ArtifactProcessor tcProc = new TestcaseProcessor();
 
         // Create test case
-        String testId = testDataManager.createNewTest();
+        String testId = "" + nextId.getAndIncrement();
+        testDataManager.createNewTest(testId);
 
         // Add test case to suite
         testDataManager.addTestCaseToSuite(testId, cmd.getOptionValue("s"));
