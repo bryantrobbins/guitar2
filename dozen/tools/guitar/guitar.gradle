@@ -81,7 +81,7 @@ task generate_sl(type: JavaExec) {
 	main = 'edu.umd.cs.guitar.testcase.TestCaseGenerator'
 	minHeapSize "64m"
 	maxHeapSize "768m"
-	args "-p", "SequenceLengthCoverage", "-m", "0", "-e", aut_efg_file_val, "-l", length_val, "-d", testcases_dir_val
+	args "-p", "SequenceLengthCoverage", "-m", "10", "-e", aut_efg_file_val, "-l", length_val, "-d", testcases_dir_val
 }
 
 task saveSuiteFiles(type: JavaExec) {
