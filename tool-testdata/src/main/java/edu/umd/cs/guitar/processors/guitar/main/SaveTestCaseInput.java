@@ -88,7 +88,7 @@ public final class SaveTestCaseInput {
         Map<String, String> procOptions = new HashMap<String, String>();
         procOptions.put(TestcaseProcessor.FILE_PATH_OPTION,
                 cmd.getOptionValue("t"));
-        testDataManager.saveArtifact(ArtifactCategory.SUITE_INPUT, tcProc,
+        testDataManager.saveArtifact(ArtifactCategory.TEST_INPUT, tcProc,
                 procOptions, testId);
     }
 }
