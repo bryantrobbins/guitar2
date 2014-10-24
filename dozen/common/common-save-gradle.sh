@@ -38,8 +38,8 @@ exec_cmd "$cmd_save -Paut_efg_file=$aut_efg_file -Pdb_id=$db_id -Psuite_id=$suit
 #--------------
 for t in $testcases_dir/*.tst
 do
-	echo "Saving test case file $testcases_dir/$t"
-	exec_cmd "$cmd_save -Pdb_id=$db_id -Psuite_id=$suite_id -Ptest_case_file=$testcases_dir/$t saveTestCaseFiles"
+	echo "Saving test case file $t"
+	exec_cmd "$cmd_save -Pdb_id=$db_id -Psuite_id=$suite_id -Ptest_case_file=$t saveTestCaseFiles"
 done
 
 r=$?
