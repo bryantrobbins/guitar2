@@ -81,18 +81,18 @@ cobertura_main_file=$model_dir/$testId.ser
 #--------------------------
 
 # Setup java command line parameters
-user.home=$tmp_home 
-net.sourceforge.cobertura.datafile=$cobertura_main_file
-dbId
-aut_replay_step_timeout
-aut_mainclass
-local_LOG_file
-local_oracle_file
-aut_initial_waitting_time
-aut_replay_delay
-aut_configuration_file
-aut_replay_timeout
-aut_replay_delay
+aut_mainclass=$aut_mainclass
+log_file=$local_LOG_file
+oracle_file=$local_oracle_file
+aut_initial_waiting_time=$aut_initial_waitting_time
+delay=$aut_replay_delay
+aut_configuration_file=$aut_configuration_file
+aut_replay_timeout=$aut_replay_timeout
+aut_replay_step_timeout=$aut_replay_step_timeout
+test_id=$testId
+db_id=$dbId
+tmp_home=$tmp_home
+cobetura_file=$cobertura_main_file
 
 testname=$testId
 echo "*** Executing test $testname ***" 
@@ -105,21 +105,17 @@ local_log_file=$model_dir/$testname.log
 local_oracle_file=$model_dir/$testname.orc 
 local_LOG_file=$model_dir/$testname.LOG
 
-cmd="$cmd_jfcreplayer_amalga -c $aut_mainclass -l $local_LOG_file -gs $local_oracle_file  -i $aut_initial_waitting_time -d $aut_replay_delay -cf $aut_configuration_file -to $aut_replay_timeout -d $aut_replay_delay -so $aut_replay_step_timeout -tdi $testId -tdd $dbId -tdh $testdataHost -tdp $testdataPort"
+cmd="gradle -b $guitar_dir/guitar.gradle -Paut_mainclass=$aut_mainclass -Plog_file=$local_LOG_file -Poracle_file=$local_oracle_file -Paut_initial_waiting_time=$aut_initial_waitting_time -Pdelay=$aut_replay_delay -Paut_configuration_file=$aut_configuration_file -Paut_replay_timeout=$aut_replay_timeout -Paut_replay_step_timeout=$aut_replay_step_timeout -Ptest_id=$testId -Pdb_id=$dbId -Ptmp_home=$tmp_home -Pcobetura_file=$cobertura_main_file"
 
 if [ ! -z $aut_arguments ]       
 then
-   cmd="$cmd -a $aut_arguments"   
+   cmd="$cmd -Paut_arguments=$aut_arguments"
 fi
 
 if [ ! -z $aut_arguments2 ]       
 then
-   cmd="$cmd:$aut_arguments2"   
+   cmd="$cmd:$aut_arguments2"
 fi
-
-if $reg_title_match; then
-   cmd="$cmd -r"
-fi 
 
 #----------------------
 # Execute replay

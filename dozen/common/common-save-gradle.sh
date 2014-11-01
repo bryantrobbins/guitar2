@@ -31,7 +31,7 @@ db_id=$3
 #--------------
 # Save suite-level artifacts
 #--------------
-exec_cmd "$cmd_save -Paut_efg_file=$aut_efg_file -Pdb_id=$db_id -Psuite_id=$suite_id -Paut_gui_file=$aut_gui_file -Paut_ripper_coverage_file=$ripper_coverage_dir/cobertura_ripper.ser saveSuiteFiles"
+exec_cmd "$cmd_save -Paut_efg_file=$aut_efg_file -Pdb_id=$db_id -Psuite_id=$suite_id -Paut_gui_file=$aut_gui_file -Paut_coverage_file=$ripper_coverage_dir/cobertura_ripper.ser saveSuiteFiles"
 
 #--------------
 # Save TC-level artifacts

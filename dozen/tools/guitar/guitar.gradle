@@ -6,7 +6,7 @@ def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
 
 // Ripper args
 def tmp_home_val = hasProperty('tmp_home') ? tmp_home : ''
-def cobertura_ripping_file_val = hasProperty('cobertura_ripping_file') ? cobertura_ripping_file : ''
+def cobertura_file_val = hasProperty('cobertura_file') ? cobertura_file : ''
 def aut_bin_val = hasProperty('aut_bin') ? aut_bin : ''
 def aut_inst_val = hasProperty('aut_inst') ? aut_inst : ''
 def aut_mainclass_val = hasProperty('aut_mainclass') ? aut_mainclass : ''
@@ -26,7 +26,7 @@ def testcases_dir_val = hasProperty('testcases_dir') ? testcases_dir : ''
 // Additional save args
 def db_id_val = hasProperty('db_id') ? db_id : ''
 def suite_id_val = hasProperty('suite_id') ? suite_id : ''
-def aut_ripper_coverage_file_val = hasProperty('aut_ripper_coverage_file') ? aut_ripper_coverage_file : ''
+def aut_coverage_file_val = hasProperty('aut_coverage_file') ? aut_ripper_coverage_file : ''
 def test_case_file_val = hasProperty('test_case_file') ? test_case_file : ''
 
 configurations.all {
@@ -70,7 +70,7 @@ task rip(type: JavaExec) {
 	minHeapSize "64m"
 	maxHeapSize "768m"
 	systemProperty "user.home", tmp_home_val
-	systemProperty "net.sourceforge.cobertura.datafile", cobertura_ripping_file_val
+	systemProperty "net.sourceforge.cobertura.datafile", cobertura_file_val
 	systemProperty "log4j.configuration", "log/guitar-clean.glc"
 	args "-c", aut_mainclass_val, "-g", aut_gui_file_val, "-i", aut_initial_waiting_time_val, "-cf", aut_configuration_file_val, "-d", delay_val, "-a", aut_arguments_val
 }
@@ -81,9 +81,9 @@ task replay(type: JavaExec) {
 	minHeapSize "64m"
 	maxHeapSize "768m"
 	systemProperty "user.home", tmp_home_val
-	systemProperty "net.sourceforge.cobertura.datafile", cobertura_ripping_file_val
+	systemProperty "net.sourceforge.cobertura.datafile", cobertura_file_val
 	systemProperty "log4j.configuration", "log/guitar-clean.glc"
-	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, aut_initial_waiting_time_val -d $aut_replay_delay -cf $aut_configuration_file -to $aut_replay_timeout -d $aut_replay_delay -so $aut_replay_step_timeout -tdi $testId -tdd $dbId -tdh $testdataHost -tdp $testdataPort"
+	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "-tdd", db_id_val, "-tdh", "mongo", "-tdp", "27017"
 }
 
 task convert(type: JavaExec) {
