@@ -33,6 +33,7 @@ import edu.umd.cs.guitar.model.GComponent;
 import edu.umd.cs.guitar.model.GUITARConstants;
 import edu.umd.cs.guitar.model.GWindow;
 import edu.umd.cs.guitar.model.IO;
+import edu.umd.cs.guitar.model.XMLHandler;
 import edu.umd.cs.guitar.model.data.AttributesType;
 import edu.umd.cs.guitar.model.data.EFG;
 import edu.umd.cs.guitar.model.data.EventType;
@@ -114,16 +115,28 @@ public class Replayer {
      * Object-based Constructor
      */
 
-    public Replayer(TestCase tc, GUIStructure guiStructure, EFG efg,
-                    Document doc) throws
-            ParserConfigurationException {
+    public Replayer(TestCase tc, GUIStructure guiStructure, EFG efg) throws
+            ParserConfigurationException, IOException, SAXException {
         super();
         this.tc = tc;
         guiStructureAdapter = new GUIStructureWrapper(guiStructure);
         this.efg = efg;
-        docGUI = doc;
         sDataPath = null;
         useImage = false;
+
+        // Need to parse GUI Structure
+        // Write GUIStructure to temp file
+        File tempFile = File.createTempFile("temp_gui", ".dat");
+        XMLHandler xmlHandler = new XMLHandler();
+        xmlHandler.writeObjToFile(guiStructure, tempFile.getAbsolutePath());
+
+        DocumentBuilderFactory domFactory = DocumentBuilderFactory
+                .newInstance();
+        domFactory.setNamespaceAware(true);
+        DocumentBuilder builder = domFactory.newDocumentBuilder();
+
+        // Parse and store
+        docGUI = builder.parse(tempFile.getAbsolutePath());
     }
 
     /**
@@ -533,7 +546,7 @@ public class Replayer {
     replayerWaitForWindow(String sWindowTitle)
             throws IOException {
         /*
-		 * This is a blocking call. Waits until window appears. Uses a regex
+         * This is a blocking call. Waits until window appears. Uses a regex
 		 * based match if specified in the command line.
 		 */
         GWindow gWindowByImage = null;
