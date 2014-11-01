@@ -84,7 +84,7 @@ task rip(type: JavaExec) {
 
 task replay(type: JavaExec) {
 	classpath configurations.replayer
-	main = 'edu.umd.cs.guitar.replayer.JFCRReplayerMain'
+	main = 'edu.umd.cs.guitar.replayer.JFCReplayerMain'
 	minHeapSize "64m"
 	maxHeapSize "768m"
 	systemProperty "user.home", tmp_home_val
