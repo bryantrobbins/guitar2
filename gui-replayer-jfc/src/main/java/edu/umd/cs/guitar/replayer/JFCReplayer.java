@@ -90,7 +90,9 @@ public class JFCReplayer {
         GUITARLog.addFileAppender(JFCReplayerConfiguration.LOG_FILE);
 
         // Get objects from TestDataManager
-        TestDataManager tdm = new TestDataManager();
+        TestDataManager tdm = new TestDataManager(JFCReplayerConfiguration
+                .TESTDATA_HOST, JFCReplayerConfiguration.TESTDATA_PORT,
+                JFCReplayerConfiguration.TESTDATA_DB_ID);
 
         GUIStructure guiStructure = (GUIStructure)
                 tdm.getArtifactByCategoryAndOwnerId(ArtifactCategory
