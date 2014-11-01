@@ -28,5 +28,10 @@
 			<artifactId>cobertura</artifactId>
 			<version>1.9.4.1</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>edu.umd.cs.guitar</groupId>
+            <artifactId>tool-testdata</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
