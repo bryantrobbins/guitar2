@@ -38,7 +38,7 @@ echo "*** Replaying ***"
 #--------------------------
 # Parameter check
 #--------------------------
-if [ $# -lt 5 ]
+if [ $# -lt 3 ]
 then
    echo "Usage: $0 <AUT name> <dbId> <testId>"
    exit 1
