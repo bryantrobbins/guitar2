@@ -50,19 +50,6 @@ public class JFCReplayerConfiguration extends GReplayerConfiguration {
             // + File.separator +
             "configuration.xml";
 
-    // GUITAR runtime parameters
-    @Option(name = "-g", usage = "<REQUIRED> GUI file path",
-            aliases = "--gui-file")
-    static String GUI_FILE = null;
-
-    @Option(name = "-e", usage = "<REQUIRED> EFG file path",
-            aliases = "--efg-file")
-    static String EFG_FILE = null;
-
-    @Option(name = "-t", usage = "<REQUIRED> testcase file path",
-            aliases = "--testcase-file")
-    static String TESTCASE = null;
-
     @Option(name = "-gs", usage = "gui state file path",
             aliases = "--gui-state")
     static String GUI_STATE_FILE = "GUITAR-Default.STA";
