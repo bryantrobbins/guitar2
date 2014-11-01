@@ -99,4 +99,21 @@ public class JFCReplayerConfiguration extends GReplayerConfiguration {
 
 	@Option(name = "-ts", usage = "automatically searching and perform terminal button to fully terminate the test case", aliases = "--terminal-search")
 	public static boolean TERMINAL_SEARCH = false;
+
+    @Option(name = "-tdi", usage = "testdata manager test id to be replayed",
+            aliases = "--testdata-test-id")
+    public static String TESTDATA_TEST_ID = "";
+
+    @Option(name = "-tdd", usage = "testdata manager db id to use",
+            aliases = "--testdata-db-id")
+    public static String TESTDATA_DB_ID = "";
+
+    @Option(name = "-tdh", usage = "testdata manager host to use",
+            aliases = "--testdata-host")
+    public static String TESTDATA_HOST = "";
+
+    @Option(name = "-tdp", usage = "testdata manager port to use",
+            aliases = "--testdata-port")
+    public static String TESTDATA_PORT = "";
+
 }

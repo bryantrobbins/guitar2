@@ -4,6 +4,7 @@ import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.ArtifactProcessor;
 import edu.umd.cs.guitar.main.TestDataManager;
 import edu.umd.cs.guitar.processors.guitar.CoverageProcessor;
+import edu.umd.cs.guitar.processors.guitar.DocumentProcessor;
 import edu.umd.cs.guitar.processors.guitar.EFGProcessor;
 import edu.umd.cs.guitar.processors.guitar.GUIProcessor;
 import org.apache.commons.cli.BasicParser;
@@ -78,6 +79,7 @@ public final class SaveSuiteInput {
         // Build processors for these objects
         ArtifactProcessor efgProc = new EFGProcessor();
         ArtifactProcessor guiProc = new GUIProcessor();
+        ArtifactProcessor docProc = new DocumentProcessor();
         ArtifactProcessor covProc =
                 new CoverageProcessor(testDataManager.getDb());
 
@@ -95,6 +97,10 @@ public final class SaveSuiteInput {
         procOptions = new HashMap<String, String>();
         procOptions.put(GUIProcessor.FILE_PATH_OPTION, cmd.getOptionValue("g"));
         testDataManager.saveArtifact(ArtifactCategory.SUITE_INPUT, guiProc,
+                procOptions, suiteId);
+
+        // Store the GUI document
+        testDataManager.saveArtifact(ArtifactCategory.SUITE_INPUT, docProc,
                 procOptions, suiteId);
 
         // Store the ripper coverage
