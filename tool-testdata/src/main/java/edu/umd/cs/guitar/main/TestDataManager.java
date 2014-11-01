@@ -232,7 +232,7 @@ public final class TestDataManager {
         String dataJson = (String) db
                 .getCollection(TestDataManagerCollections.ARTIFACTS)
                 .findOne(query).get(TestDataManagerKeys.ARTIFACT_DATA);
-
+        logger.info("The json is :" + dataJson);
         return processor.objectFromJson(dataJson);
     }
 
