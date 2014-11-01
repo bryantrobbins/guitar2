@@ -183,8 +183,7 @@ public class JFCReplayer {
                  * Set path for reading artifacts. Currently this is created
 				 * only for the "-m" case. It can be used for other cases too.
 				 */
-                String sDataPath = JFCReplayerConfiguration.GUI_FILE
-                        + "." + "data/";
+                String sDataPath = ".data/";
                 replayer.setDataPath(sDataPath);
 
                 File file = new File(sDataPath);
@@ -247,21 +246,6 @@ public class JFCReplayer {
 
         if (JFCReplayerConfiguration.MAIN_CLASS == null) {
             System.err.println("missing '-c' argument");
-            isPrintUsage = true;
-        }
-
-        if (JFCReplayerConfiguration.GUI_FILE == null) {
-            System.err.println("missing '-g' argument");
-            isPrintUsage = true;
-        }
-
-        if (JFCReplayerConfiguration.EFG_FILE == null) {
-            System.err.println("missing '-e' argument");
-            isPrintUsage = true;
-        }
-
-        if (JFCReplayerConfiguration.TESTCASE == null) {
-            System.err.println("missing '-t' argument");
             isPrintUsage = true;
         }
 
