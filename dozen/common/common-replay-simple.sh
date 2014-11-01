@@ -38,14 +38,15 @@ echo "*** Replaying ***"
 #--------------------------
 # Parameter check
 #--------------------------
-if [ $# -lt 3 ]
+if [ $# -lt 4 ]
 then
-   echo "Usage: $0 <AUT name> <dbId> <testId>"
+   echo "Usage: $0 <AUT name> <dbId> <suiteId> <testId>"
    exit 1
 fi
 
 dbId=$2
-testId=$3
+suiteId=$3
+testId=$4
 
 #--------------------------
 # Script configuration
@@ -105,7 +106,7 @@ local_log_file=$model_dir/$testname.log
 local_oracle_file=$model_dir/$testname.orc 
 local_LOG_file=$model_dir/$testname.LOG
 
-cmd="gradle -b $guitar_dir/guitar.gradle replay -Paut_mainclass=$aut_mainclass -Plog_file=$local_LOG_file -Poracle_file=$local_oracle_file -Paut_initial_waiting_time=$aut_initial_waitting_time -Pdelay=$aut_replay_delay -Paut_configuration_file=$aut_configuration_file -Paut_replay_timeout=$aut_replay_timeout -Paut_replay_step_timeout=$aut_replay_step_timeout -Ptest_id=$testId -Pdb_id=$dbId -Ptmp_home=$tmp_home -Pcobetura_file=$cobertura_main_file"
+cmd="gradle -b $guitar_dir/guitar.gradle replay -Paut_mainclass=$aut_mainclass -Plog_file=$local_LOG_file -Poracle_file=$local_oracle_file -Paut_initial_waiting_time=$aut_initial_waitting_time -Pdelay=$aut_replay_delay -Paut_configuration_file=$aut_configuration_file -Paut_replay_timeout=$aut_replay_timeout -Paut_replay_step_timeout=$aut_replay_step_timeout -Ptest_id=$testId -Psuite_id=$suiteId -Pdb_id=$dbId -Ptmp_home=$tmp_home -Pcobetura_file=$cobertura_main_file"
 
 if [ ! -z $aut_arguments ]       
 then

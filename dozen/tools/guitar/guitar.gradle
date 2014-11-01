@@ -90,7 +90,7 @@ task replay(type: JavaExec) {
 	systemProperty "user.home", tmp_home_val
 	systemProperty "net.sourceforge.cobertura.datafile", cobertura_file_val
 	systemProperty "log4j.configuration", "log/guitar-clean.glc"
-	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "-tdd", db_id_val, "-tdh", "mongo", "-tdp", "27017"
+	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "-tds", suite_id_val, "-tdd", db_id_val, "-tdh", "mongo", "-tdp", "27017"
 }
 
 task convert(type: JavaExec) {
