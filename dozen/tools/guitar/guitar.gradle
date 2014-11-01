@@ -29,6 +29,13 @@ def suite_id_val = hasProperty('suite_id') ? suite_id : ''
 def aut_coverage_file_val = hasProperty('aut_coverage_file') ? aut_ripper_coverage_file : ''
 def test_case_file_val = hasProperty('test_case_file') ? test_case_file : ''
 
+// Additional replayer args
+def log_file_val = hasProperty('log_file') ? log_file : ''
+def oracle_file_val = hasProperty('oracle_file') ? oracle_file : ''
+def aut_replay_timeout_val = hasProperty('aut_replay_timeout') ? aut_replay_timeout : ''
+def aut_replay_step_timeout_val = hasProperty('aut_replay_step_timeout') ? aut_replay_step_timeout : ''
+def test_id_val = hasProperty('test_id') ? test_id : ''
+
 configurations.all {
     // check for updates every build
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
