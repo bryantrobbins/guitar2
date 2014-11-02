@@ -8,9 +8,9 @@ import edu.umd.cs.guitar.artifacts.ArtifactProcessor;
 import edu.umd.cs.guitar.util.MongoUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by bryan on 10/4/14.
@@ -31,12 +31,6 @@ public final class TestDataManager {
      * The DB instance for this Manager.
      */
     private DB db;
-
-    /**
-     * Used to provide a sequence of unique IDs for creating tests,
-     * suites, artifacts (shared across all; ensures unique IDs used in DB).
-     */
-    private static AtomicLong nextId = new AtomicLong();
 
     /**
      * Default constructor. Uses localhost:27017/dbname, where
@@ -89,7 +83,7 @@ public final class TestDataManager {
      * @return unique String
      */
     public String generateId() {
-        return "" + nextId.incrementAndGet();
+        return ObjectId.get().toString();
     }
 
     /**
