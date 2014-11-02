@@ -256,7 +256,8 @@ public final class TestDataManager {
         BasicDBObject query = new BasicDBObject()
                 .append(TestDataManagerKeys.ARTIFACT_CATEGORY,
                         category.getKey())
-                .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, ownerId);
+                .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, ownerId)
+                .append(TestDataManagerKeys.ARTIFACT_TYPE, processor.getKey());
 
         String id = (String) db.getCollection(TestDataManagerCollections
                 .ARTIFACTS)
