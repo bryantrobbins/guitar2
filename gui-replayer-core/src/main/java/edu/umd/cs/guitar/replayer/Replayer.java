@@ -128,6 +128,11 @@ public class Replayer {
         // Need to parse GUI Structure
         // Write GUIStructure to temp file
         File tdir = new File("tmpdir");
+        if (!tdir.mkdir()) {
+            GUITARLog.log.error("Could not make temp dir for gui xml parsing " +
+                    "files");
+        }
+
         tdir.deleteOnExit();
 
         File tempFile = File.createTempFile("temp_gui", ".dat",
