@@ -115,12 +115,12 @@ public class Replayer {
      * Object-based Constructor
      */
 
-    public Replayer(TestCase tc, GUIStructure guiStructure, EFG efg) throws
+    public Replayer(TestCase tc, GUIStructure guiStructure, EFG efgVal) throws
             ParserConfigurationException, IOException, SAXException {
         super();
         this.tc = tc;
         guiStructureAdapter = new GUIStructureWrapper(guiStructure);
-        this.efg = efg;
+        this.efg = efgVal;
         sDataPath = null;
         useImage = false;
 
@@ -343,6 +343,7 @@ public class Replayer {
 
         // Lookup window for widget/event
         String sWindowTitle = getWindowName(sWidgetID);
+        log.info("sWidgetID: " + sWidgetID);
         if (sWindowTitle == null) {
             GUITARLog.log.error("Step Event ID = " + sEventID
                     + ". Unable to locate window for widget");
@@ -488,9 +489,9 @@ public class Replayer {
 			 * must
 			 * check.
 			 */
-            GUITARLog.log.error(e);
+            GUITARLog.log.error("Error in XPath Expression", e);
         }
-
+        log.info("Returning window name of " + sWindowName);
         return sWindowName;
     }
 
