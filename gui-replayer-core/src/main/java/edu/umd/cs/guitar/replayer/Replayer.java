@@ -137,6 +137,7 @@ public class Replayer {
 
         // Parse and store
         docGUI = builder.parse(tempFile.getAbsolutePath());
+        log.info(docGUI.toString());
     }
 
     /**
