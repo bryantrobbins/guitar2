@@ -226,8 +226,6 @@ public final class TestDataManager {
         String dataJson = (String) db
                 .getCollection(TestDataManagerCollections.ARTIFACTS)
                 .findOne(query).get(TestDataManagerKeys.ARTIFACT_DATA);
-        logger.info("The json is:" + dataJson);
-        logger.info("The artifact id is:" + artifactId);
         return processor.objectFromJson(dataJson);
     }
 
