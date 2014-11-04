@@ -481,6 +481,9 @@ public class Replayer {
             result = expr.evaluate(docGUI, XPathConstants.NODESET);
             nodes = (NodeList) result;
 
+            GUITARLog.log.info("There are " + nodes.getLength() + " matching " +
+                    "nodes");
+
             if (nodes.getLength() > 0) {
                 sWindowName = nodes.item(0).getNodeValue();
             }
