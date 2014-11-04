@@ -136,7 +136,6 @@ public class Replayer {
         // Parse and store
         docGUI = builder.parse(tempFile.getAbsolutePath());
         GUITARLog.log.info(docGUI.getDocumentElement() == null);
-        log.info(docGUI.toString());
     }
 
     /**
@@ -475,6 +474,9 @@ public class Replayer {
                             + "\"]]/Window/Attributes/Property[Name=\""
                             + GUITARConstants.TITLE_TAG_NAME +
                             "\"]/Value/text()";
+
+            GUITARLog.log.info("The xpath is " + xpathExpression);
+
             expr = xpath.compile(xpathExpression);
             result = expr.evaluate(docGUI, XPathConstants.NODESET);
             nodes = (NodeList) result;
