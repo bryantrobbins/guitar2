@@ -127,8 +127,7 @@ public class Replayer {
         // Need to parse GUI Structure
         // Write GUIStructure to temp file
         File tempFile = File.createTempFile("temp_gui", ".dat");
-        XMLHandler xmlHandler = new XMLHandler();
-        xmlHandler.writeObjToFile(guiStructure, tempFile.getAbsolutePath());
+        IO.writeObjToFile(guiStructure, tempFile.getAbsolutePath());
 
         DocumentBuilderFactory domFactory = DocumentBuilderFactory
                 .newInstance();
