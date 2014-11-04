@@ -127,8 +127,15 @@ public class Replayer {
 
         // Need to parse GUI Structure
         // Write GUIStructure to temp file
-        File tempFile = File.createTempFile("temp_gui", ".dat");
+        File tdir = new File("tmpdir");
+        tdir.deleteOnExit();
+
+        File tempFile = File.createTempFile("temp_gui", ".dat",
+                tdir);
         IO.writeObjToFile(guiStructure, tempFile.getAbsolutePath());
+
+        GUITARLog.log.info("Temp file created at: "
+                + tempFile.getAbsolutePath());
 
         DocumentBuilderFactory domFactory = DocumentBuilderFactory
                 .newInstance();
