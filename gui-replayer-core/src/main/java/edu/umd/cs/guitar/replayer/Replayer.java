@@ -123,6 +123,8 @@ public class Replayer {
         sDataPath = null;
         useImage = false;
 
+        GUITARLog.log.info("GUI count is: " + guiStructure.getGUI().size());
+
         // Need to parse GUI Structure
         // Write GUIStructure to temp file
         File tempFile = File.createTempFile("temp_gui", ".dat");

@@ -34,5 +34,5 @@ docker run -d --name jenkins --volumes-from cuadata --link nexus:nexus --link mo
 for i in `seq 1 $nslave`;
 do
   echo $i
-  docker run -d --volumes-from cuadata --name slave-$i --link jenkins:jenkins --link nexus:nexus --link mongo:mongo bryantrobbins/jslave
+  docker run -d --volumes-from cuadata -P --name slave-$i --link jenkins:jenkins --link nexus:nexus --link mongo:mongo bryantrobbins/jslave
 done

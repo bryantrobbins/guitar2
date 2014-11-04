@@ -38,6 +38,7 @@ public class GUIProcessorTest {
 
         opts.put(GUIProcessor.FILE_PATH_OPTION, url.getPath());
         GUIStructure guiStructure = gp.objectFromOptions(opts);
+        System.out.println(guiStructure.getGUI().size());
 
         // Need to parse GUI Structure
         // Write GUIStructure to temp file
