@@ -49,6 +49,7 @@ import edu.umd.cs.guitar.replayer.monitor.GTestStepEventArgs;
 import edu.umd.cs.guitar.replayer.monitor.TestStepEndEventArgs;
 import edu.umd.cs.guitar.replayer.monitor.TestStepStartEventArgs;
 import edu.umd.cs.guitar.util.GUITARLog;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -128,15 +129,16 @@ public class Replayer {
         // Need to parse GUI Structure
         // Write GUIStructure to temp file
         File tdir = new File("tmpdir");
+        FileUtils.deleteDirectory(tdir);
+
         if (!tdir.mkdir()) {
             GUITARLog.log.error("Could not make temp dir for gui xml parsing " +
                     "files");
         }
 
-        tdir.deleteOnExit();
-
         File tempFile = File.createTempFile("temp_gui", ".dat",
                 tdir);
+
         IO.writeObjToFile(guiStructure, tempFile.getAbsolutePath());
 
         GUITARLog.log.info("Temp file created at: "
