@@ -33,7 +33,6 @@ import edu.umd.cs.guitar.model.GComponent;
 import edu.umd.cs.guitar.model.GUITARConstants;
 import edu.umd.cs.guitar.model.GWindow;
 import edu.umd.cs.guitar.model.IO;
-import edu.umd.cs.guitar.model.XMLHandler;
 import edu.umd.cs.guitar.model.data.AttributesType;
 import edu.umd.cs.guitar.model.data.EFG;
 import edu.umd.cs.guitar.model.data.EventType;
@@ -136,6 +135,7 @@ public class Replayer {
 
         // Parse and store
         docGUI = builder.parse(tempFile.getAbsolutePath());
+        GUITARLog.log.info(docGUI.getDocumentElement() == null);
         log.info(docGUI.toString());
     }
 

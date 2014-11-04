@@ -120,6 +120,14 @@ public class JFCReplayer {
                 throw new FileNotFoundException("Testcase file not found");
             }
 
+            if (efg == null) {
+                GUITARLog.log.error("EFG not found");
+            }
+
+            if (guiStructure == null) {
+                GUITARLog.log.error("GUI Structure not found");
+            }
+
             replayer = new Replayer(tc, guiStructure, efg);
             JFCReplayerMonitor jMonitor =
                     new JFCReplayerMonitor(JFCReplayerConfiguration.MAIN_CLASS);
