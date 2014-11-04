@@ -113,11 +113,6 @@ then
    cmd="$cmd -Paut_arguments=$aut_arguments"
 fi
 
-if [ ! -z $aut_arguments2 ]       
-then
-   cmd="$cmd:$aut_arguments2"
-fi
-
 #----------------------
 # Execute replay
 #----------------------

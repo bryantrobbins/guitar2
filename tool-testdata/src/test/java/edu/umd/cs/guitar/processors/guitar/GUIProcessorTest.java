@@ -72,8 +72,7 @@ public class GUIProcessorTest {
         Object result = expr.evaluate(docGUI2, XPathConstants.NODESET);
         NodeList nodes = (NodeList) result;
         Assert.assertEquals(1, nodes.getLength());
-        Assert.assertNotNull(nodes.item(0).getNodeValue());
+        Assert.assertEquals("JabRef", nodes.item(0).getNodeValue());
     }
-
 
 }
