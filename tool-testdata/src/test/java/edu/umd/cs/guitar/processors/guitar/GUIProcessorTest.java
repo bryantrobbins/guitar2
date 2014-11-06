@@ -2,6 +2,7 @@ package edu.umd.cs.guitar.processors.guitar;
 
 
 import com.google.common.io.Resources;
+import edu.umd.cs.guitar.main.TestDataManager;
 import edu.umd.cs.guitar.model.GUITARConstants;
 import edu.umd.cs.guitar.model.IO;
 import edu.umd.cs.guitar.model.data.GUIStructure;
@@ -32,17 +33,30 @@ public class GUIProcessorTest {
             ParserConfigurationException, XPathExpressionException {
 
         GUIProcessor gp = new GUIProcessor();
+        TestDataManager tdm = new TestDataManager("localhost", "27017",
+                "amalga_jenkins-generate-sl2-52");
+
+
         Map<String, String> opts = new HashMap<String, String>();
         URL url = Resources.getResource("JabRef.GUI");
-
-
         opts.put(GUIProcessor.FILE_PATH_OPTION, url.getPath());
+
         GUIStructure guiStructure = gp.objectFromOptions(opts);
+        /**
+         *
+         GUIStructure guiStructure = (GUIStructure) tdm
+         .getArtifactByCategoryAndOwnerId
+         (ArtifactCategory.SUITE_INPUT,
+         "amalga_JabRef_sq_l_2", gp);
+         */
+
         System.out.println(guiStructure.getGUI().size());
 
         // Need to parse GUI Structure
         // Write GUIStructure to temp file
         File tempFile = File.createTempFile("temp_gui", ".dat");
+        System.out.println(tempFile.getAbsolutePath());
+
         IO.writeObjToFile(guiStructure, tempFile.getAbsolutePath());
 
         DocumentBuilderFactory domFactory = DocumentBuilderFactory

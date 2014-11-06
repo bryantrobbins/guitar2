@@ -251,6 +251,15 @@ public final class TestDataManager {
                 .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, ownerId)
                 .append(TestDataManagerKeys.ARTIFACT_TYPE, processor.getKey());
 
+        int count = db.getCollection(TestDataManagerCollections.ARTIFACTS)
+                .find(query).size();
+
+        if (count != 1) {
+            logger.warn("When trying to get one artifact, " +
+                    "there are " + count + "" +
+                    " matching");
+        }
+
         String id = (String) db.getCollection(TestDataManagerCollections
                 .ARTIFACTS)
                 .findOne(query).get(TestDataManagerKeys.ARITFACT_ID);

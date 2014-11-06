@@ -36,7 +36,7 @@ public class LogProcessor extends GsonFileProcessor<TextObject> {
 
     @Override
     public String getKey() {
-        return "replayLog";
+        return "textLog";
     }
 
     @Override

@@ -37,7 +37,7 @@ public class GUIProcessor extends GsonFileProcessor<GUIStructure> {
 
     @Override
     public String getKey() {
-        return "replayLog";
+        return "guiModel";
     }
 
     @Override
