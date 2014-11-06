@@ -255,9 +255,9 @@ public final class TestDataManager {
                 .find(query).size();
 
         if (count != 1) {
-            logger.warn("When trying to get one artifact, " +
-                    "there are " + count + "" +
-                    " matching");
+            logger.warn("When trying to get one artifact, "
+                   +  "there are " + count
+                   +  " matching");
         }
 
         String id = (String) db.getCollection(TestDataManagerCollections
