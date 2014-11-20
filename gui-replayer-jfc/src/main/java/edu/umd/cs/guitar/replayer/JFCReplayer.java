@@ -98,13 +98,13 @@ public class JFCReplayer {
                 tdm.getArtifactByCategoryAndOwnerId(ArtifactCategory
                                 .SUITE_INPUT,
                         JFCReplayerConfiguration.TESTDATA_SUITE_ID,
-                        new GUIProcessor());
+                        new GUIProcessor(tdm.getDb()));
 
         EFG efg = (EFG)
                 tdm.getArtifactByCategoryAndOwnerId(ArtifactCategory
                                 .SUITE_INPUT,
                         JFCReplayerConfiguration.TESTDATA_SUITE_ID,
-                        new EFGProcessor());
+                        new EFGProcessor(tdm.getDb()));
 
         TestCase tc = (TestCase)
                 tdm.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT,
