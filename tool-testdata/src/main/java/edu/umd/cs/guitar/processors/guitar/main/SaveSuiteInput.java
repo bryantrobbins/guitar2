@@ -76,8 +76,8 @@ public final class SaveSuiteInput {
                 cmd.getOptionValue("d"));
 
         // Build processors for these objects
-        ArtifactProcessor efgProc = new EFGProcessor();
-        ArtifactProcessor guiProc = new GUIProcessor();
+        ArtifactProcessor efgProc = new EFGProcessor(testDataManager.getDb());
+        ArtifactProcessor guiProc = new GUIProcessor(testDataManager.getDb());
         ArtifactProcessor covProc =
                 new CoverageProcessor(testDataManager.getDb());
 

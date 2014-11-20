@@ -1,11 +1,15 @@
 package edu.umd.cs.guitar.processors.guitar;
 
 
+import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import edu.umd.cs.guitar.main.TestDataManager;
 import edu.umd.cs.guitar.model.GUITARConstants;
 import edu.umd.cs.guitar.model.IO;
+import edu.umd.cs.guitar.model.XMLHandler;
 import edu.umd.cs.guitar.model.data.GUIStructure;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.DifferenceListener;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -28,28 +32,61 @@ import java.util.Map;
 
 public class GUIProcessorTest {
 
+    private void xmlCompare(URL expected, URL actual) throws IOException,
+            SAXException {
+        String expectedString = Resources.toString(expected, Charsets.UTF_8);
+        String actualString = Resources.toString(actual, Charsets.UTF_8);
+
+        DifferenceListener mine = new
+                IgnoreTimestampAndVersionDifferenceListener();
+        Diff diff = new Diff(expectedString, actualString);
+        diff.overrideDifferenceListener(mine);
+        Assert.assertTrue("XML is not similar " + diff.toString(),
+                diff.similar());
+    }
+
+    @Test
+    public void testCompare() throws XPathExpressionException,
+            ParserConfigurationException, IOException, SAXException {
+        TestDataManager tdm = new TestDataManager("localhost", "37017");
+        GUIProcessor gp = new GUIProcessor(tdm.getDb());
+
+        Map<String, String> opts = new HashMap<String, String>();
+        URL url = Resources.getResource("JabRef.GUI");
+        opts.put(GUIProcessor.FILE_PATH_OPTION, url.getPath());
+
+        GUIStructure gReadRaw = (GUIStructure) IO.readObjFromFile(url.getPath(),
+                GUIStructure.class);
+        IO.writeObjToFile(gReadRaw, "rawFile.xml");
+
+        GUIStructure gReadProcessor = gp.objectFromOptions(opts);
+        IO.writeObjToFile(gReadProcessor, "processorFile.xml");
+
+        GUIStructure fromGson = gp.objectFromJson(gp.jsonFromObject(gReadRaw));
+        XMLHandler handler = new XMLHandler();
+        handler.writeObjToFile(fromGson, "gsonFile.xml");
+
+        // Compare original file to file from GUITAR's read
+        xmlCompare(url, new File("rawFile.xml").toURI().toURL());
+
+        // Compare original to processed from options
+        xmlCompare(url, new File("processorFile.xml").toURI().toURL());
+
+        // Compare original to json-and-back object
+        xmlCompare(url, new File("gsonFile.xml").toURI().toURL());
+    }
+
     @Test
     public void testDocParsing() throws IOException, SAXException,
             ParserConfigurationException, XPathExpressionException {
-
-        GUIProcessor gp = new GUIProcessor();
-        TestDataManager tdm = new TestDataManager("localhost", "27017",
-                "amalga_jenkins-generate-sl2-52");
-
+        TestDataManager tdm = new TestDataManager("localhost", "37017");
+        GUIProcessor gp = new GUIProcessor(tdm.getDb());
 
         Map<String, String> opts = new HashMap<String, String>();
         URL url = Resources.getResource("JabRef.GUI");
         opts.put(GUIProcessor.FILE_PATH_OPTION, url.getPath());
 
         GUIStructure guiStructure = gp.objectFromOptions(opts);
-        /**
-         *
-         GUIStructure guiStructure = (GUIStructure) tdm
-         .getArtifactByCategoryAndOwnerId
-         (ArtifactCategory.SUITE_INPUT,
-         "amalga_JabRef_sq_l_2", gp);
-         */
-
         System.out.println(guiStructure.getGUI().size());
 
         // Need to parse GUI Structure
@@ -89,5 +126,4 @@ public class GUIProcessorTest {
         Assert.assertEquals(1, nodes.getLength());
         Assert.assertEquals("JabRef", nodes.item(0).getNodeValue());
     }
-
 }
