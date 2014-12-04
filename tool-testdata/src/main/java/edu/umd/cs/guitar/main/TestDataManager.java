@@ -2,6 +2,8 @@ package edu.umd.cs.guitar.main;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.ArtifactProcessor;
@@ -10,6 +12,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -256,8 +260,8 @@ public final class TestDataManager {
 
         if (count != 1) {
             logger.warn("When trying to get one artifact, "
-                   +  "there are " + count
-                   +  " matching");
+                    + "there are " + count
+                    + " matching");
         }
 
         String id = (String) db.getCollection(TestDataManagerCollections
@@ -298,6 +302,26 @@ public final class TestDataManager {
         MongoUtils.removeAllItemsFromCollection(getDb(),
                 TestDataManagerCollections.idsInSuite(suiteId));
 
+    }
+
+    /**
+     * Returns the test ids in a given test suite.
+     *
+     * @param suiteId the suite id
+     * @return the list of test ids in the given suite
+     */
+    public List<String> getTestIdsInSuite(final String suiteId) {
+        DBCollection tests = db.getCollection(suiteId);
+
+        DBCursor curs = tests.find();
+
+        ArrayList<String> ret = new ArrayList<String>();
+
+        while (curs.hasNext()) {
+            Map<String, String> nextMap = curs.next().toMap();
+            ret.add(nextMap.get(TestDataManagerKeys.TEST_ID));
+        }
+        return ret;
     }
 
 }
