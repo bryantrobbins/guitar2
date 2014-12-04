@@ -63,3 +63,5 @@ source "$aut_scripts_dir/aut.utils.sh"
 globalRet=0
 
 cmd="gradle -b $guitar_dir/guitar.gradle replaySuite -Psuite_id=$suiteId -Pdb_id=$dbId"
+echo $cmd
+eval $cmd
