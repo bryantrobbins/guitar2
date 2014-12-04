@@ -70,7 +70,8 @@ dependencies {
     replayer group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
 		replayer files(aut_bin_val)
 		replayer files(aut_inst_val)
-		jenkins group: 'org.codehaus.groovy', name: 'groovy', version: '2.3.8'
+		compile 'org.codehaus.groovy:groovy-all:2.3.8'
+		compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
 }
 
 task hello << {
@@ -133,5 +134,5 @@ task saveTestCaseFiles(type: JavaExec) {
 
 task replaySuite (dependsOn: 'classes', type: JavaExec) {
     main = 'suiteReplay'
-    classpath = configurations.jenkins
+    classpath = sourceSets.main.runtimeClasspath
 }
