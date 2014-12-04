@@ -223,28 +223,39 @@ public class JenkinsClient {
         String urlBuild = "http://" + host + ":" + port + "/" + path + "/job/"
                 + jobName + "/build";
 
-        String payload = null;
+        StringBuffer payload = null;
 
         if (params != null) {
             // Build the Jenkins payload
-            payload = "{\"parameter\": [";
+            payload = new StringBuffer();
+            payload.append("{\"parameter\": [");
+
             boolean comma = false;
             for (Entry<String, String> pair : params.entrySet()) {
                 if (comma) {
-                    payload += ",";
+                    payload.append(",");
                 } else {
                     comma = true;
                 }
-                payload += "{\"name\": \"" + pair.getKey()
-                        + "\", \"value\": \"" + pair.getValue() + "\"}";
+                payload.append("{\"name\": \"");
+                payload.append(pair.getKey());
+                payload.append("\", \"value\": \"");
+                payload.append(pair.getValue());
+                payload.append("\"}");
             }
 
-            payload += "], \"\": \"\"}";
+            payload.append("], \"\": \"\"}");
             logger.debug(payload);
         }
 
+        String pString = null;
 
-        this.makeHttpRequest(urlBuild, payload);
+        if (payload != null) {
+            pString = payload.toString();
+        }
+
+
+        this.makeHttpRequest(urlBuild, pString);
     }
 
 
