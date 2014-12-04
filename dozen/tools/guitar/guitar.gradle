@@ -131,7 +131,7 @@ task saveTestCaseFiles(type: JavaExec) {
 	args "-h", "mongo", "-p", "27017", "-d", db_id_val, "-s", suite_id_val, "-t", test_case_file_val
 }
 
-task runScript (dependsOn: 'classes', type: JavaExec) {
+task replaySuite (dependsOn: 'classes', type: JavaExec) {
     main = 'replay-suite-jenkins'
     classpath = configurations.jenkins
 }
