@@ -1,5 +1,8 @@
 // ARGS: AUT_NAME, DB_ID, SUITE_ID
 
+import edu.umd.cs.guitar.util.JenkinsClient
+import edu.umd.cs.guitar.main.TestDataManager
+
 // Jenkins client
 def jenkinsClient = new JenkinsClient("jenkins", "8080", "", "admin", "amalga84go")
 
