@@ -9,7 +9,7 @@ def jenkinsClient = new JenkinsClient("jenkins", "8080", "", "admin", "amalga84g
 // TestDataManager
 def manager = new TestDataManager("mongo", "27017", args[1])
  
-for(String id : manager.getIdsInSuite(args[2])){
+for(String id : manager.getTestIdsInSuite(args[2])){
         
         // update/obtain job-specific params
         
