@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'groovy'
 
 // Dependency path arg
 def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
@@ -47,6 +48,7 @@ configurations {
 	generate_sl
 	save
   replayer
+  jenkins
 }
 
 repositories {
@@ -68,6 +70,7 @@ dependencies {
     replayer group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
 		replayer files(aut_bin_val)
 		replayer files(aut_inst_val)
+		jenkins group: 'org.codehaus.groovy', name: 'groovy', version: '2.3.8'
 }
 
 task hello << {
@@ -128,3 +131,7 @@ task saveTestCaseFiles(type: JavaExec) {
 	args "-h", "mongo", "-p", "27017", "-d", db_id_val, "-s", suite_id_val, "-t", test_case_file_val
 }
 
+task runScript (dependsOn: 'classes', type: JavaExec) {
+    main = 'replay-suite-jenkins'
+    classpath = configurations.jenkins
+}
