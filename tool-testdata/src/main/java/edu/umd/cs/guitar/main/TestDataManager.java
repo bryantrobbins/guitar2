@@ -311,7 +311,8 @@ public final class TestDataManager {
      * @return the list of test ids in the given suite
      */
     public List<String> getTestIdsInSuite(final String suiteId) {
-        DBCollection tests = db.getCollection(suiteId);
+        DBCollection tests = db.getCollection(
+                TestDataManagerCollections.idsInSuite(suiteId));
 
         DBCursor curs = tests.find();
 
