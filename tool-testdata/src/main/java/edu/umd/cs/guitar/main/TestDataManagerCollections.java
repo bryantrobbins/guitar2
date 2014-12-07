@@ -27,6 +27,11 @@ public final class TestDataManagerCollections {
     public static final String SUITES = "suites";
 
     /**
+     * Use this ID for the suites collection.
+     */
+    public static final String EXECUTIONS = "executions";
+
+    /**
      * Use this ID for the artifacts collection.
      */
     public static final String ARTIFACTS = "artifacts";

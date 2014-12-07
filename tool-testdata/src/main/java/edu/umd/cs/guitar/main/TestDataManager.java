@@ -144,6 +144,23 @@ public final class TestDataManager {
     }
 
     /**
+     * Create a new execution entry given a unique id for this test execution.
+     * id only needs to be unique across current DB instance.
+     *
+     * @param executionId the execution id
+     */
+    public void createNewExecution(final String executionId) {
+        // Create DBObject
+        BasicDBObject basicDBObject = new BasicDBObject()
+                .append(TestDataManagerKeys.EXECUTION_ID, executionId);
+
+        // Insert object in tests table
+        MongoUtils.addItemToCollection(db,
+                TestDataManagerCollections.EXECUTIONS, basicDBObject);
+    }
+
+
+    /**
      * Create a new test suite entry, returning a unique ID for the suite.
      *
      * @return the unique id of the test suite

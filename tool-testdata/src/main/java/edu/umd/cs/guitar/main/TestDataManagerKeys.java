@@ -25,6 +25,12 @@ public final class TestDataManagerKeys {
     public static final String SUITE_ID = "suiteId";
 
     /**
+     * Provides the key for EXECUTION_ID.
+     */
+    public static final String EXECUTION_ID = "exeuctionId";
+
+
+    /**
      * Provides the key for ARTIFACT_ID.
      */
     public static final String ARITFACT_ID = "artifactId";
