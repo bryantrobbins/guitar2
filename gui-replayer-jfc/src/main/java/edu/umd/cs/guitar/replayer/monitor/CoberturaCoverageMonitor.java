@@ -25,168 +25,184 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
+import net.sourceforge.cobertura.coveragedata.CoverageDataFileHandler;
 import net.sourceforge.cobertura.coveragedata.ProjectData;
 import edu.umd.cs.guitar.exception.GException;
-import edu.umd.cs.guitar.model.data.StepType;
 import edu.umd.cs.guitar.util.GUITARLog;
 
 /**
  * @author <a href="mailto:baonn@cs.umd.edu"> Bao N. Nguyen </a>
- * 
  */
 public class CoberturaCoverageMonitor extends GTestMonitor {
 
-	/**
-	 * 
-	 */
-	private static final String COVERAGE_FILE_EXT = "ser";
-	private static final String INIT_SER = "init" + "." + COVERAGE_FILE_EXT;
-	String sCoverageCleanFile;
-	String sCoverageMainFile;
-	String sCoverageOutputDir;
-	int counter = 0;
+    /**
+     *
+     */
+    private static final String COVERAGE_FILE_EXT = "ser";
+    private static final String INIT_SER = "init" + "." + COVERAGE_FILE_EXT;
+    public static final String MERGED_SER = "merged" + "." + COVERAGE_FILE_EXT;
 
-	/**
-	 * @param sCoverageOutputDir
-	 */
-	public CoberturaCoverageMonitor(String sCoverageCleanFile,
-			String sCoverageOutputDir) {
-		super();
+    private ProjectData combinedData;
+    String sCoverageCleanFile;
+    String sCoverageMainFile;
+    String sCoverageOutputDir;
+    int counter = 0;
 
-		this.sCoverageMainFile = System
-				.getProperty("net.sourceforge.cobertura.datafile");
+    /**
+     * @param sCoverageOutputDir
+     */
+    public CoberturaCoverageMonitor(String sCoverageCleanFile,
+                                    String sCoverageOutputDir) {
+        super();
 
-		this.sCoverageCleanFile = sCoverageCleanFile;
+        this.sCoverageMainFile = System
+                .getProperty("net.sourceforge.cobertura.datafile");
 
-		this.sCoverageOutputDir = sCoverageOutputDir;
+        this.sCoverageCleanFile = sCoverageCleanFile;
 
-	}
+        this.sCoverageOutputDir = sCoverageOutputDir;
 
-	@Override
-	public void afterStep(GTestStepEventArgs eStep) {
+        this.combinedData = CoverageDataFileHandler
+                .loadCoverageData(new File(sCoverageMainFile));
 
-		StepType step = eStep.getStep();
-		String sEventID = step.getEventId();
+    }
 
-		String type = step.isReachingStep() ? "r" : "m";
+    @Override
+    public void afterStep(GTestStepEventArgs eStep) {
 
-		String sStepCoverageFile = sCoverageOutputDir + File.separator
-				+ (counter++) + "." + type + "." + sEventID;
+        StepType step = eStep.getStep();
+        String sEventID = step.getEventId();
 
-		sStepCoverageFile += ("." + COVERAGE_FILE_EXT);
+        String type = step.isReachingStep() ? "r" : "m";
 
-		try {
-			ProjectData.saveGlobalProjectData();
-			copy(sCoverageMainFile, sStepCoverageFile);
-			copy(sCoverageCleanFile, sCoverageMainFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        String sStepCoverageFile = sCoverageOutputDir + File.separator
+                + (counter++) + "." + type + "." + sEventID;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * edu.umd.cs.guitar.replayer.monitor.GTestMonitor#beforeStep(edu.umd.cs
-	 * .guitar.replayer.monitor.TestStepStartEventArgs)
-	 */
-	@Override
-	public void beforeStep(GTestStepEventArgs step) {
+        sStepCoverageFile += ("." + COVERAGE_FILE_EXT);
 
-	}
+        try {
+            ProjectData.saveGlobalProjectData();
+            copy(sCoverageMainFile, sStepCoverageFile);
+            copy(sCoverageCleanFile, sCoverageMainFile);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * edu.umd.cs.guitar.replayer.monitor.GTestMonitor#exceptionHandler(edu.
-	 * umd.cs.guitar.exception.GException)
-	 */
-	@Override
-	public void exceptionHandler(GException e) {
-		// TODO Auto-generated method stub
+            // Merge this step into the combined coverage
+            ProjectData projectDataNew = CoverageDataFileHandler
+                    .loadCoverageData(new File(sStepCoverageFile));
 
-	}
+            if (projectDataNew != null)
+                combinedData.merge(projectDataNew);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see edu.umd.cs.guitar.replayer.monitor.GTestMonitor#init()
-	 */
-	@Override
-	public void init() {
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-		GUITARLog.log.debug("Creating coverage dir: " + sCoverageOutputDir);
-		new File(sCoverageOutputDir).mkdir();
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * edu.umd.cs.guitar.replayer.monitor.GTestMonitor#beforeStep(edu.umd.cs
+     * .guitar.replayer.monitor.TestStepStartEventArgs)
+     */
+    @Override
+    public void beforeStep(GTestStepEventArgs step) {
 
-		// File fCoverageMainFile = new File(sCoverageMainFile);
+    }
 
-		try {
-			// Force Cobertura to dump out data
-			GUITARLog.log.debug("Forcing Cobertura to dump out data.... ");
-			ProjectData.saveGlobalProjectData();
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * edu.umd.cs.guitar.replayer.monitor.GTestMonitor#exceptionHandler(edu.
+     * umd.cs.guitar.exception.GException)
+     */
+    @Override
+    public void exceptionHandler(GException e) {
+        // TODO Auto-generated method stub
 
-			GUITARLog.log.debug("Copying initial coverage file .... ");
-			copy(sCoverageMainFile, sCoverageOutputDir + File.separator
-					+ INIT_SER);
-			copy(sCoverageCleanFile, sCoverageMainFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see edu.umd.cs.guitar.replayer.monitor.GTestMonitor#term()
-	 */
-	@Override
-	public void term() {
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see edu.umd.cs.guitar.replayer.monitor.GTestMonitor#init()
+     */
+    @Override
+    public void init() {
 
-	/**
-	 * Copy and overwrite if needed
-	 * 
-	 * @param source
-	 * @param dest
-	 * @throws IOException
-	 */
-	private void copy(String source, String dest) throws IOException {
-		// FileInputStream in = null;
-		// FileOutputStream out = null;
-		FileChannel in = null;
-		FileChannel out = null;
-		try {
-			File fSrc = new File(source);
-			File fDest = new File(dest);
+        GUITARLog.log.debug("Creating coverage dir: " + sCoverageOutputDir);
+        new File(sCoverageOutputDir).mkdir();
 
-			// if (fDest.exists()) {
-			// fDest.delete();
-			// }
+        // File fCoverageMainFile = new File(sCoverageMainFile);
 
-			// in = new FileInputStream(fSrc);
-			// out = new FileOutputStream(fDest);
-			// // in.transferTo(0, in.size(), out);
-			//
-			// // Transfer bytes from in to out
-			// byte[] buf = new byte[1024];
-			// int len;
-			// while ((len = in.read(buf)) > 0) {
-			// out.write(buf, 0, len);
-			// }
+        try {
+            // Force Cobertura to dump out data
+            GUITARLog.log.debug("Forcing Cobertura to dump out data.... ");
+            ProjectData.saveGlobalProjectData();
 
-			in = new FileInputStream(fSrc).getChannel();
-			out = new FileOutputStream(fDest).getChannel();
-			in.transferTo(0, in.size(), out);
+            GUITARLog.log.debug("Copying initial coverage file .... ");
+            copy(sCoverageMainFile, sCoverageOutputDir + File.separator
+                    + INIT_SER);
+            copy(sCoverageCleanFile, sCoverageMainFile);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-		} finally {
-			if (in != null)
-				in.close();
-			if (out != null)
-				out.close();
-		}
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see edu.umd.cs.guitar.replayer.monitor.GTestMonitor#term()
+     */
+    @Override
+    public void term() {
+        // Write out the combined coverage
+        CoverageDataFileHandler.saveCoverageData(combinedData, new File(sCoverageOutputDir + File.separator
+                + MERGED_SER));
+    }
+
+    /**
+     * Copy and overwrite if needed
+     *
+     * @param source
+     * @param dest
+     * @throws IOException
+     */
+    private void copy(String source, String dest) throws IOException {
+        // FileInputStream in = null;
+        // FileOutputStream out = null;
+        FileChannel in = null;
+        FileChannel out = null;
+        try {
+            File fSrc = new File(source);
+            File fDest = new File(dest);
+
+            // if (fDest.exists()) {
+            // fDest.delete();
+            // }
+
+            // in = new FileInputStream(fSrc);
+            // out = new FileOutputStream(fDest);
+            // // in.transferTo(0, in.size(), out);
+            //
+            // // Transfer bytes from in to out
+            // byte[] buf = new byte[1024];
+            // int len;
+            // while ((len = in.read(buf)) > 0) {
+            // out.write(buf, 0, len);
+            // }
+
+            in = new FileInputStream(fSrc).getChannel();
+            out = new FileOutputStream(fDest).getChannel();
+            in.transferTo(0, in.size(), out);
+
+        } finally {
+            if (in != null)
+                in.close();
+            if (out != null)
+                out.close();
+        }
+    }
 }
