@@ -81,20 +81,6 @@ cobertura_main_file=$model_dir/$testId.ser
 # Replay
 #--------------------------
 
-# Setup java command line parameters
-aut_mainclass=$aut_mainclass
-log_file=$local_LOG_file
-oracle_file=$local_oracle_file
-aut_initial_waiting_time=$aut_initial_waitting_time
-delay=$aut_replay_delay
-aut_configuration_file=$aut_configuration_file
-aut_replay_timeout=$aut_replay_timeout
-aut_replay_step_timeout=$aut_replay_step_timeout
-test_id=$testId
-db_id=$dbId
-tmp_home=$tmp_home
-cobetura_file=$cobertura_main_file
-
 testname=$testId
 echo "*** Executing test $testname ***" 
 
@@ -105,6 +91,15 @@ sleep 1
 local_log_file=$model_dir/$testname.log
 local_oracle_file=$model_dir/$testname.orc 
 local_LOG_file=$model_dir/$testname.LOG
+
+# Setup java command line parameters
+log_file=$local_LOG_file
+oracle_file=$local_oracle_file
+aut_initial_waiting_time=$aut_initial_waitting_time
+delay=$aut_replay_delay
+test_id=$testId
+db_id=$dbId
+cobetura_file=$cobertura_main_file
 
 cmd="gradle -b $guitar_dir/guitar.gradle replay -Paut_mainclass=$aut_mainclass -Paut_bin=$aut_bin_dir -Paut_inst=$aut_inst_dir -Plog_file=$local_LOG_file -Poracle_file=$local_oracle_file -Paut_initial_waiting_time=$aut_initial_waitting_time -Pdelay=$aut_replay_delay -Paut_configuration_file=$aut_configuration_file -Paut_replay_timeout=$aut_replay_timeout -Paut_replay_step_timeout=$aut_replay_step_timeout -Ptest_id=$testId -Psuite_id=$suiteId -Pdb_id=$dbId -Ptmp_home=$tmp_home -Pcobetura_file=$cobertura_main_file"
 
