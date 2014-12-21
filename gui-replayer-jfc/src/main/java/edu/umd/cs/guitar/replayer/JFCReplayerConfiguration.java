@@ -124,7 +124,7 @@ public class JFCReplayerConfiguration extends GReplayerConfiguration {
     public static String TESTDATA_SUITE_ID = "";
 
     @Option(name = "-tde", usage = "testdata manager execution id to use",
-            aliases = "--testdata-db-id")
+            aliases = "--testdata-execution-id")
     public static String TESTDATA_EXECUTION_ID = "";
 
     @Option(name = "-tdd", usage = "testdata manager db id to use",
