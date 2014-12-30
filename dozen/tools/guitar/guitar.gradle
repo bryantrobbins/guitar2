@@ -36,7 +36,10 @@ def oracle_file_val = hasProperty('oracle_file') ? oracle_file : ''
 def aut_replay_timeout_val = hasProperty('aut_replay_timeout') ? aut_replay_timeout : ''
 def aut_replay_step_timeout_val = hasProperty('aut_replay_step_timeout') ? aut_replay_step_timeout : ''
 def test_id_val = hasProperty('test_id') ? test_id : ''
+def test_exec_val = hasProperty('exec_id') ? exec_id : ''
 def aut_name_val = hasProperty('aut_name') ? aut_name : ''
+def clean_coverage_file_val = hasProperty('clean_coverage_file') ? clean_coverage_file : ''
+def coverage_dir_val = hasProperty('coverage_dir') ? coverage_dir : ''
 
 configurations.all {
     // check for updates every build
@@ -98,7 +101,7 @@ task replay(type: JavaExec) {
 	systemProperty "user.home", tmp_home_val
 	systemProperty "net.sourceforge.cobertura.datafile", cobertura_file_val
 	systemProperty "log4j.configuration", "log/guitar-clean.glc"
-	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "-tds", suite_id_val, "-tdd", db_id_val, "-tdh", "mongo", "-tdp", "27017", "-a", aut_arguments_val
+	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "tde", test_exec_val"-tds", suite_id_val, "-tdd", db_id_val, "-tdh", "mongo", "-tdp", "27017", "-a", aut_arguments_val, "-cc", clean_coverage_file_val, "-cd", coverage_dir_val
 }
 
 task convert(type: JavaExec) {
