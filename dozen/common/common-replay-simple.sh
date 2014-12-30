@@ -40,13 +40,14 @@ echo "*** Replaying ***"
 #--------------------------
 if [ $# -lt 4 ]
 then
-   echo "Usage: $0 <AUT name> <dbId> <suiteId> <testId>"
+   echo "Usage: $0 <AUT name> <dbId> <suiteId> <testId> <execId>"
    exit 1
 fi
 
 dbId=$2
 suiteId=$3
 testId=$4
+execId=$5
 
 #--------------------------
 # Script configuration
@@ -97,8 +98,6 @@ log_file=$local_LOG_file
 oracle_file=$local_oracle_file
 aut_initial_waiting_time=$aut_initial_waitting_time
 delay=$aut_replay_delay
-test_id=$testId
-db_id=$dbId
 
 # Copy clean cobertura file
 cp $cobertura_data_file_clean $cobertura_main_file
@@ -107,7 +106,7 @@ cp $cobertura_data_file_clean $cobertura_main_file
 coverage_dir=$model_dir/$testname_replay_coverage
 mkdir $coverage_dir
 
-cmd="gradle -b $guitar_dir/guitar.gradle replay -Paut_mainclass=$aut_mainclass -Paut_bin=$aut_bin_dir -Paut_inst=$aut_inst_dir -Plog_file=$local_LOG_file -Poracle_file=$local_oracle_file -Paut_initial_waiting_time=$aut_initial_waitting_time -Pdelay=$aut_replay_delay -Paut_configuration_file=$aut_configuration_file -Paut_replay_timeout=$aut_replay_timeout -Paut_replay_step_timeout=$aut_replay_step_timeout -Ptest_id=$testId -Psuite_id=$suiteId -Pdb_id=$dbId -Ptmp_home=$tmp_home -Pcobertura_file=$cobertura_main_file -Pclean_coverage_file=$cobertura_data_file_clean -Pcoverage_dir=$coverage_dir"
+cmd="gradle -b $guitar_dir/guitar.gradle replay -Paut_mainclass=$aut_mainclass -Paut_bin=$aut_bin_dir -Paut_inst=$aut_inst_dir -Plog_file=$local_LOG_file -Poracle_file=$local_oracle_file -Paut_initial_waiting_time=$aut_initial_waitting_time -Pdelay=$aut_replay_delay -Paut_configuration_file=$aut_configuration_file -Paut_replay_timeout=$aut_replay_timeout -Paut_replay_step_timeout=$aut_replay_step_timeout -Ptest_id=$testId -Psuite_id=$suiteId -Pdb_id=$dbId -Ptmp_home=$tmp_home -Pcobertura_file=$cobertura_main_file -Pclean_coverage_file=$cobertura_data_file_clean -Pcoverage_dir=$coverage_dir -Pexec_id=$execId"
 
 if [ ! -z $aut_arguments ]
 then
