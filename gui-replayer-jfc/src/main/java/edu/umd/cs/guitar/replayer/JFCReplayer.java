@@ -246,6 +246,7 @@ public class JFCReplayer {
                     + CoberturaCoverageMonitor.MERGED_SER);
             tdm.saveArtifact(ArtifactCategory.TEST_OUTPUT, coverageProcessor, procOptions,
                     JFCReplayerConfiguration.TESTDATA_EXECUTION_ID);
+
         } catch (GException e) {
             throw e;
 
