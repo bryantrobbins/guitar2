@@ -7,6 +7,7 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -173,7 +174,7 @@ public abstract class GridFSFileProcessor<T> implements ArtifactProcessor<T> {
         ByteArrayInputStream bais = new ByteArrayInputStream(baos
                 .toByteArray());
 
-        String binaryFileId = "binary_object_" + ID.incrementAndGet();
+        String binaryFileId = "binary_object_" + ObjectId.get().toString();
         GridFS binaryCollection = new GridFS(db, GRID_BINARY_COLLECTION);
 
         GridFSInputFile gfsFile = binaryCollection.createFile(bais);

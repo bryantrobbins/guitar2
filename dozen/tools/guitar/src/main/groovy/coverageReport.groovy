@@ -4,14 +4,22 @@ import edu.umd.cs.guitar.main.TestDataManager
 import edu.umd.cs.guitar.processors.guitar.CoverageProcessor
 import net.sourceforge.cobertura.coveragedata.ProjectData
 import edu.umd.cs.guitar.util.CoberturaUtils
+import edu.umd.cs.guitar.artifacts.ArtifactCategory
 
 // TestDataManager
-def manager = new TestDataManager("mongo", "27017", args[1])
+println args
+
+def manager = new TestDataManager("192.168.59.103", "37017", args[0])
 
 // Get coverage data as binary artifact
-ProjectData pd = manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_OUTPUT,
-                                        argv[1],
-                                        new CoverageProcessor(argv[0]))
+ArtifactCategory cat = ArtifactCategory.TEST_OUTPUT
+CoverageProcessor cp = new CoverageProcessor(manager.getDb())
+println("Category=" + cat)
+println("ExecID=" + args[1])
+println("Processor=" + cp)
+
+ProjectData pd = (ProjectData) manager.getArtifactByCategoryAndOwnerId(cat, args[1], cp)
+println("Data=" + pd)
 
 // Convert to coverge report String
 def report = CoberturaUtils.getCoverageReportFromCoverageObject(pd)
