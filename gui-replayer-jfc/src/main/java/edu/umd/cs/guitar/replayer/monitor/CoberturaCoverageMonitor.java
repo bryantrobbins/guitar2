@@ -43,7 +43,6 @@ public class CoberturaCoverageMonitor extends GTestMonitor {
     private static final String INIT_SER = "init" + "." + COVERAGE_FILE_EXT;
     public static final String MERGED_SER = "merged" + "." + COVERAGE_FILE_EXT;
 
-    private ProjectData combinedData;
     String sCoverageCleanFile;
     String sCoverageMainFile;
     String sCoverageOutputDir;
@@ -62,9 +61,6 @@ public class CoberturaCoverageMonitor extends GTestMonitor {
         this.sCoverageCleanFile = sCoverageCleanFile;
 
         this.sCoverageOutputDir = sCoverageOutputDir;
-
-        this.combinedData = CoverageDataFileHandler
-                .loadCoverageData(new File(sCoverageMainFile));
 
     }
 
@@ -85,14 +81,6 @@ public class CoberturaCoverageMonitor extends GTestMonitor {
             ProjectData.saveGlobalProjectData();
             copy(sCoverageMainFile, sStepCoverageFile);
             copy(sCoverageCleanFile, sCoverageMainFile);
-
-            // Merge this step into the combined coverage
-            ProjectData projectDataNew = CoverageDataFileHandler
-                    .loadCoverageData(new File(sStepCoverageFile));
-
-            if (projectDataNew != null)
-                combinedData.merge(projectDataNew);
-
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -159,9 +147,7 @@ public class CoberturaCoverageMonitor extends GTestMonitor {
      */
     @Override
     public void term() {
-        // Write out the combined coverage
-        CoverageDataFileHandler.saveCoverageData(combinedData, new File(sCoverageOutputDir + File.separator
-                + MERGED_SER));
+
     }
 
     /**

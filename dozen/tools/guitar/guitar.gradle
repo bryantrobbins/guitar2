@@ -72,8 +72,8 @@ dependencies {
     save group: 'edu.umd.cs.guitar', name: 'tool-testdata', version: '0.0.1-SNAPSHOT'
     replayer group: 'edu.umd.cs.guitar', name: 'gui-replayer-jfc', version: '0.0.1-SNAPSHOT'
     replayer group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
-		replayer files(aut_bin_val)
 		replayer files(aut_inst_val)
+		replayer files(aut_bin_val)
 		compile 'org.codehaus.groovy:groovy-all:2.3.8'
 		compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
 }
