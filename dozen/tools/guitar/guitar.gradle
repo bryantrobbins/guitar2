@@ -147,3 +147,9 @@ task replaySuite (dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     args aut_name_val, db_id_val, suite_id_val
 }
+
+task saveTCOutputs (dependsOn: 'classes', type: JavaExec) {
+    main = 'saveTCOutputs'
+    classpath = sourceSets.main.runtimeClasspath
+    args 'mongo', '27017', db_id_val, test_exec_val, coverage_dir_val
+}
