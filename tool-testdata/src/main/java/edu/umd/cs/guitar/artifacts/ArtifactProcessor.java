@@ -13,6 +13,12 @@ import java.util.Map;
  * @param <T> the class of objects being serialized by this instances
  */
 public interface ArtifactProcessor<T> {
+
+    /**
+     * Key for index option in options map.
+     */
+    String INDEX_OPTION = "index";
+
     /**
      * This method provides conversion from options to a JSON string. The
      * options can specify, for example, a filename from which the object

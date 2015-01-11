@@ -215,13 +215,21 @@ public final class TestDataManager {
                                        String> options, final String owner) {
         String artifactId = generateId();
 
+        String key = processor.getKey();
+        String index = options.get(ArtifactProcessor.INDEX_OPTION);
+
+        // Build key with optional index suffix
+        if (index != null) {
+            key += index;
+        }
+
         // Create object
         BasicDBObject basicDBObject = new BasicDBObject()
                 .append(TestDataManagerKeys.ARITFACT_ID, artifactId)
                 .append(TestDataManagerKeys.ARTIFACT_CATEGORY,
                         category.getKey())
                 .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, owner)
-                .append(TestDataManagerKeys.ARTIFACT_TYPE, processor.getKey())
+                .append(TestDataManagerKeys.ARTIFACT_TYPE, key)
                 .append(TestDataManagerKeys.ARTIFACT_DATA,
                         processor.jsonFromOptions(options));
 
@@ -258,13 +266,16 @@ public final class TestDataManager {
      *                  edu.umd.cs.guitar.artifacts.ArtifactCategory
      * @param ownerId   the ID of the owner of this artifact
      * @param processor an ArtifactProcessor instance for the artifact
+     * @param index     the index of the artifact (needed if more than one
+     *                  artifact per type + owner)
      * @return the artifact as a Java object
      */
     public Object getArtifactByCategoryAndOwnerId(final ArtifactCategory
                                                           category,
                                                   final String ownerId,
                                                   final ArtifactProcessor<?>
-                                                          processor) {
+                                                          processor,
+                                                  final String index) {
 
         BasicDBObject query = new BasicDBObject()
                 .append(TestDataManagerKeys.ARTIFACT_CATEGORY,

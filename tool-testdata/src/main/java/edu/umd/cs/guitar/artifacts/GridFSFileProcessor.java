@@ -33,7 +33,6 @@ public abstract class GridFSFileProcessor<T> implements ArtifactProcessor<T> {
      */
     public static final String FILE_PATH_OPTION = "path";
 
-
     /**
      * Key for GridFS handle in json object.
      */
