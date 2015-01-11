@@ -1,7 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
+import groovy.io.FileType
+
 def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
+def aut_inst_dir_val = hasProperty('aut_inst_dir') ? aut_inst_dir : ''
+def aut_cov_bin_list_val = hasProperty('aut_cov_bin_list') ? aut_cov_bin_list : ''
+def coverage_dir_val = hasProperty('coverage_dir') ? coverage_dir : ''
 
 configurations {
 	cobertura
@@ -28,11 +33,25 @@ task hello << {
 task instrument(type: JavaExec) {
 	classpath configurations.cobertura
 	main = 'net.sourceforge.cobertura.instrument.Main'
-	args '--datafile', cobertura_data_file_clean, '--destination', aut_inst_dir, aut_cov_bin_list
+	args '--datafile', cobertura_data_file_clean, '--destination', aut_inst_dir_val, aut_cov_bin_list_val
 }
 
 task report(type: JavaExec) {
 	classpath configurations.cobertura
-	main = 'net.sourceforge.cobertura.instrument.Main'
-	args '--datafile', cobertura_data_file_clean, '--destination', aut_inst_dir, aut_cov_bin_list
+	main = 'net.sourceforge.cobertura.reporting.Main'
+	args '--datafile', cobertura_data_file_clean, '--format', 'xml', '--destination', coverage_dir_val
+}
+
+task merge(type: JavaExec) {
+	def alist = ['--datafile', cobertura_data_file_clean]
+	def dir = new File(coverage_dir_val)
+	if(project.gradle.startParameter.taskNames.contains('merge')){
+		dir.eachFileRecurse (FileType.FILES) { file ->
+ 			alist << file.toString()
+		}
+	}
+
+	classpath configurations.cobertura
+	main = 'net.sourceforge.cobertura.merge.Main'
+	args alist
 }
