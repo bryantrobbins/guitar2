@@ -266,6 +266,29 @@ public final class TestDataManager {
      *                  edu.umd.cs.guitar.artifacts.ArtifactCategory
      * @param ownerId   the ID of the owner of this artifact
      * @param processor an ArtifactProcessor instance for the artifact
+     * @return the artifact as a Java object
+     */
+    public Object getArtifactByCategoryAndOwnerId(final ArtifactCategory
+                                                          category,
+                                                  final String ownerId,
+                                                  final ArtifactProcessor<?>
+                                                          processor) {
+
+        return getArtifactByCategoryAndOwnerId(category,
+                ownerId,
+                processor,
+                null);
+
+    }
+
+    /**
+     * Get an artifact given its category and the ID of its owner (usually a
+     * test, suite, or execution).
+     *
+     * @param category  the category of the artifact from choices in
+     *                  edu.umd.cs.guitar.artifacts.ArtifactCategory
+     * @param ownerId   the ID of the owner of this artifact
+     * @param processor an ArtifactProcessor instance for the artifact
      * @param index     the index of the artifact (needed if more than one
      *                  artifact per type + owner)
      * @return the artifact as a Java object
@@ -277,11 +300,16 @@ public final class TestDataManager {
                                                           processor,
                                                   final String index) {
 
+        String key = processor.getKey();
+        if (index != null) {
+            key += index;
+        }
+
         BasicDBObject query = new BasicDBObject()
                 .append(TestDataManagerKeys.ARTIFACT_CATEGORY,
                         category.getKey())
                 .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, ownerId)
-                .append(TestDataManagerKeys.ARTIFACT_TYPE, processor.getKey());
+                .append(TestDataManagerKeys.ARTIFACT_TYPE, key);
 
         int count = db.getCollection(TestDataManagerCollections.ARTIFACTS)
                 .find(query).size();
