@@ -43,7 +43,6 @@ import edu.umd.cs.guitar.model.data.GUIStructure;
 import edu.umd.cs.guitar.model.data.TestCase;
 import edu.umd.cs.guitar.model.wrapper.AttributesTypeWrapper;
 import edu.umd.cs.guitar.model.wrapper.ComponentTypeWrapper;
-import edu.umd.cs.guitar.processors.guitar.CoverageProcessor;
 import edu.umd.cs.guitar.processors.guitar.EFGProcessor;
 import edu.umd.cs.guitar.processors.guitar.GUIProcessor;
 import edu.umd.cs.guitar.processors.guitar.LogProcessor;
@@ -236,15 +235,10 @@ public class JFCReplayer {
             // Save the log
             LogProcessor logProcessor = new LogProcessor();
             Map<String, String> procOptions = new HashMap<String, String>();
-            procOptions.put(LogProcessor.FILE_PATH_OPTION, JFCReplayerConfiguration.LOG_FILE);
-            tdm.saveArtifact(ArtifactCategory.TEST_OUTPUT, logProcessor, procOptions,
-                    JFCReplayerConfiguration.TESTDATA_EXECUTION_ID);
-
-            // Save the coverage data
-            CoverageProcessor coverageProcessor = new CoverageProcessor(tdm.getDb());
-            procOptions.put(CoverageProcessor.FILE_PATH_OPTION, JFCReplayerConfiguration.COVERAGE_DIR + File.separator
-                    + CoberturaCoverageMonitor.MERGED_SER);
-            tdm.saveArtifact(ArtifactCategory.TEST_OUTPUT, coverageProcessor, procOptions,
+            procOptions.put(LogProcessor.FILE_PATH_OPTION,
+                    JFCReplayerConfiguration.LOG_FILE);
+            tdm.saveArtifact(ArtifactCategory.TEST_OUTPUT, logProcessor,
+                    procOptions,
                     JFCReplayerConfiguration.TESTDATA_EXECUTION_ID);
 
         } catch (GException e) {
