@@ -34,6 +34,8 @@ dir.eachFileRecurse (FileType.FILES) { file ->
   }
 }
 
+println fileList
+
 // Save each artifact
 fileList.eachWithIndex(){ path, i ->
 	println GOTHERE
