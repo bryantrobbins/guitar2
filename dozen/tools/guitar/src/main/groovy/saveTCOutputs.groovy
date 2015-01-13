@@ -25,7 +25,7 @@ CoverageProcessor cp = new CoverageProcessor(manager.getDb())
 // Get list of coverage files from coverageDir
 fileList = []
 indexList = []
-def dir = new File(".")
+def dir = new File(coverageDir)
 dir.eachFileRecurse (FileType.FILES) { file ->
   def splits = file.getName().toString().split("\\.")
   if(splits[-1].equals("ser")){
