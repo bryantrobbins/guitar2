@@ -35,8 +35,7 @@ dir.eachFileRecurse (FileType.FILES) { file ->
 }
 
 // Save each artifact
-def index = 0
-fileList.each(){
-	opts = [(CoverageProcessor.FILE_PATH_OPTION): it, (CoverageProcessor.INDEX_OPTION): index]
+fileList.eachWithIndex(path, i){
+	opts = [(CoverageProcessor.FILE_PATH_OPTION): path, (CoverageProcessor.INDEX_OPTION): i]
 	manager.saveArtifact(cat, cp, opts, execId)
 }
