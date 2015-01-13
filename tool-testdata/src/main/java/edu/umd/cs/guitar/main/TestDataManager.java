@@ -223,6 +223,8 @@ public final class TestDataManager {
             key += index;
         }
 
+        System.out.println("KEY=" + key);
+
         // Create object
         BasicDBObject basicDBObject = new BasicDBObject()
                 .append(TestDataManagerKeys.ARITFACT_ID, artifactId)
