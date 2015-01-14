@@ -42,6 +42,7 @@ public class CoverageProcessor extends GridFSFileProcessor<ProjectData> {
             return CoberturaUtils
                     .loadCoverageData(new ByteArrayInputStream(data));
         } catch (IOException e) {
+            e.printStackTrace();
             logger.error("Error loading coverage object from byte array", e);
             return null;
         }
