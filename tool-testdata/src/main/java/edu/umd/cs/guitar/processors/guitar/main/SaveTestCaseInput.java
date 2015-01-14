@@ -13,6 +13,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public final class SaveTestCaseInput {
         // Build and parse cmd line options
 
         Options options = new Options();
-        options.addOption("t", true, "the test case file");
+        options.addOption("t", true, "the test case dir");
         options.addOption("s", true, "the test suite id");
 
         options.addOption("h", true, "the mongodb host");
@@ -76,19 +77,36 @@ public final class SaveTestCaseInput {
         // Build processors for these objects
         ArtifactProcessor tcProc = new TestcaseProcessor();
 
-        // Create test case
-        String[] splits = cmd.getOptionValue("t").split("/");
-        String testId = splits[splits.length - 1].split("\\.")[0];
-        testDataManager.createNewTest(testId);
+        // Loop over files in dir
+        String tcdir = cmd.getOptionValue("t");
+        File tcdirFile = new File(tcdir);
+        File[] tcfiles = tcdirFile.listFiles();
 
-        // Add test case to suite
-        testDataManager.addTestCaseToSuite(testId, cmd.getOptionValue("s"));
+        if (tcfiles == null) {
+            logger.error("Got a bad list of files");
+        } else {
+            for (File tcFile : tcfiles) {
+                if (tcFile.getName().contains("tst")) {
+                    // Create test case
+                    String[] splits = tcFile.getName().split("/");
+                    String testId = splits[splits.length - 1].split("\\.")[0];
+                    testDataManager.createNewTest(testId);
 
-        // Store the test case steps file
-        Map<String, String> procOptions = new HashMap<String, String>();
-        procOptions.put(TestcaseProcessor.FILE_PATH_OPTION,
-                cmd.getOptionValue("t"));
-        testDataManager.saveArtifact(ArtifactCategory.TEST_INPUT, tcProc,
-                procOptions, testId);
+                    // Add test case to suite
+                    testDataManager.addTestCaseToSuite(testId,
+                            cmd.getOptionValue("s"));
+
+                    // Store the test case steps file
+                    Map<String, String> procOptions = new HashMap<String,
+                            String>();
+                    procOptions.put(TestcaseProcessor.FILE_PATH_OPTION,
+                            tcFile.getAbsolutePath());
+                    testDataManager.saveArtifact(ArtifactCategory.TEST_INPUT,
+                            tcProc,
+                            procOptions, testId);
+
+                }
+            }
+        }
     }
 }
