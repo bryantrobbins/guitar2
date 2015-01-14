@@ -28,7 +28,7 @@ indexList = []
 def dir = new File(coverageDir)
 dir.eachFileRecurse (FileType.FILES) { file ->
   def splits = file.getName().toString().split("\\.")
-  if(splits[-1].equals("ser")){
+  if(splits[-1].equals("ser") && (! (splits[0].charAt(0) == 't')){
     indexList << file.getName().toString().split("\\.")[0]
     fileList << file.getAbsolutePath()
   }
@@ -38,9 +38,6 @@ println fileList
 
 // Save each artifact
 fileList.eachWithIndex(){ path, i ->
-	println 'GOTHERE'
-	println path
-	println i
 	def opts = [(CoverageProcessor.FILE_PATH_OPTION): path, (CoverageProcessor.INDEX_OPTION): indexList[i] ]
 	manager.saveArtifact(cat, cp, opts, execId)
 }

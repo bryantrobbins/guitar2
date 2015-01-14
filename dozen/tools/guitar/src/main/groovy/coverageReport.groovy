@@ -1,4 +1,4 @@
-// ARGS: DB_ID, TEST_ID
+// ARGS: DB_ID, EXEC_ID
 
 import edu.umd.cs.guitar.main.TestDataManager
 import edu.umd.cs.guitar.processors.guitar.CoverageProcessor
@@ -18,7 +18,7 @@ println("Category=" + cat)
 println("ExecID=" + args[1])
 println("Processor=" + cp)
 
-ProjectData pd = (ProjectData) manager.getArtifactByCategoryAndOwnerId(cat, args[1], cp)
+ProjectData pd = (ProjectData) manager.getArtifactByCategoryAndOwnerId(cat, args[1], cp, "i")
 println("Data=" + pd)
 
 // Convert to coverge report String
