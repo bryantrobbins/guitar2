@@ -29,6 +29,7 @@ def db_id_val = hasProperty('db_id') ? db_id : ''
 def suite_id_val = hasProperty('suite_id') ? suite_id : ''
 def aut_coverage_file_val = hasProperty('aut_coverage_file') ? aut_coverage_file : ''
 def test_case_file_val = hasProperty('test_case_file') ? test_case_file : ''
+def testcase_dir_val = hasProperty('testcase_dir') ? testcase_dir : ''
 
 // Additional replayer args
 def log_file_val = hasProperty('log_file') ? log_file : ''
@@ -133,7 +134,7 @@ task saveTestCaseFiles(type: JavaExec) {
 	main = 'edu.umd.cs.guitar.processors.guitar.main.SaveTestCaseInput'
 	minHeapSize "64m"
 	maxHeapSize "768m"
-	args "-h", "mongo", "-p", "27017", "-d", db_id_val, "-s", suite_id_val, "-t", test_case_file_val
+	args "-h", "mongo", "-p", "27017", "-d", db_id_val, "-s", suite_id_val, "-t", testcase_dir_val
 }
 
 task coverageReport (dependsOn: 'classes', type: JavaExec) {
