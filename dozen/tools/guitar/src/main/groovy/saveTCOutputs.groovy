@@ -30,7 +30,7 @@ dir.eachFileRecurse (FileType.FILES) { file ->
   def splits = file.getName().toString().split("\\.")
   if(splits[-1].equals("ser")){
     indexList << file.getName().toString().split("\\.")[0]
-    fileList << file.getName()
+    fileList << file.getAbsolutePath()
   }
 }
 
