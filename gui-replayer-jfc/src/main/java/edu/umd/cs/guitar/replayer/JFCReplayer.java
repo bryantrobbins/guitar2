@@ -231,26 +231,38 @@ public class JFCReplayer {
             replayer.execute();
 
             // After execution, let's come back and save artifacts
-
-            // Save the log
-            LogProcessor logProcessor = new LogProcessor();
-            Map<String, String> procOptions = new HashMap<String, String>();
-            procOptions.put(LogProcessor.FILE_PATH_OPTION,
-                    JFCReplayerConfiguration.LOG_FILE);
-            tdm.saveArtifact(ArtifactCategory.TEST_OUTPUT, logProcessor,
-                    procOptions,
-                    JFCReplayerConfiguration.TESTDATA_EXECUTION_ID);
+            saveLog(tdm);
 
         } catch (GException e) {
+            saveLog(tdm);
             throw e;
 
         } catch (IOException e) {
             GUITARLog.log.error("Unable to create GUI data path");
+            saveLog(tdm);
             throw e;
 
         } catch (Exception e) {
+            saveLog(tdm);
             throw e;
         }
+    }
+
+    /**
+     * Save the log file
+     *
+     * @param tdm A TestDataManager instance
+     */
+
+    private void saveLog(final TestDataManager tdm) {
+        // Save the log
+        LogProcessor logProcessor = new LogProcessor();
+        Map<String, String> procOptions = new HashMap<String, String>();
+        procOptions.put(LogProcessor.FILE_PATH_OPTION,
+                JFCReplayerConfiguration.LOG_FILE);
+        tdm.saveArtifact(ArtifactCategory.TEST_OUTPUT, logProcessor,
+                procOptions,
+                JFCReplayerConfiguration.TESTDATA_EXECUTION_ID);
     }
 
     /**
