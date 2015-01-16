@@ -3,11 +3,8 @@ apply plugin: 'maven'
 apply plugin: 'groovy'
 
 // Dependency path arg
-def master = System.getenv("MASTER")
-println "what"
-println master
+def master = hasProperty('master') ? master : 'localhost'
 def loc = hasProperty('nexusLocation') ? nexusLocation : '$master:8081'
-println loc
 
 // Ripper args
 def tmp_home_val = hasProperty('tmp_home') ? tmp_home : ''

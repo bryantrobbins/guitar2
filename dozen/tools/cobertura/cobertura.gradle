@@ -3,8 +3,7 @@ apply plugin: 'maven'
 
 import groovy.io.FileType
 
-def master = System.getenv("MASTER")
-
+def master = hasProperty('master') ? master : 'localhost'
 def loc = hasProperty('nexusLocation') ? nexusLocation : '$master:8081'
 def aut_inst_dir_val = hasProperty('aut_inst_dir') ? aut_inst_dir : ''
 def aut_cov_bin_list_val = hasProperty('aut_cov_bin_list') ? aut_cov_bin_list : ''
