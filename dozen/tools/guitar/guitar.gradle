@@ -4,7 +4,10 @@ apply plugin: 'groovy'
 
 // Dependency path arg
 def master = System.getenv("MASTER")
+println "what"
+println master
 def loc = hasProperty('nexusLocation') ? nexusLocation : '$master:8081'
+println loc
 
 // Ripper args
 def tmp_home_val = hasProperty('tmp_home') ? tmp_home : ''
