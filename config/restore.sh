@@ -19,4 +19,6 @@ fi
 echo "Restoring from $archive"
  
 ./load.sh $archive
-./start.sh $nslave
+./image.sh
+#./master-start.sh $nslave
+./slave-start.sh $nslave

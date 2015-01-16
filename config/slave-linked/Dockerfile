@@ -24,4 +24,4 @@ EXPOSE 22
 EXPOSE 5005
 
 WORKDIR jslave
-CMD    ["java", "-jar", "swarm.jar", "-master", "http://128.8.126.2:8080", "-username", "admin", "-password", "amalga84go", "-labels", "basic", "-executors", "1", "-fsroot", "/jslave/home"]
+CMD    ["java", "-jar", "swarm.jar", "-master", "http://jenkins:8080", "-username", "admin", "-password", "amalga84go", "-labels", "basic linked", "-executors", "1", "-fsroot", "/jslave/home"]
