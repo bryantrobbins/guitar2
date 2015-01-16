@@ -7,7 +7,7 @@ import edu.umd.cs.guitar.main.TestDataManager
 def jenkinsClient = new JenkinsClient("jenkins", "8080", "", "admin", "amalga84go")
 
 // TestDataManager
-def manager = new TestDataManager("mongo", "27017", args[1])
+def manager = new TestDataManager(System.env.MASTER, "37017", args[1])
  
 def tests = manager.getTestIdsInSuite(args[2])
 println "Size is ${tests.size()}"
