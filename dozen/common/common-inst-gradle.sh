@@ -59,7 +59,7 @@ source "$aut_scripts_dir/aut.cfg"
 exec_cmd "mkdir -p $aut_inst_dir"
 
 # Instrument
-cmd_cobertura_inst="gradle -b $cobertura_dir/cobertura.gradle -Pmaster=$MASTER"
+cmd_cobertura_inst="gradle -b $cobertura_dir/cobertura.gradle"
 cmd="$cmd_cobertura_inst  -Pcobertura_data_file_clean=$cobertura_data_file_clean -Paut_inst_dir=$aut_inst_dir -Paut_cov_bin_list=$aut_cov_bin_list instrument"
 exec_cmd "$cmd"
 ret=$?
