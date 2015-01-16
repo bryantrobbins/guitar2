@@ -12,5 +12,4 @@ now=`date +%s`
 arch="backup.$now.tar"
  
 ./backup.sh $arch
-./load.sh $arch
-./start.sh $nslave
+./restore.sh $arch $nslave

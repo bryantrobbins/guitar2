@@ -3,7 +3,8 @@ apply plugin: 'maven'
 apply plugin: 'groovy'
 
 // Dependency path arg
-def loc = hasProperty('nexusLocation') ? nexusLocation : 'nexus:8081'
+def master = hasProperty('master') ? master : 'guitar03.cs.umd.edu'
+def loc = hasProperty('nexusLocation') ? nexusLocation : master + ':8081'
 
 // Ripper args
 def tmp_home_val = hasProperty('tmp_home') ? tmp_home : ''
@@ -102,7 +103,7 @@ task replay(type: JavaExec) {
 	systemProperty "user.home", tmp_home_val
 	systemProperty "net.sourceforge.cobertura.datafile", cobertura_file_val
 	systemProperty "log4j.configuration", "log/guitar-clean.glc"
-	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "-tde", test_exec_val, "-tds", suite_id_val, "-tdd", db_id_val, "-tdh", "mongo", "-tdp", "27017", "-a", aut_arguments_val, "-cc", clean_coverage_file_val, "-cd", coverage_dir_val
+	args "-c", aut_mainclass_val, "-l", log_file_val, "-gs", oracle_file_val, "-i", aut_initial_waiting_time_val,"-d", delay_val, "-cf", aut_configuration_file_val, "-to", aut_replay_timeout_val, "-so", aut_replay_step_timeout_val, "-tdi", test_id_val, "-tde", test_exec_val, "-tds", suite_id_val, "-tdd", db_id_val, "-tdh", master, "-tdp", "37017", "-a", aut_arguments_val, "-cc", clean_coverage_file_val, "-cd", coverage_dir_val
 }
 
 task convert(type: JavaExec) {
@@ -126,7 +127,7 @@ task saveSuiteFiles(type: JavaExec) {
 	main = 'edu.umd.cs.guitar.processors.guitar.main.SaveSuiteInput'
 	minHeapSize "64m"
 	maxHeapSize "768m"
-	args "-h", "mongo", "-p", "27017", "-d", db_id_val, "-s", suite_id_val, "-e", aut_efg_file_val, "-g", aut_gui_file_val, "-r", aut_coverage_file_val
+	args "-h", master, "-p", "37017", "-d", db_id_val, "-s", suite_id_val, "-e", aut_efg_file_val, "-g", aut_gui_file_val, "-r", aut_coverage_file_val
 }
 
 task saveTestCaseFiles(type: JavaExec) {
@@ -134,7 +135,7 @@ task saveTestCaseFiles(type: JavaExec) {
 	main = 'edu.umd.cs.guitar.processors.guitar.main.SaveTestCaseInput'
 	minHeapSize "64m"
 	maxHeapSize "768m"
-	args "-h", "mongo", "-p", "27017", "-d", db_id_val, "-s", suite_id_val, "-t", testcase_dir_val
+	args "-h", master, "-p", "37017", "-d", db_id_val, "-s", suite_id_val, "-t", testcase_dir_val
 }
 
 task coverageReport (dependsOn: 'classes', type: JavaExec) {
@@ -152,5 +153,5 @@ task replaySuite (dependsOn: 'classes', type: JavaExec) {
 task saveTCOutputs (dependsOn: 'classes', type: JavaExec) {
     main = 'saveTCOutputs'
     classpath = sourceSets.main.runtimeClasspath
-    args 'mongo', '27017', db_id_val, test_exec_val, coverage_dir_val
+    args master, '37017', db_id_val, test_exec_val, coverage_dir_val
 }

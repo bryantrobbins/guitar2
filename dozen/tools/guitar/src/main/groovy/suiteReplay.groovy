@@ -3,11 +3,13 @@
 import edu.umd.cs.guitar.util.JenkinsClient
 import edu.umd.cs.guitar.main.TestDataManager
 
+def master = "guitar03.cs.umd.edu"
+
 // Jenkins client
-def jenkinsClient = new JenkinsClient("jenkins", "8080", "", "admin", "amalga84go")
+def jenkinsClient = new JenkinsClient(master, "8080", "", "admin", "amalga84go")
 
 // TestDataManager
-def manager = new TestDataManager("mongo", "27017", args[1])
+def manager = new TestDataManager(master, "37017", args[1])
  
 def tests = manager.getTestIdsInSuite(args[2])
 println "Size is ${tests.size()}"

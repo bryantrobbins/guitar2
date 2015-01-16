@@ -1,5 +1,4 @@
 #/bin/bash
-
 nslave=$1
 
 if [ -z "$nslave" ]; then
@@ -7,13 +6,6 @@ if [ -z "$nslave" ]; then
   echo "Usage: $0 numberOfSlaves"
   exit
 fi
- 
-# Build image for jenkins slaves
-docker ps -a | awk '{print $1,$2}' | grep "bryantrobbins/jslave" | awk '{print $1}' | xargs docker stop
-docker ps -a | awk '{print $1,$2}' | grep "bryantrobbins/jslave" | awk '{print $1}' | xargs docker rm
-docker rmi bryantrobbins/jslave
-
-docker build -t="bryantrobbins/jslave" ./slave
 
 # Start nexus
 docker stop nexus
@@ -30,9 +22,13 @@ docker stop jenkins
 docker rm jenkins
 docker run -d --name jenkins --volumes-from cuadata --link nexus:nexus --link mongo:mongo -p 9080:8080 -u root jenkins
 
+# Build image for jenkins slaves
+docker ps -a | awk '{print $1,$2}' | grep "bryantrobbins/jslave-linked" | awk '{print $1}' | xargs docker stop
+docker ps -a | awk '{print $1,$2}' | grep "bryantrobbins/jslave-linked" | awk '{print $1}' | xargs docker rm
+
 # Start some jenkins slaves
 for i in `seq 1 $nslave`;
 do
   echo $i
-  docker run -d --volumes-from cuadata -P --name slave-$i --link jenkins:jenkins --link nexus:nexus --link mongo:mongo bryantrobbins/jslave
+  docker run -d --volumes-from cuadata -P --name slave-$i bryantrobbins/jslave-linked
 done
