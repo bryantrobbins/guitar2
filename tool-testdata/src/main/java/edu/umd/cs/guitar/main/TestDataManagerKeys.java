@@ -27,7 +27,7 @@ public final class TestDataManagerKeys {
     /**
      * Provides the key for EXECUTION_ID.
      */
-    public static final String EXECUTION_ID = "exeuctionId";
+    public static final String EXECUTION_ID = "executionId";
 
     /**
      * Provides the key for BUNDLE_ID.

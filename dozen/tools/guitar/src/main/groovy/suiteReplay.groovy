@@ -29,4 +29,7 @@ for(String id : manager.getTestIdsInSuite(args[2])){
         
         // Use Jenkins client to launch job
         jenkinsClient.submitJob("replay-test", jobParams)
+
+				// ZZZ to let the master recover
+				sleep(100)
 }
