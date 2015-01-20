@@ -84,7 +84,7 @@ public final class SaveTestCaseOutput {
 
         // Create test execution
         String executionId = cmd.getOptionValue("e");
-        testDataManager.createNewExecution(executionId);
+        testDataManager.createNewBundle(executionId);
 
         // Store the coverage file
         Map<String, String> procOptions = new HashMap<String, String>();

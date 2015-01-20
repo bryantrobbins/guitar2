@@ -27,9 +27,9 @@ public final class TestDataManagerCollections {
     public static final String SUITES = "suites";
 
     /**
-     * Use this ID for the suites collection.
+     * Use this ID for the bundles collection.
      */
-    public static final String EXECUTIONS = "executions";
+    public static final String BUNDLES = "bundles";
 
     /**
      * Use this ID for the artifacts collection.
@@ -44,7 +44,7 @@ public final class TestDataManagerCollections {
     /**
      * This variable holds the prefix for individual execution collections.
      */
-    private static final String EXECUTION_PREFIX = "exec_";
+    private static final String BUNDLE_PREFIX = "bundle_";
 
     /**
      * This method builds a String for an individual suite collection
@@ -58,15 +58,15 @@ public final class TestDataManagerCollections {
     }
 
     /**
-     * This method builds a String for an individual execution
-     * collection given an execution ID.
+     * This method builds a String for an individual bundle
+     * collection given a bundle ID.
      *
-     * @param executionId the ID of the execution whose collection ID is needed
-     * @return the id of the execution-specific collection
+     * @param bundleId the ID of the execution whose collection ID is needed
+     * @return the id of the bundle-specific collection
      */
 
-    public static String idsInExecution(final String executionId) {
-        return EXECUTION_PREFIX + executionId;
+    public static String idsInBundle(final String bundleId) {
+        return BUNDLE_PREFIX + bundleId;
     }
 
 }

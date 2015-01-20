@@ -29,6 +29,11 @@ public final class TestDataManagerKeys {
      */
     public static final String EXECUTION_ID = "exeuctionId";
 
+    /**
+     * Provides the key for BUNDLE_ID.
+     */
+    public static final String BUNDLE_ID = "bundleId";
+
 
     /**
      * Provides the key for ARTIFACT_ID.

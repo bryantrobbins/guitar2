@@ -144,19 +144,19 @@ public final class TestDataManager {
     }
 
     /**
-     * Create a new execution entry given a unique id for this test execution.
+     * Create a new bundle of test executions given a unique bundle ID.
      * id only needs to be unique across current DB instance.
      *
-     * @param executionId the execution id
+     * @param bundleId the bundle id
      */
-    public void createNewExecution(final String executionId) {
+    public void createNewBundle(final String bundleId) {
         // Create DBObject
         BasicDBObject basicDBObject = new BasicDBObject()
-                .append(TestDataManagerKeys.EXECUTION_ID, executionId);
+                .append(TestDataManagerKeys.BUNDLE_ID, bundleId);
 
         // Insert object in tests table
         MongoUtils.addItemToCollection(db,
-                TestDataManagerCollections.EXECUTIONS, basicDBObject);
+                TestDataManagerCollections.BUNDLES, basicDBObject);
     }
 
 
@@ -347,6 +347,32 @@ public final class TestDataManager {
                         .idsInSuite(suiteId),
                 basicDBObject);
     }
+
+    /**
+     * Add an execution to a bundle.
+     *
+     * @param executionId the execution to be added to a bundle
+     * @param bundleId    the bundle to which to add the execution
+     * @param testId      the test being executed
+     * @param suiteId     the suite being executed
+     */
+
+    public void addExecutionToBundle(final String executionId,
+                                     final String bundleId,
+                                     final String testId,
+                                     final String suiteId) {
+
+        // Create DBObject
+        BasicDBObject basicDBObject = new BasicDBObject()
+                .append(TestDataManagerKeys.EXECUTION_ID, executionId)
+                .append(TestDataManagerKeys.TEST_ID, testId);
+
+        // Insert object in suite-specific table
+        MongoUtils.addItemToCollection(db, TestDataManagerCollections
+                        .idsInBundle(bundleId),
+                basicDBObject);
+    }
+
 
     /**
      * Remove any currently associated test cases from a suite. Note: this only
