@@ -1,4 +1,4 @@
-// ARGS: AUT_NAME, DB_ID, SUITE_ID
+// ARGS: AUT_NAME, DB_ID, SUITE_ID, BUNDLE_ID
 
 import edu.umd.cs.guitar.util.JenkinsClient
 import edu.umd.cs.guitar.main.TestDataManager
@@ -25,6 +25,7 @@ for(String id : manager.getTestIdsInSuite(args[2])){
         jobParams.put("DB_ID", args[1])
         jobParams.put("SUITE_ID", args[2])
         jobParams.put("TEST_ID", id)
+        jobParams.put("BUNDLE_ID", args[3])
         
         // Use Jenkins client to launch job
         jenkinsClient.submitJob("replay-test", jobParams)
