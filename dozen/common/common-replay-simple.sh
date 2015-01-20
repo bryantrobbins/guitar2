@@ -129,7 +129,7 @@ then
    echo FAILED continuing with next
    globalRet=$ret
 fi
-exec_cmd "sync"
+#exec_cmd "sync"
 
 # --------------------
 # Log time
