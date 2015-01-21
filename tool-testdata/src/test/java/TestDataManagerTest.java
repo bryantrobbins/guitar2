@@ -80,7 +80,7 @@ public class TestDataManagerTest {
 
         Assert.assertTrue(MongoUtils.isItemInCollection(client.getDB(dbId),
                 TestDataManagerCollections.ARTIFACTS,
-                new BasicDBObject().append(TestDataManagerKeys.ARITFACT_ID,
+                new BasicDBObject().append(TestDataManagerKeys.ARTIFACT_ID,
                         artifactId)
                         .append(TestDataManagerKeys.ARTIFACT_CATEGORY,
                                 ArtifactCategory.TEST_INPUT.getKey())

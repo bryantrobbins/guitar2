@@ -227,7 +227,7 @@ public final class TestDataManager {
 
         // Create object
         BasicDBObject basicDBObject = new BasicDBObject()
-                .append(TestDataManagerKeys.ARITFACT_ID, artifactId)
+                .append(TestDataManagerKeys.ARTIFACT_ID, artifactId)
                 .append(TestDataManagerKeys.ARTIFACT_CATEGORY,
                         category.getKey())
                 .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, owner)
@@ -252,7 +252,7 @@ public final class TestDataManager {
                                   final ArtifactProcessor<?> processor) {
 
         BasicDBObject query = new BasicDBObject()
-                .append(TestDataManagerKeys.ARITFACT_ID, artifactId);
+                .append(TestDataManagerKeys.ARTIFACT_ID, artifactId);
 
         String dataJson = (String) db
                 .getCollection(TestDataManagerCollections.ARTIFACTS)
@@ -322,9 +322,13 @@ public final class TestDataManager {
                     + " matching");
         }
 
-        String id = (String) db.getCollection(TestDataManagerCollections
-                .ARTIFACTS)
-                .findOne(query).get(TestDataManagerKeys.ARITFACT_ID);
+        String id = MongoUtils.findItemPropetyInCollection(db,
+                TestDataManagerCollections.ARTIFACTS, query,
+                TestDataManagerKeys.ARTIFACT_ID);
+
+        if (id == null) {
+            return null;
+        }
 
         return getArtifactById(id, processor);
     }

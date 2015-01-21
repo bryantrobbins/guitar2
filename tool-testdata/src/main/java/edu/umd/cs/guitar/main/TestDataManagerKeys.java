@@ -38,7 +38,7 @@ public final class TestDataManagerKeys {
     /**
      * Provides the key for ARTIFACT_ID.
      */
-    public static final String ARITFACT_ID = "artifactId";
+    public static final String ARTIFACT_ID = "artifactId";
 
     /**
      * Provides the key for ARTIFACT_CATEGORY.
