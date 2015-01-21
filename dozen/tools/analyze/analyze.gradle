@@ -8,9 +8,7 @@ def loc = hasProperty('nexusLocation') ? nexusLocation : master + ':8081'
 
 // Ripper args
 def db_id_val = hasProperty('db_id') ? db_id : ''
-def suite_id_val = hasProperty('suite_id') ? suite_id : ''
-def test_id_val = hasProperty('test_id') ? test_id : ''
-def exec_id_val = hasProperty('exec_id') ? exec_id : ''
+def bundle_id_val = hasProperty('bundle_id') ? bundle_id : ''
 
 configurations.all {
     // check for updates every build
@@ -30,12 +28,8 @@ dependencies {
 		compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
 }
 
-task hello << {
-	println "Hello World"
-}
-
 task process (dependsOn: 'classes', type: JavaExec) {
     main = 'process'
     classpath = sourceSets.main.runtimeClasspath
-    args master, '37017', db_id_val, suite_id_val, exec_id_val
+    args master, '37017', db_id_val, bundle_id_val
 }

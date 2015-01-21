@@ -409,4 +409,25 @@ public final class TestDataManager {
         return ret;
     }
 
+    /**
+     * Returns the test ids in a given test suite.
+     *
+     * @param bundleId the suite id
+     * @return the list of test ids in the given suite
+     */
+    public List<String> getExecutionIdsInBundle(final String bundleId) {
+        DBCollection execs = db.getCollection(
+                TestDataManagerCollections.idsInBundle(bundleId));
+
+        DBCursor curs = execs.find();
+
+        ArrayList<String> ret = new ArrayList<String>();
+
+        while (curs.hasNext()) {
+            Map<String, String> nextMap = curs.next().toMap();
+            ret.add(nextMap.get(TestDataManagerKeys.EXECUTION_ID));
+        }
+        return ret;
+    }
+
 }
