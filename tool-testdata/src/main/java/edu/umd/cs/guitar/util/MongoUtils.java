@@ -180,4 +180,50 @@ public final class MongoUtils {
 
     }
 
+    /**
+     * Execute a query against a collection, returning a matching object.
+     *
+     * @param db         the MongoDB DB to connect to
+     * @param collection the collection to query
+     * @param query      the query to execute, given as a DBObject
+     * @return the resulting object found, or null if no such object exists
+     */
+    public static DBObject findItemInCollection(final DB db,
+                                                final String collection,
+                                                final DBObject query) {
+        DBObject found = db.getCollection(collection).findOne(query);
+        if (found == null) {
+            return null;
+        }
+
+        return found;
+    }
+
+    /**
+     * Execute a query against a collection, returning a given property of
+     * the first found item.
+     *
+     * @param db         the MongoDB DB to connect to
+     * @param collection the collection to query
+     * @param query      the query to execute, given as a DBObject
+     * @param property   the property to return
+     * @return the value of the given property on the first found object,
+     * or null if no such object is found
+     */
+    public static String findItemPropetyInCollection(final DB db,
+                                                     final String collection,
+                                                     final DBObject query,
+                                                     final String property) {
+
+        DBObject found = findItemInCollection(db, collection, query);
+
+        if (found == null) {
+            return null;
+        }
+
+        return (String) found.get(property);
+
+    }
+
+
 }

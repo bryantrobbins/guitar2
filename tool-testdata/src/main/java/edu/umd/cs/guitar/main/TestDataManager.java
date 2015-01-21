@@ -410,10 +410,10 @@ public final class TestDataManager {
     }
 
     /**
-     * Returns the test ids in a given test suite.
+     * Returns the execution ids in a given bundle.
      *
-     * @param bundleId the suite id
-     * @return the list of test ids in the given suite
+     * @param bundleId the bundle id
+     * @return the list of execution ids in the given bundle
      */
     public List<String> getExecutionIdsInBundle(final String bundleId) {
         DBCollection execs = db.getCollection(
@@ -428,6 +428,25 @@ public final class TestDataManager {
             ret.add(nextMap.get(TestDataManagerKeys.EXECUTION_ID));
         }
         return ret;
+    }
+
+    /**
+     * Returns the execution id of a given test id within a given bundle.
+     *
+     * @param bundleId the bundle id
+     * @param testId   the test id
+     * @return the execution id of the given test id in the given bundle
+     */
+    public String getExecutionIdForTestIdInBundle(final String bundleId,
+                                                  final String testId) {
+        // Create DBObject
+        BasicDBObject query = new BasicDBObject()
+                .append(TestDataManagerKeys.TEST_ID, testId);
+
+        // Return testId of found record
+        return MongoUtils.findItemPropetyInCollection(db,
+                TestDataManagerCollections.idsInBundle(bundleId),
+                query, TestDataManagerKeys.TEST_ID);
     }
 
 }
