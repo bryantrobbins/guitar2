@@ -446,7 +446,7 @@ public final class TestDataManager {
         // Return testId of found record
         return MongoUtils.findItemPropetyInCollection(db,
                 TestDataManagerCollections.idsInBundle(bundleId),
-                query, TestDataManagerKeys.TEST_ID);
+                query, TestDataManagerKeys.EXECUTION_ID);
     }
 
 }
