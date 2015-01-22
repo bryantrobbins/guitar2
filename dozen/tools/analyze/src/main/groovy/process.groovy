@@ -23,11 +23,19 @@ List<String> failing = []
 List<String> passing = []
 List<String> missingLog = []
 List<String> missingExec = []
+List<String> componentDisabled = []
+List<String> componentNotFound = []
+List<String> stepTimeout = []
 
 def testIds = manager.getTestIdsInSuite(suiteId)
 println "There are " + testIds.size() + " tests in suite " + suiteId
 
+int count = 0
 for(String testId : manager.getTestIdsInSuite(suiteId)){
+	count++
+	if(count % 50 == 0){
+		println "."
+	}
 	String execId = manager.getExecutionIdForTestIdInBundle(bundleId, testId)
 	
 	if(execId == null){
@@ -39,37 +47,73 @@ for(String testId : manager.getTestIdsInSuite(suiteId)){
 																																 execId, logProc)
 	if(logObject == null){
 		missingLog.add(testId)
-	} else {
-		boolean didPass = pass(logObject)
-		if(didPass){
-			passing.add(testId)
-		} else{
-			failing.add(testId)
-		}
+		continue
 	}
+
+	def reason = pass(logObject)
+	if(reason == null){
+			passing.add(testId)
+			continue
+	}
+
+	def record = [testId: testId, execId: execId, reason: reason]
+
+	if(reason.contains("ComponentDisabled")){
+		componentDisabled.add(record)
+		continue
+	}
+
+	if(reason.contains("ComponentNotFound")){
+		componentNotFound.add(record)
+		continue
+	}
+
+	if(reason.contains("TIMEOUT")){
+		stepTimeout.add(record)
+		continue
+	}
+
+	failing.add(record)
+
 }
 
 def pass(obj){
+	def pattern = ~/((?:[a-zA-Z]{3} \d{1,2}, \d{4,4} \d{1,2}:\d{2}:\d{2} (AM|PM) (\(SEVERE\)|\(ERROR\))).*\r(?:(.*Exception.*(\r.*)(\tat.*\r)+)))|((?:[a-zA-Z]{3} \d{1,2}, \d{4,4} \d{1,2}:\d{2}:\d{2} (AM|PM) (\(SEVERE\)|\(ERROR\))).*)/
 	for(int i=0; i<obj.size(); i++){
 		String line = obj.getLine(i)
-		if (line.toUpperCase().contains("ERROR")){
-			return false
+		if (line.toUpperCase().contains("COMPONENTDISABLED")){
+			return line
+		}
+		if (line.toUpperCase().contains("COMPONENTNOTFOUND")){
+			return line
+		}
+		if (line.toUpperCase().contains("STEP TIMER: TIMEOUT!!!")){
+			return line
+		}
+		if (pattern.matcher(line).matches()){
+			return line
+		}
+		if (line.toUpperCase().contains(":REPLAY FAILED")){
+			return line
 		}
 	}
-	return true
+	return null
 }
 
+println "========PASSING========"
+println "Passing test count=" + passing.size()
 println "========FAILING========"
 println "Failing test count=" + failing.size()
 println failing
 println "========ERROR-E========"
 println "Error execution missing count=" + missingExec.size()
-println missingExec
 println "========ERROR-L========"
 println "Error log missing count=" + missingLog.size()
-println missingLog
-println "========PASSING========"
-println "Passing test count=" + passing.size()
-println passing
+println "========ERROR-D========"
+println "Error component disabled count=" + componentDisabled.size()
+println "========ERROR-C========"
+println "Error component not found count=" + componentNotFound.size()
+println "========ERROR-T========"
+println "Error step timeout count=" + stepTimeout.size()
 
 println "DONE with analysis"
