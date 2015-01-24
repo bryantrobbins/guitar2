@@ -1,11 +1,22 @@
 #/bin/bash
-nslave=$1
+
+archive=$1
+
+if [ -z "$archive" ]; then
+  echo "No archive provided."
+  echo "Usage: $0 archive.tar numberOfSlaves"
+  exit
+fi
+
+nslave=$2
 
 if [ -z "$nslave" ]; then
   echo "Number of jenkins slaves not provided"
-  echo "Usage: $0 numberOfSlaves"
+  echo "Usage: $0 archive.tar numberOfSlaves"
   exit
 fi
+
+./load-master.sh $archive
 
 # Start nexus
 docker stop nexus
@@ -22,11 +33,15 @@ docker stop jenkins
 docker rm jenkins
 docker run -d --name jenkins --volumes-from cuadata --link nexus:nexus --link mongo:mongo -p 9080:8080 -u root jenkins
 
-# Build image for jenkins slaves
+# Stop any existing slaves
 docker ps -a | awk '{print $1,$2}' | grep "bryantrobbins/jslave-linked" | awk '{print $1}' | xargs docker stop
 docker ps -a | awk '{print $1,$2}' | grep "bryantrobbins/jslave-linked" | awk '{print $1}' | xargs docker rm
 
-# Start some jenkins slaves
+# Build slave-linked image
+docker rmi bryantrobbins/jslave-linked
+docker build -t="bryantrobbins/jslave-linked" ./slave-linked
+
+# Start new slaves
 for i in `seq 1 $nslave`;
 do
   echo $i
