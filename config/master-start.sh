@@ -21,7 +21,7 @@ fi
 # Start nexus
 docker stop nexus
 docker rm nexus
-docker run -d --name nexus -h nexus --volumes-from cuadata -p 9081:8081 conceptnotfound/sonatype-nexus
+docker run -d --name nexus -h nexus --volumes-from cuadata -p 8081:8081 conceptnotfound/sonatype-nexus
 
 # Start mongo
 docker stop mongo
@@ -31,7 +31,7 @@ docker run -d --name mongo --volumes-from cuadata -p 37017:27017 -p 38017:28017 
 # Start jenkins
 docker stop jenkins
 docker rm jenkins
-docker run -d --name jenkins --volumes-from cuadata --link nexus:nexus --link mongo:mongo -p 9080:8080 -u root jenkins
+docker run -d --name jenkins --volumes-from cuadata --link nexus:nexus --link mongo:mongo -p 8080:8080 -p 50000:50000 -u root jenkins
 
 # Stop any existing slaves
 docker ps -a | awk '{print $1,$2}' | grep "bryantrobbins/jslave-linked" | awk '{print $1}' | xargs docker stop
@@ -45,5 +45,6 @@ docker build -t="bryantrobbins/jslave-linked" ./slave-linked
 for i in `seq 1 $nslave`;
 do
   echo $i
-  docker run -d --volumes-from cuadata -P --name slave-$i bryantrobbins/jslave-linked
+  docker run -d --volumes-from cuadata -P --name slave-$i --link jenkins:jenkins bryantrobbins/jslave-linked
+  sleep 15
 done
