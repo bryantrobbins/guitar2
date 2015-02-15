@@ -11,6 +11,11 @@ def baseVal = hasProperty('base') ? base : 'example'
 def csvDataVal = hasProperty('csvData') ? csvData : ''
 def captionVal = hasProperty('caption') ? caption : ''
 def outputVal = hasProperty('output') ? output : ''
+def useStarVal = hasProperty('useStar') ? true : false
+def imageVal = hasProperty('image') ? image : ''
+def heightVal = hasProperty('height') ? height : ''
+def widthVal = hasProperty('width') ? width : ''
+def scaleVal = hasProperty('scale') ? scale : ''
 
 buildscript {
 	repositories {
@@ -26,7 +31,6 @@ buildscript {
 
 // A couple of globals (available only to tasks, not functions)
 def client = DockerClientBuilder.getInstance(dockerUrlVal).build();
-
 def dockerfileContent = '''
 FROM ubuntu:14.04
 MAINTAINER Bryan Robbins "bryantrobbins@gmail.com"
@@ -179,9 +183,14 @@ task generateTable <<
 		align += "|"
 	}
 
+	// Prepare wrapper keyword
+	def wrapper = "table"
+	if(useStarVal){
+		wrapper += "*"
+	}
 
 	// Print table content
-	output << "\\begin{table}\n"
+	output << "\\begin{${wrapper}}\n"
 	output << "\\centering\n"
 	output << "\\caption{${captionVal}}\n"
 
@@ -199,7 +208,7 @@ task generateTable <<
 	}
 
 	output << "\\hline\\end{tabular}\n"
-	output << "\\end{table}\n"
+	output << "\\end{${wrapper}}\n"
 	
 	println output.toString()
 	
@@ -207,4 +216,64 @@ task generateTable <<
 		FileUtils.writeStringToFile(new File(outputVal), output.toString());
 	}
 
+}
+
+def getInlineProperty(prop, value, first){
+	def ret = ""
+
+	if(!value.isEmpty()){
+		if(!first){
+			ret += ", "	
+		}
+		ret += "${prop}=${value}"
+	}
+
+	ret
+}
+
+task generateFigure << {
+	def output = new StringBuffer()
+	def wrapper = "figure"
+	def firstProp = true
+
+	if(useStarVal){
+		wrapper += "*"
+	}	
+
+	def params = getInlineProperty("height", heightVal, firstProp)
+	firstProp = params.isEmpty()
+	params += getInlineProperty("width", widthVal, firstProp)
+	firstProp = params.isEmpty()
+	params += getInlineProperty("scale", scaleVal, firstProp)
+
+	output << "\\begin{${wrapper}}\n"
+	output << "\\centering\n"
+	output << "\\includegraphics[${params}]{${imageVal}}\n"
+	output << "\\caption{${captionVal}}\n"
+	output << "\\end{${wrapper}}\n"
+
+	println output.toString()
+	
+	if(!outputVal.equals('')){
+		FileUtils.writeStringToFile(new File(outputVal), output.toString());
+	}
+
+}
+
+def bringInline(input){
+	def ret = input
+}
+
+task singleFile << {
+	def input = FileUtils.readFileToString(new File(source))
+	def regex = /\\input\{(.+)\}/
+	def matcher = ( input  =~ regex )
+	while(matcher.size() > 0){
+		def repl = bringInline(FileUtils.readFileToString(new File("${matcher[0][1]}.tex")))
+		input = input.replace(matcher[0][0], repl)
+		matcher = ( input  =~ regex )
+	}
+	if(!outputVal.isEmpty()){
+		FileUtils.writeStringToFile(new File(outputVal), input)
+	}
 }
