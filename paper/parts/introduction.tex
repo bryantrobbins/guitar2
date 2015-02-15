@@ -1,0 +1,19 @@
+Model-based software testing excels at the generation of short test cases. Often,
+the collective group of test cases (called the test suite) provides a guarantee
+of coverage. Consider various existing work by Memon et al., which generates test
+cases for event-driven systems such as those driven by Graphical User Interfaces
+(GUIs). Their sequence length coverage generation technique experiences an
+exponential growth of possible test cases as longer sequence lengths are considered. This
+growth often leads to a practical limit of considering only sequences of length 2 or 3.
+when generating test suites. Other research suggests that longer test cases, and test
+cases involving the interaction of 3 or more variables, find signficantly more
+bugs than test cases designed to cover only 1 or 2 input variables in combination.
+
+We suggest that test cases generated from model-based techniques can potentially be
+combined in interesting ways while still preserving the desired qualities of the overall
+test suite. Significantly reducing the runtime of generated suites by combination would allow
+for the consideration of increasingly higher-order test cases.
+
+In support of this goal of combining test cases, in the paper we describe and
+evaluate a method for predicting the feasibility of potential test case
+combinations. We require our technique

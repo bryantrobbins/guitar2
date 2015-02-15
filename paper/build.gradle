@@ -150,7 +150,20 @@ task cleanPaper <<
 	deletePaperFiles(baseVal)
 }
 
-task buildPaper <<
+task singleFile << {
+	def input = FileUtils.readFileToString(new File(source))
+	def regex = /\\input\{(.+)\}/
+	def matcher = ( input  =~ regex )
+	while(matcher.size() > 0){
+		def repl = FileUtils.readFileToString(new File("${matcher[0][1]}.tex"))
+		input = input.replace(matcher[0][0], repl)
+		matcher = ( input  =~ regex )
+	}
+
+	FileUtils.writeStringToFile(new File("${baseVal}.tex"), input)
+}
+
+task buildPaper (dependsOn: singleFile) <<
 {
 	// Execute Latex Cmd
 	doCmd(client, latexCmd)
@@ -260,20 +273,3 @@ task generateFigure << {
 
 }
 
-def bringInline(input){
-	def ret = input
-}
-
-task singleFile << {
-	def input = FileUtils.readFileToString(new File(source))
-	def regex = /\\input\{(.+)\}/
-	def matcher = ( input  =~ regex )
-	while(matcher.size() > 0){
-		def repl = bringInline(FileUtils.readFileToString(new File("${matcher[0][1]}.tex")))
-		input = input.replace(matcher[0][0], repl)
-		matcher = ( input  =~ regex )
-	}
-	if(!outputVal.isEmpty()){
-		FileUtils.writeStringToFile(new File(outputVal), input)
-	}
-}
