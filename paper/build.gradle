@@ -2,10 +2,15 @@ import com.github.dockerjava.core.DockerClientBuilder
 import com.github.dockerjava.api.model.Volume
 import com.github.dockerjava.api.model.Bind
 import org.apache.commons.io.IOUtils
+import org.apache.commons.io.FileUtils
+import static com.xlson.groovycsv.CsvParser.parseCsv
 
 // Load properties or defaults
 def dockerUrlVal = hasProperty('dockerUrl') ? dockerUrl : 'https://192.168.59.103:2376'
 def baseVal = hasProperty('base') ? base : 'example'
+def csvDataVal = hasProperty('csvData') ? csvData : ''
+def captionVal = hasProperty('caption') ? caption : ''
+def outputVal = hasProperty('output') ? output : ''
 
 buildscript {
 	repositories {
@@ -15,6 +20,7 @@ buildscript {
 	dependencies {
 		classpath 'com.github.docker-java:docker-java:0.10.5'
 		classpath 'commons-io:commons-io:2.4'
+		classpath 'com.xlson.groovycsv:groovycsv:1.0'
 	}
 }
 
@@ -153,4 +159,52 @@ task buildPaper <<
 
 	// Execute LaTex Cmd
 	doCmd(client, latexCmd)
+}
+
+task generateTable <<
+{
+	def output = new StringBuffer()
+	
+	// Read csv data
+	def csv = FileUtils.readFileToString(new File(csvDataVal))
+	
+	// Parse csv data
+	def data = parseCsv(csv, autoDetect:true)
+	def numColumns = data.columns.size()
+
+	// Prepare alignment
+	def align = "|"
+	numColumns.downto(1){
+		align += "c"
+		align += "|"
+	}
+
+
+	// Print table content
+	output << "\\begin{table}\n"
+	output << "\\centering\n"
+	output << "\\caption{${captionVal}}\n"
+
+	output << "\\begin{tabular}{${align}} \\hline\n"
+
+	for(line in data) {
+		def oneRow = line[0]
+		for(int i =1; i<numColumns; i++){
+			oneRow += "\t&\t"
+			oneRow += line[i]
+		}
+		oneRow += "\\\\"
+		oneRow += "\\hline\n"
+		output << oneRow
+	}
+
+	output << "\\hline\\end{tabular}\n"
+	output << "\\end{table}\n"
+	
+	println output.toString()
+	
+	if(!outputVal.equals('')){
+		FileUtils.writeStringToFile(new File(outputVal), output.toString());
+	}
+
 }
