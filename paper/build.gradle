@@ -1,0 +1,156 @@
+import com.github.dockerjava.core.DockerClientBuilder
+import com.github.dockerjava.api.model.Volume
+import com.github.dockerjava.api.model.Bind
+import org.apache.commons.io.IOUtils
+
+// Load properties or defaults
+def dockerUrlVal = hasProperty('dockerUrl') ? dockerUrl : 'https://192.168.59.103:2376'
+def baseVal = hasProperty('base') ? base : 'example'
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath 'com.github.docker-java:docker-java:0.10.5'
+		classpath 'commons-io:commons-io:2.4'
+	}
+}
+
+// A couple of globals (available only to tasks, not functions)
+def client = DockerClientBuilder.getInstance(dockerUrlVal).build();
+
+def dockerfileContent = '''
+FROM ubuntu:14.04
+MAINTAINER Bryan Robbins "bryantrobbins@gmail.com"
+RUN apt-get update && apt-get clean
+RUN apt-get install texlive-latex-base texlive-fonts-recommended -y
+RUN apt-get install r-base r-base-dev -y
+RUN mkdir -p /paper
+VOLUME ["/paper"]
+WORKDIR /paper
+'''
+
+// Commands
+def latexCmd = "pdflatex ${baseVal}.tex"
+def bibtexCmd = "bibtex ${baseVal}"
+
+def withClient(client, clos){
+	clos(client)
+}
+
+def getDockerfilePath(){
+	"build/lgdock"
+}
+
+def getBuildBaseDir(){
+	new File(getDockerfilePath())
+}
+
+def getImageTag(){
+	"bryantrobbins/lgdock"
+}
+
+def getCurrentDirectory(){
+	new File(".").getAbsoluteFile().parent.toString()
+}
+
+def getMount(){
+	new Volume("/paper");
+}
+
+def asString(inputStream){
+	IOUtils.toString(inputStream, "UTF-8")
+}
+
+def wrap(cmd){
+	cmd.split(" ")
+}
+
+def deleteFile(file){
+	new File(file).delete()
+}
+
+def doCmd(client, cmd){
+	def imageTag = getImageTag()
+	def mount = getMount()
+	def wd = getCurrentDirectory()
+
+	withClient(client){
+		def container = it.createContainerCmd(imageTag).withVolumes(mount)
+		def resp = container.withCmd(wrap(cmd)).exec()
+		def id = resp.getId()
+		it.startContainerCmd(id)
+  		.withBinds(new Bind(wd, mount))
+			.exec()
+		it.waitContainerCmd(id)
+			.exec()
+	}
+}
+
+def deletePaperFiles(base){
+	deleteFile("${base}.log")	
+	deleteFile("${base}.aux")	
+	deleteFile("${base}.blg")	
+	deleteFile("${base}.bbl")	
+	deleteFile("${base}.pdf")	
+}
+
+task cleanAll <<
+{
+	// Remove temp build files
+	new File('build').deleteDir()
+
+	// Remove temp paper files
+	deletePaperFiles()
+
+	// Remove image
+	def imageTag = getImageTag()
+	withClient(client){
+		it.removeImageCmd(imageTag).withForce().exec()
+	}
+}
+
+task info <<
+{
+	def info = withClient(client){
+		it.infoCmd().exec()
+	}
+	println info
+}
+
+task writeDockerfile <<
+{
+	getBuildBaseDir().mkdirs()
+	new File("${dockerfilePath}/Dockerfile").write(dockerfileContent)
+}
+
+task buildImage(dependsOn: writeDockerfile) <<
+{
+	def imageTag = getImageTag()
+	withClient(client){
+		def resp = it.buildImageCmd(buildBaseDir).withTag(imageTag).exec();
+		asString(resp)
+	}
+}
+
+task cleanPaper <<
+{
+	deletePaperFiles(baseVal)
+}
+
+task buildPaper <<
+{
+	// Execute Latex Cmd
+	doCmd(client, latexCmd)
+
+	// Execute BibTex Cmd
+	doCmd(client, bibtexCmd)
+
+	// Execute LaTex Cmd
+	doCmd(client, latexCmd)
+
+	// Execute LaTex Cmd
+	doCmd(client, latexCmd)
+}
