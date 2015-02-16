@@ -16,6 +16,7 @@ def imageVal = hasProperty('image') ? image : ''
 def heightVal = hasProperty('height') ? height : ''
 def widthVal = hasProperty('width') ? width : ''
 def scaleVal = hasProperty('scale') ? scale : ''
+def rscriptVal = hasProperty('rscript') ? rscript : ''
 
 buildscript {
 	repositories {
@@ -38,6 +39,9 @@ RUN apt-get update && apt-get clean
 RUN apt-get install texlive-latex-base texlive-fonts-recommended -y
 RUN apt-get install r-base r-base-dev -y
 RUN mkdir -p /paper
+RUN mkdir -p /opt/Rpackages
+RUN echo 'install.packages("e1071", lib="/opt/Rpackages/", repos="http://watson.nci.nih.gov/cran_mirror/")' >> rinstall
+RUN R CMD BATCH --slave rinstall rinstall.out
 VOLUME ["/paper"]
 WORKDIR /paper
 '''
@@ -45,6 +49,8 @@ WORKDIR /paper
 // Commands
 def latexCmd = "pdflatex ${baseVal}.tex"
 def bibtexCmd = "bibtex ${baseVal}"
+def rscriptCmd = "R CMD BATCH --slave ${rscriptVal} ${outputVal}"
+def catCmd = "cat /rinstall.out"
 
 def withClient(client, clos){
 	clos(client)
@@ -105,6 +111,19 @@ def deletePaperFiles(base){
 	deleteFile("${base}.blg")	
 	deleteFile("${base}.bbl")	
 	deleteFile("${base}.pdf")	
+}
+
+def getInlineProperty(prop, value, first){
+	def ret = ""
+
+	if(!value.isEmpty()){
+		if(!first){
+			ret += ", "	
+		}
+		ret += "${prop}=${value}"
+	}
+
+	ret
 }
 
 task cleanAll <<
@@ -231,19 +250,6 @@ task generateTable <<
 
 }
 
-def getInlineProperty(prop, value, first){
-	def ret = ""
-
-	if(!value.isEmpty()){
-		if(!first){
-			ret += ", "	
-		}
-		ret += "${prop}=${value}"
-	}
-
-	ret
-}
-
 task generateFigure << {
 	def output = new StringBuffer()
 	def wrapper = "figure"
@@ -273,3 +279,11 @@ task generateFigure << {
 
 }
 
+task runRscript << {
+	// Execute R script
+  doCmd(client, rscriptCmd)		
+}
+
+task debugMe << {
+  doCmd(client, catCmd)		
+}
