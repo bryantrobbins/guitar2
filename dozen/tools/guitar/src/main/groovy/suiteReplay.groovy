@@ -3,7 +3,7 @@
 import edu.umd.cs.guitar.util.JenkinsClient
 import edu.umd.cs.guitar.main.TestDataManager
 
-def master = "atif01.cs.umd.edu"
+def master = "172.16.5.255"
 
 // Jenkins client
 def jenkinsClient = new JenkinsClient(master, "8080", "", "admin", "amalga84go")
