@@ -1,0 +1,83 @@
+In this section, we formalize the algorithms used in our experimental study.
+Our high-level goal is to develop an algorithm \textsc{Reduce} which will produce
+a reduced test suite from a provided input suite while controlling for two confidence
+parameters. We accomplish the reduction through test case combination.
+
+Starting from a copy of the initial test suite $I$, we select and remove a random test case
+$i$ from $I$. In the \textsc{FindOne} algorithm, we loop over the possible combinations of 
+$i$ with other test cases from $I$, considering the possible ways which $i$ and this additional
+test case $t$ could be combined. The enumeration of possible combinations of any two test cases
+is given by \textsc{FindPossible}. \textsc{FindOne} returns the first test case $c$ discovered which also
+meets both the feasibility probability constraint $\alpha$ and the coverage probability constraint $\beta$.
+In the event that we find no such test case $c$, a null value is returned to \textsc{Reduce}, indicating
+that the originally considered test case $i$ should be added directly to the reduce test suite $R$ and
+no longer considered as a candidate for combination with other test cases remaining in $I$.
+
+The \textsc{CoverageUnion} procedure called from the \textsc{FindOne} algorithm simply returns the
+union of the sets of requirements covered by test cases $i$ and $t$.
+
+The \textsc{FindPossible} procedure called from the \textsc{FindOne} algorithm constructs candidate
+combined test cases from two input test cases $i$ and $t$. We currently utilize two very simple heuristics for
+test case combination as a part of this initial study:
+
+\begin{enumerate}
+	\item \textbf{Append}: Return a new test case $c$ formed by appending $t$ to $i$
+	\item \textbf{AppendAfterInitial}: Determine the longest initial subsequence $s$ shared by $i$ and $t$.
+	Return a new test case $c$ formed by appending $t - s$ to $i$
+\end{enumerate}
+
+The \textsc{GetProbFeasible} procedure called from \textsc{FindOne} returns an estimate of the
+probability that a test case $c$ is feasible. We estimate probabilities with an N-gram model learned
+from the execution of the initial input suite. Under this model, a sequence is considered to be 
+\textit{more feasible} if the N-grams of the sequence have been observed in the input suite. Unobserved
+sequences are still assigned some probability because we use a smoothing technique (in particular,
+Kneser-Ney smoothing).
+
+Similarly, the \textsc{GetProbCovered} procedure called from the \textsc{FindOne} algorithm returns an
+estimate of the probability that all requirements in a set of requirements $V$ are covered by a test case
+$c$. We compute this probability as the joint probability of each requirement $v$ from $V$ being met
+by the test case. We estimate the probability that a test case $c$ covers a requirement $v$ from an N-gram
+model specific to the requirement $v$, such that a probability returned by the model is the probability that the
+given sequence covers the given requirement. As in the feasibility case, we learn the N-gram models from
+observing per-event coverage of requirements during the execution of the initial suite.
+
+\begin{figure}
+\begin{algorithmic}[1]
+\Procedure{Reduce}{$S$, $\alpha$, $\beta$}
+\State $R = \{\}$
+\State $I = S$
+\While{$size(I) > 0$}
+\State $i \gets $ \Call{SelectRandomSequence}{$I$}
+\State $(c,s) \gets$ \Call{FindOne}{$i$, $I$, $\alpha$, $\beta$}
+\If{$c \neq null$}
+\State $R \gets R \cup c$
+\State $I \gets I - s$
+\Else
+\State $R \gets R \cup i$
+\EndIf
+\EndWhile
+\State \textbf{return} $R$
+\EndProcedure\end{algorithmic}
+\caption{\textsc{Reduce} algorithm for producing a reduced test suite with feasibility and coverage confidence levels}
+\label{a:reduce}
+\end{figure}
+
+\begin{figure}
+\begin{algorithmic}[1]
+\Procedure{FindOne}{$i$, $I$}
+\ForAll{$t \in I$}
+\State $V \gets $ \Call{CoverageUnion}{$i$, $t$}
+\State $C \gets$ \Call{FindPossible}{$i$, $t$}
+\ForAll{$c \in C$}
+\State $P_f \gets$ \Call{GetProbFeasible}{$c$}
+\State $P_c \gets$ \Call{GetProbCoverage}{$c$, $V$}
+\If{$P_f \geq \alpha \land P_c \geq \beta$}
+\State \textbf{return} $(c, t)$
+\EndIf
+\EndFor
+\EndFor
+\State \textbf{return} $(null, null)$
+\EndProcedure\end{algorithmic}
+\caption{\textsc{FindOne} algorithm for finding a test case combination which meets the minimum confidence criteria}
+\label{a:findone}
+\end{figure}

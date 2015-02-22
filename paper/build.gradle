@@ -1,0 +1,289 @@
+import com.github.dockerjava.core.DockerClientBuilder
+import com.github.dockerjava.api.model.Volume
+import com.github.dockerjava.api.model.Bind
+import org.apache.commons.io.IOUtils
+import org.apache.commons.io.FileUtils
+import static com.xlson.groovycsv.CsvParser.parseCsv
+
+// Load properties or defaults
+def dockerUrlVal = hasProperty('dockerUrl') ? dockerUrl : 'https://192.168.59.103:2376'
+def baseVal = hasProperty('base') ? base : 'example'
+def csvDataVal = hasProperty('csvData') ? csvData : ''
+def captionVal = hasProperty('caption') ? caption : ''
+def outputVal = hasProperty('output') ? output : ''
+def useStarVal = hasProperty('useStar') ? true : false
+def imageVal = hasProperty('image') ? image : ''
+def heightVal = hasProperty('height') ? height : ''
+def widthVal = hasProperty('width') ? width : ''
+def scaleVal = hasProperty('scale') ? scale : ''
+def rscriptVal = hasProperty('rscript') ? rscript : ''
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath 'com.github.docker-java:docker-java:0.10.5'
+		classpath 'commons-io:commons-io:2.4'
+		classpath 'com.xlson.groovycsv:groovycsv:1.0'
+	}
+}
+
+// A couple of globals (available only to tasks, not functions)
+def client = DockerClientBuilder.getInstance(dockerUrlVal).build();
+def dockerfileContent = '''
+FROM ubuntu:14.04
+MAINTAINER Bryan Robbins "bryantrobbins@gmail.com"
+RUN apt-get update && apt-get clean
+RUN apt-get install texlive-latex-base texlive-fonts-recommended -y
+RUN apt-get install r-base r-base-dev -y
+RUN mkdir -p /paper
+RUN mkdir -p /opt/Rpackages
+RUN echo 'install.packages("e1071", lib="/opt/Rpackages/", repos="http://watson.nci.nih.gov/cran_mirror/")' >> rinstall
+RUN R CMD BATCH --slave rinstall rinstall.out
+VOLUME ["/paper"]
+WORKDIR /paper
+'''
+
+// Commands
+def latexCmd = "pdflatex ${baseVal}.tex"
+def bibtexCmd = "bibtex ${baseVal}"
+def rscriptCmd = "R CMD BATCH --slave ${rscriptVal} ${outputVal}"
+def catCmd = "cat /rinstall.out"
+
+def withClient(client, clos){
+	clos(client)
+}
+
+def getDockerfilePath(){
+	"build/lgdock"
+}
+
+def getBuildBaseDir(){
+	new File(getDockerfilePath())
+}
+
+def getImageTag(){
+	"bryantrobbins/lgdock"
+}
+
+def getCurrentDirectory(){
+	new File(".").getAbsoluteFile().parent.toString()
+}
+
+def getMount(){
+	new Volume("/paper");
+}
+
+def asString(inputStream){
+	IOUtils.toString(inputStream, "UTF-8")
+}
+
+def wrap(cmd){
+	cmd.split(" ")
+}
+
+def deleteFile(file){
+	new File(file).delete()
+}
+
+def doCmd(client, cmd){
+	def imageTag = getImageTag()
+	def mount = getMount()
+	def wd = getCurrentDirectory()
+
+	withClient(client){
+		def container = it.createContainerCmd(imageTag).withVolumes(mount)
+		def resp = container.withCmd(wrap(cmd)).exec()
+		def id = resp.getId()
+		it.startContainerCmd(id)
+  		.withBinds(new Bind(wd, mount))
+			.exec()
+		it.waitContainerCmd(id)
+			.exec()
+	}
+}
+
+def deletePaperFiles(base){
+	deleteFile("${base}.log")	
+	deleteFile("${base}.aux")	
+	deleteFile("${base}.blg")	
+	deleteFile("${base}.bbl")	
+	deleteFile("${base}.pdf")	
+}
+
+def getInlineProperty(prop, value, first){
+	def ret = ""
+
+	if(!value.isEmpty()){
+		if(!first){
+			ret += ", "	
+		}
+		ret += "${prop}=${value}"
+	}
+
+	ret
+}
+
+task cleanAll <<
+{
+	// Remove temp build files
+	new File('build').deleteDir()
+
+	// Remove temp paper files
+	deletePaperFiles()
+
+	// Remove image
+	def imageTag = getImageTag()
+	withClient(client){
+		it.removeImageCmd(imageTag).withForce().exec()
+	}
+}
+
+task info <<
+{
+	def info = withClient(client){
+		it.infoCmd().exec()
+	}
+	println info
+}
+
+task writeDockerfile <<
+{
+	getBuildBaseDir().mkdirs()
+	new File("${dockerfilePath}/Dockerfile").write(dockerfileContent)
+}
+
+task buildImage(dependsOn: writeDockerfile) <<
+{
+	def imageTag = getImageTag()
+	withClient(client){
+		def resp = it.buildImageCmd(buildBaseDir).withTag(imageTag).exec();
+		asString(resp)
+	}
+}
+
+task cleanPaper <<
+{
+	deletePaperFiles(baseVal)
+}
+
+task singleFile << {
+	def input = FileUtils.readFileToString(new File(source))
+	def regex = /\\input\{(.+)\}/
+	def matcher = ( input  =~ regex )
+	while(matcher.size() > 0){
+		def repl = FileUtils.readFileToString(new File("${matcher[0][1]}.tex"))
+		input = input.replace(matcher[0][0], repl)
+		matcher = ( input  =~ regex )
+	}
+
+	FileUtils.writeStringToFile(new File("${baseVal}.tex"), input)
+}
+
+task buildPaper (dependsOn: singleFile) <<
+{
+	// Execute Latex Cmd
+	doCmd(client, latexCmd)
+
+	// Execute BibTex Cmd
+	doCmd(client, bibtexCmd)
+
+	// Execute LaTex Cmd
+	doCmd(client, latexCmd)
+
+	// Execute LaTex Cmd
+	doCmd(client, latexCmd)
+}
+
+task generateTable <<
+{
+	def output = new StringBuffer()
+	
+	// Read csv data
+	def csv = FileUtils.readFileToString(new File(csvDataVal))
+	
+	// Parse csv data
+	def data = parseCsv(csv, autoDetect:true)
+	def numColumns = data.columns.size()
+
+	// Prepare alignment
+	def align = "|"
+	numColumns.downto(1){
+		align += "c"
+		align += "|"
+	}
+
+	// Prepare wrapper keyword
+	def wrapper = "table"
+	if(useStarVal){
+		wrapper += "*"
+	}
+
+	// Print table content
+	output << "\\begin{${wrapper}}\n"
+	output << "\\centering\n"
+	output << "\\caption{${captionVal}}\n"
+
+	output << "\\begin{tabular}{${align}} \\hline\n"
+
+	for(line in data) {
+		def oneRow = line[0]
+		for(int i =1; i<numColumns; i++){
+			oneRow += "\t&\t"
+			oneRow += line[i]
+		}
+		oneRow += "\\\\"
+		oneRow += "\\hline\n"
+		output << oneRow
+	}
+
+	output << "\\hline\\end{tabular}\n"
+	output << "\\end{${wrapper}}\n"
+	
+	println output.toString()
+	
+	if(!outputVal.equals('')){
+		FileUtils.writeStringToFile(new File(outputVal), output.toString());
+	}
+
+}
+
+task generateFigure << {
+	def output = new StringBuffer()
+	def wrapper = "figure"
+	def firstProp = true
+
+	if(useStarVal){
+		wrapper += "*"
+	}	
+
+	def params = getInlineProperty("height", heightVal, firstProp)
+	firstProp = params.isEmpty()
+	params += getInlineProperty("width", widthVal, firstProp)
+	firstProp = params.isEmpty()
+	params += getInlineProperty("scale", scaleVal, firstProp)
+
+	output << "\\begin{${wrapper}}\n"
+	output << "\\centering\n"
+	output << "\\includegraphics[${params}]{${imageVal}}\n"
+	output << "\\caption{${captionVal}}\n"
+	output << "\\end{${wrapper}}\n"
+
+	println output.toString()
+	
+	if(!outputVal.equals('')){
+		FileUtils.writeStringToFile(new File(outputVal), output.toString());
+	}
+
+}
+
+task runRscript << {
+	// Execute R script
+  doCmd(client, rscriptCmd)		
+}
+
+task debugMe << {
+  doCmd(client, catCmd)		
+}

@@ -11,7 +11,4 @@ docker rm backup
 docker run --name backup --volumes-from cuadata -v $local:/backup busybox tar cvf /backup/$archive var/jenkins_home nexus data/db sources
 docker rm backup
 
-echo "Compressing archive"
-gzip $archive
-
 echo "Done"
