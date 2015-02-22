@@ -3,7 +3,7 @@ apply plugin: 'maven'
 
 import groovy.io.FileType
 
-def master = hasProperty('master') ? master : 'guitar03.cs.umd.edu'
+def master = hasProperty('master') ? master : 'guitar05.cs.umd.edu'
 def loc = hasProperty('nexusLocation') ? nexusLocation : master + ':8081'
 def aut_inst_dir_val = hasProperty('aut_inst_dir') ? aut_inst_dir : ''
 def aut_cov_bin_list_val = hasProperty('aut_cov_bin_list') ? aut_cov_bin_list : ''
