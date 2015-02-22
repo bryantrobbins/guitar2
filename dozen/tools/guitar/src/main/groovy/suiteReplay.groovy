@@ -31,5 +31,5 @@ for(String id : manager.getTestIdsInSuite(args[2])){
         jenkinsClient.submitJob("replay-test", jobParams)
 
 				// ZZZ to let the master recover
-				sleep(2000)
+				sleep(100)
 }
