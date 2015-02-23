@@ -8,8 +8,10 @@ def loc = hasProperty('nexusLocation') ? nexusLocation : master + ':8081'
 
 // Ripper args
 def db_id_val = hasProperty('db_id') ? db_id : ''
-def bundle_id_val = hasProperty('bundle_id') ? bundle_id : ''
 def suite_id_val = hasProperty('suite_id') ? suite_id : ''
+def bundle_id1_val = hasProperty('bundle_id1') ? bundle_id1 : ''
+def bundle_id2_val = hasProperty('bundle_id2') ? bundle_id2 : ''
+def bundle_id3_val = hasProperty('bundle_id3') ? bundle_id3 : ''
 
 configurations.all {
     // check for updates every build
@@ -31,5 +33,5 @@ dependencies {
 task process (dependsOn: 'classes', type: JavaExec) {
     main = 'process'
     classpath = sourceSets.main.runtimeClasspath
-    args master, '37017', db_id_val, bundle_id_val, suite_id_val
+    args master, '37017', db_id_val, suite_id_val, bundle_id1_val, bundle_id2_val, bundle_id3_val
 }

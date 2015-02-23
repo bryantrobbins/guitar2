@@ -160,10 +160,10 @@ public abstract class GridFSFileProcessor<T> implements ArtifactProcessor<T> {
      * @return the ID of the binary file in GridFS (used as json string in
      * primary MongoDB document store)
      */
-    public final String jsonFromObject(final T object) {
+    public final String jsonFromObject(final Object object) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
-            baos.write(byteArrayFromObject(object));
+            baos.write(byteArrayFromObject((T) object));
         } catch (IOException e) {
             logger.error("Could not write object bytes to stream", e);
         }

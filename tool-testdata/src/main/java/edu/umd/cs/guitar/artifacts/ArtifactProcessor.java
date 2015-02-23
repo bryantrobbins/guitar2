@@ -33,6 +33,14 @@ public interface ArtifactProcessor<T> {
     String jsonFromOptions(final Map<String, String> options);
 
     /**
+     * This method provides conversion from an Object to a JSON string.
+     *
+     * @param object The object to be converted
+     * @return the JSON String
+     */
+    String jsonFromObject(final Object object);
+
+    /**
      * This method provides conversion from a JSON string to an object.
      *
      * @param json the JSON string

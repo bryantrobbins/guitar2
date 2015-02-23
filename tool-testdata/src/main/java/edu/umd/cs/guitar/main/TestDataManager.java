@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.ArtifactProcessor;
@@ -242,6 +243,57 @@ public final class TestDataManager {
     }
 
     /**
+     * Another variant of saveArtifact to work with direct objects
+     * instead of options.
+     *
+     * @param category  The artifact category
+     * @param processor an ArtifactProcessor instance for the artifact
+     * @param obj       The object to convert to json
+     * @param owner     unique ID of the parent/owner of this artifact
+     *                  (should be a test or suite)
+     * @return the JSON String
+     */
+    public String saveArtifact(final ArtifactCategory category,
+                               final ArtifactProcessor<?> processor,
+                               final Object obj, final String owner) {
+
+        String artifactId = generateId();
+        String key = processor.getKey();
+        System.out.println("KEY=" + key);
+
+        // Create object
+        BasicDBObject basicDBObject = new BasicDBObject()
+                .append(TestDataManagerKeys.ARTIFACT_ID, artifactId)
+                .append(TestDataManagerKeys.ARTIFACT_CATEGORY,
+                        category.getKey())
+                .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, owner)
+                .append(TestDataManagerKeys.ARTIFACT_TYPE, key)
+                .append(TestDataManagerKeys.ARTIFACT_DATA,
+                        processor.jsonFromObject(obj));
+
+        MongoUtils.addItemToCollection(db, TestDataManagerCollections
+                .ARTIFACTS, basicDBObject);
+
+        return artifactId;
+    }
+
+    /**
+     * Get the JSON associated with an artifact without casting
+     * to its object.
+     *
+     * @param artifactId the artifact whose JSON to retrieve
+     * @return the json data
+     */
+    public String getArtifactJson(final String artifactId) {
+        BasicDBObject query = new BasicDBObject()
+                .append(TestDataManagerKeys.ARTIFACT_ID, artifactId);
+
+        return (String) db
+                .getCollection(TestDataManagerCollections.ARTIFACTS)
+                .findOne(query).get(TestDataManagerKeys.ARTIFACT_DATA);
+    }
+
+    /**
      * Get an artifact as an object given its unique artifact ID.
      *
      * @param artifactId unique ID of artifact
@@ -251,12 +303,7 @@ public final class TestDataManager {
     public Object getArtifactById(final String artifactId,
                                   final ArtifactProcessor<?> processor) {
 
-        BasicDBObject query = new BasicDBObject()
-                .append(TestDataManagerKeys.ARTIFACT_ID, artifactId);
-
-        String dataJson = (String) db
-                .getCollection(TestDataManagerCollections.ARTIFACTS)
-                .findOne(query).get(TestDataManagerKeys.ARTIFACT_DATA);
+        String dataJson = getArtifactJson(artifactId);
         return processor.objectFromJson(dataJson);
     }
 
@@ -302,6 +349,34 @@ public final class TestDataManager {
                                                           processor,
                                                   final String index) {
 
+        String id = getArtifactIdByCategoryAndOwnerId(category, ownerId,
+                processor, index);
+
+        if (id == null) {
+            return null;
+        }
+
+        return getArtifactById(id, processor);
+    }
+
+    /**
+     * Get an artifact ID given a category and the ID of its owner (usually a
+     * test, suite, or execution).
+     *
+     * @param category  the category of the artifact from choices in
+     *                  edu.umd.cs.guitar.artifacts.ArtifactCategory
+     * @param ownerId   the ID of the owner of this artifact
+     * @param processor an ArtifactProcessor instance for the artifact
+     * @param index     the index of the artifact (needed if more than one
+     *                  artifact per type + owner)
+     * @return the artifact id as a String
+     */
+    public String getArtifactIdByCategoryAndOwnerId(final ArtifactCategory
+                                                            category,
+                                                    final String ownerId,
+                                                    final ArtifactProcessor<?>
+                                                            processor,
+                                                    final String index) {
         String key = processor.getKey();
         if (index != null) {
             key += index;
@@ -322,15 +397,57 @@ public final class TestDataManager {
                     + " matching");
         }
 
-        String id = MongoUtils.findItemPropetyInCollection(db,
+        return MongoUtils.findItemPropetyInCollection(db,
                 TestDataManagerCollections.ARTIFACTS, query,
                 TestDataManagerKeys.ARTIFACT_ID);
+    }
 
-        if (id == null) {
-            return null;
-        }
+    /**
+     * Create a new artifact from an existing one. Useful
+     * when creating new test suites with existing test suite
+     * input artifacts.
+     *
+     * @param category  the category of the artifact from choices in
+     *                  edu.umd.cs.guitar.artifacts.ArtifactCategory
+     * @param ownerId   the ID of the owner of this artifact
+     * @param processor an ArtifactProcessor instance for the artifact
+     * @param index     the index of the artifact (needed if more than one
+     *                  artifact per type + owner)
+     */
 
-        return getArtifactById(id, processor);
+    public void copyArtifact(final ArtifactCategory
+                                     category,
+                             final String ownerId,
+                             final ArtifactProcessor<?>
+                                     processor,
+                             final String index) {
+
+        String artifactId = getArtifactIdByCategoryAndOwnerId(category,
+                ownerId, processor, index);
+
+        BasicDBObject query = new BasicDBObject()
+                .append(TestDataManagerKeys.ARTIFACT_ID, artifactId);
+
+        String newArtifactId = generateId();
+
+        DBObject result = db
+                .getCollection(TestDataManagerCollections.ARTIFACTS)
+                .findOne(query);
+
+        // Create object
+        BasicDBObject basicDBObject = new BasicDBObject()
+                .append(TestDataManagerKeys.ARTIFACT_ID, newArtifactId)
+                .append(TestDataManagerKeys.ARTIFACT_CATEGORY,
+                        result.get(TestDataManagerKeys.ARTIFACT_CATEGORY))
+                .append(TestDataManagerKeys.ARTIFACT_OWNER_ID,
+                        result.get(TestDataManagerKeys.ARTIFACT_OWNER_ID))
+                .append(TestDataManagerKeys.ARTIFACT_TYPE,
+                        result.get(TestDataManagerKeys.ARTIFACT_TYPE))
+                .append(TestDataManagerKeys.ARTIFACT_DATA,
+                        result.get(TestDataManagerKeys.ARTIFACT_DATA));
+
+        MongoUtils.addItemToCollection(db, TestDataManagerCollections
+                .ARTIFACTS, basicDBObject);
     }
 
     /**

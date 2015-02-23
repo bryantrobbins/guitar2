@@ -1,6 +1,7 @@
 package edu.umd.cs.guitar.processors.guitar;
 
 import edu.umd.cs.guitar.artifacts.GsonFileProcessor;
+import edu.umd.cs.guitar.model.data.StepType;
 import edu.umd.cs.guitar.model.data.TestCase;
 import edu.umd.cs.guitar.util.GUITARUtils;
 import org.apache.log4j.LogManager;
@@ -46,4 +47,28 @@ public class TestcaseProcessor extends GsonFileProcessor<TestCase> {
     public Iterator<String> getIterator(final List<TestCase> objectList) {
         return null;
     }
+
+    /**
+     * Concatenate two test cases into a new test case.
+     *
+     * @param a First test case
+     * @param b Second test case
+     * @return Combined test case
+     */
+    public static TestCase concat(final TestCase a, final TestCase b) {
+        TestCase ret = new TestCase();
+
+        // First one
+        for (StepType step : a.getStep()) {
+            ret.getStep().add(step);
+        }
+
+        // Second one
+        for (StepType step : a.getStep()) {
+            ret.getStep().add(step);
+        }
+
+        return ret;
+    }
+
 }

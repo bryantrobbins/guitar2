@@ -62,8 +62,8 @@ public abstract class GsonFileProcessor<T> implements ArtifactProcessor<T> {
      * @param object The object to be serialized
      * @return the json String
      */
-    public final String jsonFromObject(final T object) {
-        return gson.toJson(object);
+    public final String jsonFromObject(final Object object) {
+        return gson.toJson((T) object);
     }
 
 }
