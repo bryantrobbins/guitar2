@@ -126,6 +126,11 @@ public class TestDataManagerTest {
         }
 
         @Override
+        public String jsonFromObject(Object o){
+            return getMagicString();
+        }
+
+        @Override
         public String objectFromJson(String json) {
             return getMagicString();
         }
