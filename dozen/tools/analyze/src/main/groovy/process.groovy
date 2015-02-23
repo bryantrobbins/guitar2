@@ -159,10 +159,6 @@ def createPassingSuite(manager, passing, suiteId){
 	}
 }
 
-def saveGUI(manager, suiteId){
-	manager.saveArtifact(
-}
-
 def createCombinedSuite(manager, passing, suiteId){
 	// Build processors for these objects
 	ArtifactProcessor efgProc = new EFGProcessor(testDataManager.getDb());
@@ -173,10 +169,11 @@ def createCombinedSuite(manager, passing, suiteId){
 	manager.createNewSuite(cbId)
 	println "Passing suite ${cbId} created"
 
-	// Save over the EFG and GUI
-	manager.copyArtifact(category, cbId, efgProc, null)
-	manager.copyArtifact(category, cbId, guiProc, null)
+	// Save the EFG and GUI
+	manager.copyArtifact(category, suiteId, efgProc, null)
+	manager.copyArtifact(category, suiteId, guiProc, null)
 
+	// Create all possible combinations
 	for(String aid : passing){
 		for(String bid : passing){
 			if(!aid.equals(bid)){

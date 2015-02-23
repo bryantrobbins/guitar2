@@ -407,23 +407,25 @@ public final class TestDataManager {
      * when creating new test suites with existing test suite
      * input artifacts.
      *
-     * @param category  the category of the artifact from choices in
-     *                  edu.umd.cs.guitar.artifacts.ArtifactCategory
-     * @param ownerId   the ID of the owner of this artifact
-     * @param processor an ArtifactProcessor instance for the artifact
-     * @param index     the index of the artifact (needed if more than one
-     *                  artifact per type + owner)
+     * @param category   the category of the artifact from choices in
+     *                   edu.umd.cs.guitar.artifacts.ArtifactCategory
+     * @param newOwnerId the ID of the owner of the new copy
+     * @param oldOwnerId the ID of the owner of the original artifact
+     * @param processor  an ArtifactProcessor instance for the artifact
+     * @param index      the index of the artifact (needed if more than one
+     *                   artifact per type + owner)
      */
 
     public void copyArtifact(final ArtifactCategory
                                      category,
-                             final String ownerId,
+                             final String newOwnerId,
+                             final String oldOwnerId,
                              final ArtifactProcessor<?>
                                      processor,
                              final String index) {
 
         String artifactId = getArtifactIdByCategoryAndOwnerId(category,
-                ownerId, processor, index);
+                oldOwnerId, processor, index);
 
         BasicDBObject query = new BasicDBObject()
                 .append(TestDataManagerKeys.ARTIFACT_ID, artifactId);
@@ -439,8 +441,7 @@ public final class TestDataManager {
                 .append(TestDataManagerKeys.ARTIFACT_ID, newArtifactId)
                 .append(TestDataManagerKeys.ARTIFACT_CATEGORY,
                         result.get(TestDataManagerKeys.ARTIFACT_CATEGORY))
-                .append(TestDataManagerKeys.ARTIFACT_OWNER_ID,
-                        result.get(TestDataManagerKeys.ARTIFACT_OWNER_ID))
+                .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, newOwnerId)
                 .append(TestDataManagerKeys.ARTIFACT_TYPE,
                         result.get(TestDataManagerKeys.ARTIFACT_TYPE))
                 .append(TestDataManagerKeys.ARTIFACT_DATA,
