@@ -190,6 +190,14 @@ public final class TestDataManager {
         BasicDBObject basicDBObject = new BasicDBObject()
                 .append(TestDataManagerKeys.SUITE_ID, suiteId);
 
+        // Delete suite entry if present
+        if (MongoUtils.isItemInCollection(db, TestDataManagerCollections.SUITES,
+                basicDBObject)) {
+            MongoUtils.removeItemFromCollection(db,
+                    TestDataManagerCollections.SUITES,
+                    TestDataManagerKeys.SUITE_ID, suiteId);
+        }
+
         // Insert object in suites table
         MongoUtils.addItemToCollection(db, TestDataManagerCollections.SUITES,
                 basicDBObject);

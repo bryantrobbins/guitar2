@@ -4,8 +4,12 @@ import edu.umd.cs.guitar.main.TestDataManager
 import edu.umd.cs.guitar.main.TestDataManagerCollections
 import edu.umd.cs.guitar.processors.guitar.LogProcessor
 import edu.umd.cs.guitar.processors.guitar.TestcaseProcessor
+import edu.umd.cs.guitar.processors.guitar.EFGProcessor
+import edu.umd.cs.guitar.processors.guitar.GUIProcessor
 import edu.umd.cs.guitar.artifacts.ArtifactCategory
 import edu.umd.cs.guitar.processors.applog.TextObject
+
+import edu.umd.cs.guitar.model.data.TestCase
 
 String host = args[0]
 String port = args[1]
@@ -57,8 +61,8 @@ nInconsistent = resultsCombined["inconsistent"].size()
 println "Feasible,Infeasible,Inconsistent"
 println "${nFeasible},${nInfeasible},${nInconsistent}"
 
-createPassingSuite(manager, resultsCombined["passing"], suiteId)
-createCombinedSuite(manager, resultsCombined["passing"], suiteId)
+createPassingSuite(manager, resultsCombined["feasible"], suiteId)
+createCombinedSuite(manager, resultsCombined["feasible"], suiteId)
 
 def analyzeBundle(manager, logProc, suiteId, bundleId){
 	println "Analyzing bundle " + bundleId
@@ -147,12 +151,12 @@ def createPassingSuite(manager, passing, suiteId){
 	manager.createNewSuite(psId)
 	println "Passing suite ${psId} created"
 
-	ArtifactProcessor efgProc = new EFGProcessor(testDataManager.getDb());
-	ArtifactProcessor guiProc = new GUIProcessor(testDataManager.getDb());
+	EFGProcessor efgProc = new EFGProcessor(manager.getDb());
+	GUIProcessor guiProc = new GUIProcessor(manager.getDb());
 
 	// Save over the EFG and GUI
-	manager.copyArtifact(category, psId, efgProc, null)
-	manager.copyArtifact(category, psId, guiProc, null)
+	manager.copyArtifact(ArtifactCategory.SUITE_INPUT, psId, suiteId, efgProc, null)
+	manager.copyArtifact(ArtifactCategory.SUITE_INPUT, psId, suiteId, guiProc, null)
 
 	for(String id : passing){
 		manager.addTestCaseToSuite(id, psId)
@@ -161,17 +165,17 @@ def createPassingSuite(manager, passing, suiteId){
 
 def createCombinedSuite(manager, passing, suiteId){
 	// Build processors for these objects
-	ArtifactProcessor efgProc = new EFGProcessor(testDataManager.getDb());
-	ArtifactProcessor guiProc = new GUIProcessor(testDataManager.getDb());
-	ArtifactProcessor tcProc = new TestcaseProcessor()
+	EFGProcessor efgProc = new EFGProcessor(manager.getDb());
+	GUIProcessor guiProc = new GUIProcessor(manager.getDb());
+	TestcaseProcessor tcProc = new TestcaseProcessor()
 
 	String cbId = "${suiteId}_combined"
 	manager.createNewSuite(cbId)
-	println "Passing suite ${cbId} created"
+	println "Combined suite ${cbId} created"
 
 	// Save the EFG and GUI
-	manager.copyArtifact(category, suiteId, efgProc, null)
-	manager.copyArtifact(category, suiteId, guiProc, null)
+	manager.copyArtifact(ArtifactCategory.SUITE_INPUT, cbId, suiteId, efgProc, null)
+	manager.copyArtifact(ArtifactCategory.SUITE_INPUT, cbId, suiteId, guiProc, null)
 
 	// Create all possible combinations
 	for(String aid : passing){
