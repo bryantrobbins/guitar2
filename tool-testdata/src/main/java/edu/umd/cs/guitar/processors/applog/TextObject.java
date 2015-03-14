@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by bryan on 4/5/14.
@@ -19,6 +20,56 @@ public class TextObject {
      * A log4j logger.
      */
     private static Logger logger = LogManager.getLogger(TextObject.class);
+
+    /**
+     * A little enum for a single test result.
+     */
+    public static enum TestResult {
+        /**
+         * Passing result.
+         */
+        PASS,
+
+        /**
+         * Failing because execution is missing.
+         */
+        EXECUTION_MISSING,
+
+        /**
+         * Failing because log is missing.
+         */
+        LOG_MISSING,
+
+        /**
+         * Failing because a component is disabled.
+         */
+        COMPONENT_DISABLED,
+
+        /**
+         * Failing because a component is not found.
+         */
+        COMPONENT_NOT_FOUND,
+
+        /**
+         * Failing because of a step timeout.
+         */
+        STEP_TIMEOUT,
+
+        /**
+         * Failing because of an error in the log.
+         */
+        ERROR_IN_LOG,
+
+        /**
+         * A top-level (Gradle) failure for any other reason.
+         */
+        FAIL,
+
+        /**
+         * Inconsistent result.
+         */
+        INCONSISTENT
+    }
 
     /**
      * These are the lines of the represented text file.
@@ -69,6 +120,41 @@ public class TextObject {
                     e);
         }
         return ret;
+    }
+
+    /**
+     * Process the log text and return a codified result.
+     *
+     * @return the codified result
+     */
+    public TestResult computeResult() {
+        Pattern pattern = Pattern.compile("(((?:[a-zA-Z]{3} \\d{1,2}, \\d{4,"
+                + "4} \\d{1,2}:\\d{2}:\\d{2} (AM|PM) (\\(SEVERE\\)|\\"
+                + "(ERROR\\))"
+                + ").*\\r(?:(.*Exception.*(\\r.*)(\\tat.*\\r)+)))|("
+                + "(?:[a-zA-Z]{3} \\d{1,2}, \\d{4,4} \\d{1,"
+                + "2}:\\d{2}:\\d{2} (AM|PM) (\\(SEVERE\\)|\\(ERROR\\))).*))");
+
+        for (int i = 0; i < this.size(); i++) {
+            String line = this.getLine(i);
+            if (line.toUpperCase().contains("COMPONENTDISABLED")) {
+                return TestResult.COMPONENT_DISABLED;
+            }
+            if (line.toUpperCase().contains("COMPONENTNOTFOUND")) {
+                return TestResult.COMPONENT_NOT_FOUND;
+            }
+            if (line.toUpperCase().contains("STEP TIMER: TIMEOUT!!!")) {
+                return TestResult.STEP_TIMEOUT;
+            }
+            if (pattern.matcher(line).matches()) {
+                return TestResult.ERROR_IN_LOG;
+            }
+            if (line.toUpperCase().contains(":REPLAY FAILED")) {
+                return TestResult.FAIL;
+            }
+        }
+
+        return TestResult.PASS;
     }
 
 }

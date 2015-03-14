@@ -34,6 +34,30 @@ public final class TestDataManagerKeys {
      */
     public static final String BUNDLE_ID = "bundleId";
 
+    /**
+     * Provides the key for RESULT_ID.
+     */
+    public static final String RESULT_ID = "resultId";
+
+    /**
+     * Provides the key for PASSING_RESULTS.
+     */
+    public static final String PASSING_RESULTS = "passingResults";
+
+    /**
+     * Provides the key for FAILING_RESULTS.
+     */
+    public static final String FAILING_RESULTS = "failingResults";
+
+    /**
+     * Provides the key for INCONSISTENT_RESULTS.
+     */
+    public static final String INCONSISTENT_RESULTS = "inconsistentResults";
+
+    /**
+     * Provides the key for RESULTS.
+     */
+    public static final String RESULTS = "results";
 
     /**
      * Provides the key for ARTIFACT_ID.

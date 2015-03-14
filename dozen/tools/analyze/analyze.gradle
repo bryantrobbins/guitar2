@@ -8,10 +8,9 @@ def loc = hasProperty('nexusLocation') ? nexusLocation : master + ':8081'
 
 // Ripper args
 def db_id_val = hasProperty('db_id') ? db_id : ''
+def result_id_val = hasProperty('result_id') ? result_id : ''
 def suite_id_val = hasProperty('suite_id') ? suite_id : ''
-def bundle_id1_val = hasProperty('bundle_id1') ? bundle_id1 : ''
-def bundle_id2_val = hasProperty('bundle_id2') ? bundle_id2 : ''
-def bundle_id3_val = hasProperty('bundle_id3') ? bundle_id3 : ''
+def bundles_val = hasProperty('bundles') ? bundles : ''
 
 configurations.all {
     // check for updates every build
@@ -30,8 +29,8 @@ dependencies {
 		compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
 }
 
-task process (dependsOn: 'classes', type: JavaExec) {
-    main = 'process'
+task postResults (dependsOn: 'classes', type: JavaExec) {
+    main = 'post'
     classpath = sourceSets.main.runtimeClasspath
-    args master, '37017', db_id_val, suite_id_val, bundle_id1_val, bundle_id2_val, bundle_id3_val
+    args master, '37017', db_id_val, suite_id_val, bundles_val
 }

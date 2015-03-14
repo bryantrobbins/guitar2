@@ -5,6 +5,7 @@ import edu.umd.cs.guitar.model.data.GUIMap;
 import edu.umd.cs.guitar.model.data.GUIStructure;
 import edu.umd.cs.guitar.model.data.StepType;
 import edu.umd.cs.guitar.model.data.TestCase;
+import edu.umd.cs.guitar.processors.applog.TextObject;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * Created by bryan.
  */
 public final class GUITARUtils {
+
 
     /**
      * Hiding the default public constructor.
@@ -143,4 +145,18 @@ public final class GUITARUtils {
         return ret;
     }
 
+    /**
+     * Get the result of a single test execution.
+     *
+     * @param logObject the log artifact for this execution
+     * @return the test result
+     */
+    public static TextObject.TestResult getExecutionResult(final TextObject
+                                                                   logObject) {
+        if (logObject == null) {
+            return TextObject.TestResult.LOG_MISSING;
+        }
+
+        return logObject.computeResult();
+    }
 }

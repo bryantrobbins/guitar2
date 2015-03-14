@@ -1,5 +1,6 @@
 package edu.umd.cs.guitar.main;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -8,6 +9,8 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.ArtifactProcessor;
+import edu.umd.cs.guitar.processors.applog.TextObject;
+import edu.umd.cs.guitar.processors.guitar.LogProcessor;
 import edu.umd.cs.guitar.util.MongoUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -577,6 +580,107 @@ public final class TestDataManager {
         return MongoUtils.findItemPropetyInCollection(db,
                 TestDataManagerCollections.idsInBundle(bundleId),
                 query, TestDataManagerKeys.EXECUTION_ID);
+    }
+
+    /**
+     * Add results for a given set of bundles.
+     *
+     * @param resultId  the id of the results
+     * @param suiteId   the suite which was executed
+     * @param bundleIds the bundles which contain suite executions
+     * @return true if update succeeds, false otherwise
+     */
+    public boolean postResults(final String resultId,
+                               final String suiteId,
+                               final List<String> bundleIds) {
+
+        int numBundles = bundleIds.size();
+
+        // Initialize result storage
+        BasicDBList pass = new BasicDBList();
+        BasicDBList fail = new BasicDBList();
+        BasicDBList inconsistent = new BasicDBList();
+
+        // For each test in suite
+        for (String testId : getTestIdsInSuite(suiteId)) {
+            int passCount = 0;
+
+            // For each bundle
+            for (String bundleId : bundleIds) {
+                // get execution id
+                String execId =
+                        getExecutionIdForTestIdInBundle(bundleId, testId);
+
+                // get log artifact
+                LogProcessor logProc = new LogProcessor();
+                ArtifactCategory output = ArtifactCategory.TEST_OUTPUT;
+                TextObject logObject =
+                        (TextObject) getArtifactByCategoryAndOwnerId(output,
+                                execId, logProc);
+
+                // determine test result
+                TextObject.TestResult result =
+                        TextObject.TestResult.EXECUTION_MISSING;
+
+                if (logObject != null) {
+                    result = logObject.computeResult();
+                }
+
+                if (result.equals(TextObject.TestResult.PASS)) {
+                    passCount++;
+                }
+            }
+
+            // If the test passed every time
+            if (passCount == numBundles) {
+                pass.add(testId);
+            } else if (passCount == 0) {
+                fail.add(testId);
+            } else {
+                inconsistent.add(testId);
+            }
+        }
+
+        // Build the DBObject
+        BasicDBObject bdo = new BasicDBObject();
+        // Put result id
+        bdo.put(TestDataManagerKeys.RESULT_ID, resultId);
+
+        // Put suite id
+        bdo.put(TestDataManagerKeys.SUITE_ID, suiteId);
+
+        // Put bundle ids
+        BasicDBList bundles = new BasicDBList();
+        bundles.addAll(bundleIds);
+        bdo.put(TestDataManagerKeys.BUNDLE_ID, bundles);
+
+        // Put results
+        BasicDBObject resultBdo = new BasicDBObject();
+        resultBdo.put(TestDataManagerKeys.PASSING_RESULTS, pass);
+        resultBdo.put(TestDataManagerKeys.FAILING_RESULTS, fail);
+        resultBdo.put(TestDataManagerKeys.INCONSISTENT_RESULTS, inconsistent);
+        bdo.put(TestDataManagerKeys.RESULTS, resultBdo);
+
+        // Insert the object
+        return MongoUtils.addItemToCollection(db,
+                TestDataManagerCollections.RESULTS,
+                bdo);
+    }
+
+    /**
+     * Add results for a given set of bundles.
+     *
+     * @param suiteId   the suite which was executed
+     * @param bundleIds the bundles which contain suite executions
+     * @return the result id, or null if posting fails
+     */
+    public String postResults(final String suiteId, final List<String> bundleIds) {
+        String resultId = generateId();
+        if (postResults(resultId, suiteId, bundleIds)) {
+            return resultId;
+        } else {
+            return null;
+        }
     }
 
 }
