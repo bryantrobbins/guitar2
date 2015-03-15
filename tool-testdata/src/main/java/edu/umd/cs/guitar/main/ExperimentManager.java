@@ -220,10 +220,9 @@ public final class ExperimentManager {
             if ((count % PROGRESS_INTERVAL) == 0) {
                 System.out.println(".");
             }
-            if (addFeaturesToTest(manager, testId) == null) {
-                return false;
-            }
+            addFeaturesToTest(manager, testId);
         }
+
         return true;
     }
 
