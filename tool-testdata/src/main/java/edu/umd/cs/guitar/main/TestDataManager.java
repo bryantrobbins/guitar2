@@ -6,6 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.util.JSON;
 import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.ArtifactProcessor;
 import edu.umd.cs.guitar.util.MongoUtils;
@@ -242,7 +243,7 @@ public final class TestDataManager {
                 .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, owner)
                 .append(TestDataManagerKeys.ARTIFACT_TYPE, key)
                 .append(TestDataManagerKeys.ARTIFACT_DATA,
-                        processor.jsonFromOptions(options));
+                        JSON.parse(processor.jsonFromOptions(options)));
 
         MongoUtils.addItemToCollection(db, TestDataManagerCollections
                 .ARTIFACTS, basicDBObject);
