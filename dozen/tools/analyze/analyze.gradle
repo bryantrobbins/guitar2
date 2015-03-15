@@ -34,3 +34,9 @@ task postResults (dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     args master, '37017', db_id_val, suite_id_val, bundles_val
 }
+
+task addFeatures (dependsOn: 'classes', type: JavaExec) {
+    main = 'features'
+    classpath = sourceSets.main.runtimeClasspath
+    args master, '37017', db_id_val, suite_id_val
+}

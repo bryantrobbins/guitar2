@@ -22,7 +22,7 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
     /**
      * The key to use for the test ID in options.
      */
-    private static final String TEST_ID_OPTION = "testId";
+    public static final String TEST_ID_OPTION = "testId";
     /**
      * Log4j logger.
      */
