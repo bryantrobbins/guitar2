@@ -235,6 +235,8 @@ public final class TestDataManager {
 
         System.out.println("KEY=" + key);
 
+        DBObject dataObject = (DBObject) JSON.parse(processor.jsonFromOptions(options));
+
         // Create object
         BasicDBObject basicDBObject = new BasicDBObject()
                 .append(TestDataManagerKeys.ARTIFACT_ID, artifactId)
@@ -242,8 +244,7 @@ public final class TestDataManager {
                         category.getKey())
                 .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, owner)
                 .append(TestDataManagerKeys.ARTIFACT_TYPE, key)
-                .append(TestDataManagerKeys.ARTIFACT_DATA,
-                        JSON.parse(processor.jsonFromOptions(options)));
+                .append(TestDataManagerKeys.ARTIFACT_DATA, dataObject);
 
         MongoUtils.addItemToCollection(db, TestDataManagerCollections
                 .ARTIFACTS, basicDBObject);
@@ -299,7 +300,7 @@ public final class TestDataManager {
 
         return (String) db
                 .getCollection(TestDataManagerCollections.ARTIFACTS)
-                .findOne(query).get(TestDataManagerKeys.ARTIFACT_DATA);
+                .findOne(query).get(TestDataManagerKeys.ARTIFACT_DATA).toString();
     }
 
     /**

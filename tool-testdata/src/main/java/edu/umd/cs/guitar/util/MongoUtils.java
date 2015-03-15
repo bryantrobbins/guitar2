@@ -4,7 +4,6 @@ package edu.umd.cs.guitar.util;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteResult;
@@ -12,9 +11,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.net.UnknownHostException;
-import java.util.Map;
-import java.util.Map.Entry;
-
 
 /**
  * This class provides utility methods for dealing with MongoDB.
@@ -117,43 +113,7 @@ public final class MongoUtils {
                                              final DBObject item) {
 
         DBCollection items = db.getCollection(collectionId);
-
-        DBCursor curs = items.find();
-
-        while (curs.hasNext()) {
-            DBObject next = curs.next();
-            if (compareItemsLeft(item, next)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Helper method to compare two items.
-     *
-     * @param a item to be compared
-     * @param b item to be compared
-     * @return true if the items match
-     */
-    private static boolean compareItemsLeft(final DBObject a,
-                                            final DBObject b) {
-        Map<String, String> aMap = a.toMap();
-        Map<String, String> bMap = b.toMap();
-        for (Entry<String, String> e : aMap.entrySet()) {
-            String seeking = bMap.get(e.getKey());
-
-            if (seeking == null) {
-                return false;
-            }
-
-            if (!seeking.equals(e.getValue())) {
-                return false;
-            }
-        }
-
-        return true;
+        return (items.find(item).size() > 0);
     }
 
     /**
