@@ -83,4 +83,19 @@ public final class TestDataManagerKeys {
      * Provides the key for ARTIFACT_DATA.
      */
     public static final String ARTIFACT_DATA = "artifactData";
+
+    /**
+     * Provides the key for GROUP_ID.
+     */
+    public static final String GROUP_ID = "groupId";
+
+    /**
+     * Provides the key for FEATURE_ID.
+     */
+    public static final String FEATURES_OBJECT = "features";
+
+    /**
+     * Provides the key for TEST_LIST_ID.
+     */
+    public static final String TEST_LIST_ID = "testList";
 }

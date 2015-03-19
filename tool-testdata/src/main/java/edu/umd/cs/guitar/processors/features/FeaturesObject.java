@@ -51,6 +51,15 @@ public class FeaturesObject {
     }
 
     /**
+     * Get the features associated with this object.
+     *
+     * @return the List of features
+     */
+    public List<String> getFeatures() {
+        return features;
+    }
+
+    /**
      * Check if a feature exists in this feature list.
      *
      * @param feature the feature to search for

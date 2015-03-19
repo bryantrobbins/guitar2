@@ -41,9 +41,8 @@ RUN apt-get install r-base r-base-dev -y
 RUN apt-get -y install openjdk-7-jdk --no-install-recommends --no-install-suggests
 RUN mkdir -p /paper
 RUN mkdir -p /opt/Rpackages
-RUN echo 'install.packages("e1071", lib="/opt/Rpackages/", repos="http://watson.nci.nih.gov/cran_mirror/")' >> rinstall
-RUN echo 'install.packages("rmongodb", lib="/opt/Rpackages/", repos="http://watson.nci.nih.gov/cran_mirror/")' >> rinstall
-RUN echo 'install.packages("rJava", lib="/opt/Rpackages/", repos="http://watson.nci.nih.gov/cran_mirror/")' >> rinstall
+RUN echo 'install.packages("e1071", lib="/opt/Rpackages/", repos="http://lib.stat.cmu.edu/R/CRAN/")' >> rinstall
+RUN echo 'install.packages("rmongodb", lib="/opt/Rpackages/", repos="http://lib.stat.cmu.edu/R/CRAN/")' >> rinstall
 RUN R CMD BATCH --slave rinstall rinstall.out
 VOLUME ["/paper"]
 WORKDIR /paper
@@ -53,7 +52,7 @@ WORKDIR /paper
 def latexCmd = "pdflatex ${baseVal}.tex"
 def bibtexCmd = "bibtex ${baseVal}"
 def rscriptCmd = "R CMD BATCH --slave ${rscriptVal} ${outputVal}"
-def catCmd = "cat /rinstall.out"
+def debugCmd = "ls -ltr /opt/Rpackages"
 
 def withClient(client, clos){
 	clos(client)
@@ -288,5 +287,5 @@ task runRscript << {
 }
 
 task debugMe << {
-  doCmd(client, catCmd)		
+  doCmd(client, debugCmd)		
 }

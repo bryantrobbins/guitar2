@@ -4,12 +4,14 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.processors.applog.TextObject;
+import edu.umd.cs.guitar.processors.features.FeaturesObject;
 import edu.umd.cs.guitar.processors.guitar.FeaturesProcessor;
 import edu.umd.cs.guitar.processors.guitar.LogProcessor;
 import edu.umd.cs.guitar.util.MongoUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -211,7 +213,6 @@ public final class ExperimentManager {
             final String mongoPort,
             final String dbId,
             final String suiteId) {
-        boolean success = true;
 
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
         int count = 0;
@@ -224,6 +225,104 @@ public final class ExperimentManager {
         }
 
         return true;
+    }
+
+    /**
+     * Add features to test cases in given suites which are aware of features
+     * across all test cases.
+     *
+     * @param mongoHost the mongodb host to use
+     * @param mongoPort the mongodb port to use
+     * @param dbId      the db to use
+     * @param suiteIds  the suites to add features for
+     * @return the unique id for the created group if successful, else null
+     */
+    public static String addGlobalFeaturesForSuites(final String mongoHost,
+                                                    final String mongoPort,
+                                                    final String dbId,
+                                                    final List<String> suiteIds) {
+        TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
+        FeaturesProcessor fproc = new FeaturesProcessor(manager);
+        ArrayList<String> allFeatures = new ArrayList<String>();
+
+        int count = 0;
+        String groupId = manager.generateId();
+
+        // Add features for all in-scope suites
+        // Keep track of all features as we go
+        for (String suiteId : suiteIds) {
+            for (String testId : manager.getTestIdsInSuite(suiteId)) {
+                count++;
+                if ((count % PROGRESS_INTERVAL) == 0) {
+                    System.out.println(".");
+                }
+
+                String artifactId = addFeaturesToTest(manager, testId);
+                FeaturesObject fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
+                allFeatures.addAll(fob.getFeatures());
+            }
+        }
+
+        // Build the DBObject
+        BasicDBObject bdo = new BasicDBObject();
+
+        // Add GroupId
+        bdo.put(TestDataManagerKeys.GROUP_ID, groupId);
+
+        // Add suite Ids
+        BasicDBList suites = new BasicDBList();
+        suites.addAll(suiteIds);
+        bdo.put(TestDataManagerKeys.SUITE_ID, suites);
+
+        // Build list of tests in this group
+        BasicDBList testList = new BasicDBList();
+
+        for (String suiteId : suiteIds) {
+            for (String testId : manager.getTestIdsInSuite(suiteId)) {
+                BasicDBObject myDbo = new BasicDBObject();
+                // Build list of features from list of all possible
+                FeaturesObject fob = (FeaturesObject) manager.getArtifactByCategoryAndOwnerId(
+                        ArtifactCategory.TEST_INPUT,
+                        testId,
+                        fproc
+                );
+
+                BasicDBObject myGlobalFeatures = new BasicDBObject();
+                for (String feature : allFeatures) {
+                    if (fob.getFeatures().contains(feature)) {
+                        myGlobalFeatures.append(feature, "1.0");
+                    } else {
+                        myGlobalFeatures.append(feature, "0.0");
+                    }
+                }
+
+                // Add the test id for this test
+                myDbo.append(TestDataManagerKeys.TEST_ID, testId);
+
+                // Add the suite id for this test
+                myDbo.append(TestDataManagerKeys.SUITE_ID, suiteId);
+
+                // Add the global features object
+                myDbo.put(TestDataManagerKeys.FEATURES_OBJECT, myGlobalFeatures);
+
+                // Add Dbo to list of Dbos for the group
+                testList.add(myDbo);
+            }
+        }
+
+        // Add List of test objects to group object
+        bdo.put(TestDataManagerKeys.TEST_LIST_ID, testList);
+
+        // Insert the object
+        boolean result = MongoUtils.addItemToCollection(manager.getDb(),
+                TestDataManagerCollections.GROUPS,
+                bdo);
+
+        if (!result) {
+            return null;
+        } else {
+            return groupId;
+        }
     }
 
 }
