@@ -47,6 +47,11 @@ public final class TestDataManagerCollections {
     public static final String GROUPS = "groups";
 
     /**
+     * Use this ID for the groups collection.
+     */
+    public static final String GLOBAL_FEATURES = "globalFeatures";
+
+    /**
      * This variable holds the prefix for individual suite collections.
      */
     private static final String SUITE_PREFIX = "suite_";

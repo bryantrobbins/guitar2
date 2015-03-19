@@ -274,8 +274,10 @@ public final class ExperimentManager {
         suites.addAll(suiteIds);
         bdo.put(TestDataManagerKeys.SUITE_ID, suites);
 
-        // Build list of tests in this group
-        BasicDBList testList = new BasicDBList();
+        // Record the group entry
+        MongoUtils.addItemToCollection(manager.getDb(),
+                TestDataManagerCollections.GROUPS,
+                bdo);
 
         for (String suiteId : suiteIds) {
             for (String testId : manager.getTestIdsInSuite(suiteId)) {
@@ -296,6 +298,9 @@ public final class ExperimentManager {
                     }
                 }
 
+                // Add the overall group id for this entry
+                myDbo.append(TestDataManagerKeys.GROUP_ID, groupId);
+
                 // Add the test id for this test
                 myDbo.append(TestDataManagerKeys.TEST_ID, testId);
 
@@ -305,24 +310,15 @@ public final class ExperimentManager {
                 // Add the global features object
                 myDbo.put(TestDataManagerKeys.FEATURES_OBJECT, myGlobalFeatures);
 
-                // Add Dbo to list of Dbos for the group
-                testList.add(myDbo);
+                // Add Dbo to GlobalizedFeatures collection
+                MongoUtils.addItemToCollection(manager.getDb(),
+                        TestDataManagerCollections.GLOBAL_FEATURES,
+                        myDbo);
+
             }
         }
 
-        // Add List of test objects to group object
-        bdo.put(TestDataManagerKeys.TEST_LIST_ID, testList);
-
-        // Insert the object
-        boolean result = MongoUtils.addItemToCollection(manager.getDb(),
-                TestDataManagerCollections.GROUPS,
-                bdo);
-
-        if (!result) {
-            return null;
-        } else {
-            return groupId;
-        }
+        return groupId;
     }
 
 }
