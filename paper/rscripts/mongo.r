@@ -38,15 +38,9 @@ combined.all <- c(combined.passing, combined.failing)
 
 global.all <- c(combined.all, input.all)
 
-# Build global feature list
-global.features <- list()
-for (tid in global.all){
-  myFeaturesQuery <- sprintf('{"ownerId": "%s", "artifactType": "testCaseFeatures"}', tid)
-	myFeatsBson <- mongo.bson.from.JSON(myFeaturesQuery)
-	myFeatsValue <- mongo.findOne(m, artifactsCollection, myFeatsBson)
-	myFeatsList <- mongo.bson.to.list(myFeatsValue)[['artifactData']][['features']]
-	global.features <- unique(c(global.features, myFeatsList))
-}
+# Get global.features from DB
+bson <- mongo.bson.from.JSON(features.query)
+global.features <- mongo.find
 
 # Build data frame for all examples
 cna <- c(list('isFeas', 'isInput'),global.features)
@@ -66,28 +60,5 @@ for (tid in global.all){
 			global.df[tid, 'isFeasible'] <- 1
 		}
 	}
-
-	# Set feature values
-	myFeaturesQuery <- sprintf('{"ownerId": "%s", "artifactType": "testCaseFeatures"}', tid)
-  myFeatsBson <- mongo.bson.from.JSON(myFeaturesQuery)
-  myFeatsValue <- mongo.findOne(m, artifactsCollection, myFeatsBson)
-  myFeatsList <- mongo.bson.to.list(myFeatsValue)[['artifactData']][['features']]
-	
-	for(feat in myFeatsList){
-		global.df[tid, feat] <- 1	
-	}
 }
 
-# Convert df to bson for storage
-list <- list(a=2, b=3, c=list(d=4, e=5))
-bson <- mongo.bson.from.df(global.df)
-
-# Add some metadata
-dfList <- mongo.bson.to.list(bson)
-sprintf('{"inputSuiteId": "%s", "combinedSuiteId": "%s", "frame": "%s"}', input.suite, combined.suite, dfJson)
-mdBson <- mongo.bson.from.list(mdList)
-mongo.insert(m, dfCollection, mdBson)
-
-# Add data frame of examples
-mongo.update(m, dfCollection, query)
-global.df

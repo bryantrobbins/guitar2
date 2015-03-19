@@ -11,6 +11,7 @@ def db_id_val = hasProperty('db_id') ? db_id : ''
 def result_id_val = hasProperty('result_id') ? result_id : ''
 def suite_id_val = hasProperty('suite_id') ? suite_id : ''
 def bundles_val = hasProperty('bundles') ? bundles : ''
+def suites_val = hasProperty('suites') ? suites : ''
 
 configurations.all {
     // check for updates every build
@@ -36,7 +37,9 @@ task postResults (dependsOn: 'classes', type: JavaExec) {
 }
 
 task addFeatures (dependsOn: 'classes', type: JavaExec) {
+		minHeapSize "1g"
+		maxHeapSize "4g"
     main = 'features'
     classpath = sourceSets.main.runtimeClasspath
-    args master, '37017', db_id_val, suite_id_val
+    args master, '37017', db_id_val, suites_val
 }
