@@ -233,8 +233,6 @@ public final class TestDataManager {
             key += index;
         }
 
-        System.out.println("KEY=" + key);
-
         DBObject dataObject = (DBObject) JSON.parse(processor.jsonFromOptions(options));
 
         // Create object
@@ -269,7 +267,6 @@ public final class TestDataManager {
 
         String artifactId = generateId();
         String key = processor.getKey();
-        System.out.println("KEY=" + key);
 
         // Create object
         BasicDBObject basicDBObject = new BasicDBObject()
