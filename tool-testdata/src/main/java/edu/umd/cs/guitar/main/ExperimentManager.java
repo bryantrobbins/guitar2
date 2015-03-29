@@ -11,8 +11,8 @@ import edu.umd.cs.guitar.util.MongoUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -243,10 +243,12 @@ public final class ExperimentManager {
                                                     final List<String> suiteIds) {
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
         FeaturesProcessor fproc = new FeaturesProcessor(manager);
-        ArrayList<String> allFeatures = new ArrayList<String>();
+        HashSet<String> allFeatures = new HashSet<String>();
 
         int count = 0;
         String groupId = manager.generateId();
+
+        System.out.println("Adding group");
 
         // Add features for all in-scope suites
         // Keep track of all features as we go
@@ -257,8 +259,16 @@ public final class ExperimentManager {
                     System.out.println(".");
                 }
 
-                String artifactId = addFeaturesToTest(manager, testId);
-                FeaturesObject fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
+                FeaturesObject fob = (FeaturesObject) manager.getArtifactByCategoryAndOwnerId(
+                        ArtifactCategory.TEST_INPUT,
+                        testId,
+                        fproc
+                );
+
+                if (fob == null) {
+                    String artifactId = addFeaturesToTest(manager, testId);
+                    fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
+                }
                 allFeatures.addAll(fob.getFeatures());
             }
         }
@@ -274,11 +284,17 @@ public final class ExperimentManager {
         suites.addAll(suiteIds);
         bdo.put(TestDataManagerKeys.SUITE_ID, suites);
 
+        // Build and add the global feature list
+        BasicDBList dbl = new BasicDBList();
+        dbl.addAll(allFeatures);
+        bdo.put(TestDataManagerKeys.FEATURES_LIST, dbl);
+
         // Record the group entry
         MongoUtils.addItemToCollection(manager.getDb(),
                 TestDataManagerCollections.GROUPS,
                 bdo);
 
+        System.out.println("Adding global features");
         for (String suiteId : suiteIds) {
             for (String testId : manager.getTestIdsInSuite(suiteId)) {
                 BasicDBObject myDbo = new BasicDBObject();
@@ -310,6 +326,7 @@ public final class ExperimentManager {
                 // Add the global features object
                 myDbo.put(TestDataManagerKeys.FEATURES_OBJECT, myGlobalFeatures);
 
+                // Add an easy-to-parse feature list
                 // Add Dbo to GlobalizedFeatures collection
                 MongoUtils.addItemToCollection(manager.getDb(),
                         TestDataManagerCollections.GLOBAL_FEATURES,

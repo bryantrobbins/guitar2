@@ -92,7 +92,12 @@ public final class TestDataManagerKeys {
     /**
      * Provides the key for FEATURE_ID.
      */
-    public static final String FEATURES_OBJECT = "features";
+    public static final String FEATURES_OBJECT = "featuresObject";
+
+    /**
+     * Provides the key for FEATURE_ID.
+     */
+    public static final String FEATURES_LIST = "featuresList";
 
     /**
      * Provides the key for TEST_LIST_ID.

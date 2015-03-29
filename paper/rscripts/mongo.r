@@ -38,10 +38,6 @@ combined.all <- c(combined.passing, combined.failing)
 
 global.all <- c(combined.all, input.all)
 
-# Get global.features from DB
-bson <- mongo.bson.from.JSON(features.query)
-global.features <- mongo.find
-
 # Build data frame for all examples
 cna <- c(list('isFeas', 'isInput'),global.features)
 global.df <- data.frame(mat.or.vec(length(global.all), length(cna)))
@@ -60,5 +56,13 @@ for (tid in global.all){
 			global.df[tid, 'isFeasible'] <- 1
 		}
 	}
+
+  # Get global.features from DB
+  features.query <- sprintf('{"testId": "%s"}', tid)
+  queryBson <- mongo.bson.from.JSON(features.query)
+  resultBson<- mongo.find(m, featuresCollection, queryBson)
+	resultList <- mongo.bson.to.list(resultBson)
+	for ( feat in resultList[['
+
 }
 
