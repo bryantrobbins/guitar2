@@ -286,6 +286,7 @@ public final class ExperimentManager {
 
         // Build and add the global feature list
         BasicDBList dbl = new BasicDBList();
+        System.out.println("Features List has size of " + allFeatures.size());
         dbl.addAll(allFeatures);
         bdo.put(TestDataManagerKeys.FEATURES_LIST, dbl);
 
@@ -294,46 +295,46 @@ public final class ExperimentManager {
                 TestDataManagerCollections.GROUPS,
                 bdo);
 
-        System.out.println("Adding global features");
-        for (String suiteId : suiteIds) {
-            for (String testId : manager.getTestIdsInSuite(suiteId)) {
-                BasicDBObject myDbo = new BasicDBObject();
-                // Build list of features from list of all possible
-                FeaturesObject fob = (FeaturesObject) manager.getArtifactByCategoryAndOwnerId(
-                        ArtifactCategory.TEST_INPUT,
-                        testId,
-                        fproc
-                );
-
-                BasicDBObject myGlobalFeatures = new BasicDBObject();
-                for (String feature : allFeatures) {
-                    if (fob.getFeatures().contains(feature)) {
-                        myGlobalFeatures.append(feature, "1.0");
-                    } else {
-                        myGlobalFeatures.append(feature, "0.0");
-                    }
-                }
-
-                // Add the overall group id for this entry
-                myDbo.append(TestDataManagerKeys.GROUP_ID, groupId);
-
-                // Add the test id for this test
-                myDbo.append(TestDataManagerKeys.TEST_ID, testId);
-
-                // Add the suite id for this test
-                myDbo.append(TestDataManagerKeys.SUITE_ID, suiteId);
-
-                // Add the global features object
-                myDbo.put(TestDataManagerKeys.FEATURES_OBJECT, myGlobalFeatures);
-
-                // Add an easy-to-parse feature list
-                // Add Dbo to GlobalizedFeatures collection
-                MongoUtils.addItemToCollection(manager.getDb(),
-                        TestDataManagerCollections.GLOBAL_FEATURES,
-                        myDbo);
-
-            }
-        }
+//        System.out.println("Adding global features");
+//        for (String suiteId : suiteIds) {
+//            for (String testId : manager.getTestIdsInSuite(suiteId)) {
+//                BasicDBObject myDbo = new BasicDBObject();
+//                // Build list of features from list of all possible
+//                FeaturesObject fob = (FeaturesObject) manager.getArtifactByCategoryAndOwnerId(
+//                        ArtifactCategory.TEST_INPUT,
+//                        testId,
+//                        fproc
+//                );
+//
+//                BasicDBObject myGlobalFeatures = new BasicDBObject();
+//                for (String feature : allFeatures) {
+//                    if (fob.getFeatures().contains(feature)) {
+//                        myGlobalFeatures.append(feature, "1.0");
+//                    } else {
+//                        myGlobalFeatures.append(feature, "0.0");
+//                    }
+//                }
+//
+//                // Add the overall group id for this entry
+//                myDbo.append(TestDataManagerKeys.GROUP_ID, groupId);
+//
+//                // Add the test id for this test
+//                myDbo.append(TestDataManagerKeys.TEST_ID, testId);
+//
+//                // Add the suite id for this test
+//                myDbo.append(TestDataManagerKeys.SUITE_ID, suiteId);
+//
+//                // Add the global features object
+//                myDbo.put(TestDataManagerKeys.FEATURES_OBJECT, myGlobalFeatures);
+//
+//                // Add an easy-to-parse feature list
+//                // Add Dbo to GlobalizedFeatures collection
+//                MongoUtils.addItemToCollection(manager.getDb(),
+//                        TestDataManagerCollections.GLOBAL_FEATURES,
+//                        myDbo);
+//
+//            }
+//        }
 
         return groupId;
     }

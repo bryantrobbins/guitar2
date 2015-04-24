@@ -17,7 +17,7 @@ groupsCollection <- 'amalga_jenkins-generate-sl1-14.groups'
 
 # Some JSON objects
 input.suite <- 'amalga_JabRef_sq_l_1'
-groupId <- '551894310364984789d6237f'
+groupId <- '5538dbc24282b709a7c70fa6'
 input.query <- sprintf('{"suiteId": "%s"}', input.suite)
 combined.query <- sprintf('{"suiteId": "%s_combined"}', input.suite)
 group.query <- sprintf('{"groupId": "%s"}', groupId)
@@ -41,6 +41,7 @@ combined.failing <- list[['results']][['failingResults']]
 combined.all <- c(combined.passing, combined.failing)
 
 global.all <- c(combined.all, input.all)
+length(global.all)
 
 # Get global features
 cat('Loading global feature list\n')
@@ -48,24 +49,25 @@ bson <- mongo.bson.from.JSON(group.query)
 value <- mongo.findOne(m, groupsCollection, bson)
 list <- mongo.bson.to.list(value)
 global.features <- list[['featuresList']]
+length(global.features)
 
 # Build data frame for all examples
 cat('Initializing global data frame\n')
 cna <- c(list('isFeas', 'isInput'),global.features)
-global.df <- data.frame(mat.or.vec(length(global.all), length(cna)))
+global.df <- data.frame(matrix(0, length(global.all), length(cna)))
 rownames(global.df) <- global.all
 colnames(global.df) <- cna
 
 for (tid in global.all){
-	# Set isInput and isFeasible
+	# Set isInput and isFeas
 	if(tid %in% input.all){
 		global.df[tid, 'isInput'] <- 1
 		if(tid %in% input.passing){
-			global.df[tid, 'isFeasible'] <- 1
+			global.df[tid, 'isFeas'] <- 1
 		}
 	}else {
 		if(tid %in% combined.passing){
-			global.df[tid, 'isFeasible'] <- 1
+			global.df[tid, 'isFeas'] <- 1
 		}
 	}
 

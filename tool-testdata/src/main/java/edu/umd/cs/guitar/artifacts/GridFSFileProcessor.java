@@ -2,9 +2,11 @@ package edu.umd.cs.guitar.artifacts;
 
 import com.google.gson.JsonParser;
 import com.mongodb.DB;
+import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
+import com.mongodb.util.JSON;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
@@ -81,8 +83,11 @@ public abstract class GridFSFileProcessor<T> implements ArtifactProcessor<T> {
         // GridFS object
         GridFS gfsBinary = new GridFS(db, GRID_BINARY_COLLECTION);
 
+        // Remove json wrapper
+        DBObject idWrapper = (DBObject) JSON.parse(json);
+
         // Coverage object from GridFS
-        GridFSDBFile binaryOutput = gfsBinary.findOne(json);
+        GridFSDBFile binaryOutput = gfsBinary.findOne(idWrapper.get("id").toString());
 
         // Prepare output stream
         ByteArrayOutputStream binaryStreamOut = new ByteArrayOutputStream();
@@ -185,7 +190,7 @@ public abstract class GridFSFileProcessor<T> implements ArtifactProcessor<T> {
         gfsFile.setFilename(binaryFileId);
         gfsFile.save();
 
-        return binaryFileId;
+        return "{'id': '" + binaryFileId + "'}";
     }
 
 }

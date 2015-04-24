@@ -1,9 +1,11 @@
 package edu.umd.cs.guitar.artifacts;
 
 import com.mongodb.DB;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.util.JSON;
 import edu.umd.cs.guitar.main.TestDataManager;
 import org.junit.Assert;
 import org.junit.Before;
@@ -66,9 +68,13 @@ public class GridFSFileProcessorTest {
         Map<String, String> options = new HashMap<String, String>();
         options.put(GridFSTestProcessor.FILE_PATH_OPTION, path);
         String json = proc.jsonFromOptions(options);
+        System.out.println("GOTHERE:" + json);
+
+        // Remove JSON wrapper
+        DBObject idWrapper = (DBObject) JSON.parse(json);
 
         // Verify file created
-        GridFSDBFile binaryOutput = gfsBinary.findOne(json);
+        GridFSDBFile binaryOutput = gfsBinary.findOne(idWrapper.get("id").toString());
         Assert.assertNotNull(binaryOutput);
 
         // Actually compare the data
@@ -84,8 +90,11 @@ public class GridFSFileProcessorTest {
         CustomBinaryObject object = new CustomBinaryObject(100);
         String json = proc.jsonFromObject(object);
 
+        // Remove JSON wrapper
+        DBObject idWrapper = (DBObject) JSON.parse(json);
+
         // Verify file created
-        GridFSDBFile binaryOutput = gfsBinary.findOne(json);
+        GridFSDBFile binaryOutput = gfsBinary.findOne(idWrapper.get("id").toString());
         Assert.assertNotNull(binaryOutput);
 
         // Actually compare the data
