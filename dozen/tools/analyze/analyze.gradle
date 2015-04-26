@@ -12,6 +12,7 @@ def result_id_val = hasProperty('result_id') ? result_id : ''
 def suite_id_val = hasProperty('suite_id') ? suite_id : ''
 def bundles_val = hasProperty('bundles') ? bundles : ''
 def suites_val = hasProperty('suites') ? suites : ''
+def size = hasProperty('size') ? size: '1000'
 
 configurations.all {
     // check for updates every build
@@ -34,6 +35,12 @@ task postResults (dependsOn: 'classes', type: JavaExec) {
     main = 'post'
     classpath = sourceSets.main.runtimeClasspath
     args master, '37017', db_id_val, suite_id_val, bundles_val
+}
+
+task generateCombined (dependsOn: 'classes', type: JavaExec) {
+    main = 'generateCombined'
+    classpath = sourceSets.main.runtimeClasspath
+    args master, '37017', db_id_val, suite_id_val, result_id_val, size_val
 }
 
 task addFeatures (dependsOn: 'classes', type: JavaExec) {

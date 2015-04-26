@@ -2,11 +2,16 @@ package edu.umd.cs.guitar.main;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import edu.umd.cs.guitar.artifacts.ArtifactCategory;
+import edu.umd.cs.guitar.model.data.TestCase;
 import edu.umd.cs.guitar.processors.applog.TextObject;
 import edu.umd.cs.guitar.processors.features.FeaturesObject;
+import edu.umd.cs.guitar.processors.guitar.EFGProcessor;
 import edu.umd.cs.guitar.processors.guitar.FeaturesProcessor;
+import edu.umd.cs.guitar.processors.guitar.GUIProcessor;
 import edu.umd.cs.guitar.processors.guitar.LogProcessor;
+import edu.umd.cs.guitar.processors.guitar.TestcaseProcessor;
 import edu.umd.cs.guitar.util.MongoUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -15,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by bryan on 10/4/14.
@@ -148,6 +154,77 @@ public final class ExperimentManager {
         return MongoUtils.addItemToCollection(manager.getDb(),
                 TestDataManagerCollections.RESULTS,
                 bdo);
+    }
+
+    /**
+     * Get a results object by its ID.
+     *
+     * @param manager  the TestDataManager to use
+     * @param resultId the the id of the results
+     * @return a DBObject of the results
+     */
+    public static DBObject getResultsObject(final TestDataManager manager, final String resultId) {
+        DBObject query = new BasicDBObject(TestDataManagerKeys.RESULT_ID, resultId);
+        return manager.getDb().getCollection(TestDataManagerCollections.RESULTS).findOne(query);
+    }
+
+
+    /**
+     * Generate a test suite of test case combinations given an input test suite and input suite
+     * execution results.
+     *
+     * @param manager  a TestDataManager object to use
+     * @param suiteId  the input test suite ID
+     * @param resultId the results to use in identifying feasible input test cases
+     * @param size     the number of test cases to put in the combined suite
+     * @return true upon success, false otherwise
+     */
+    public static boolean generateCombinationSuite(final TestDataManager manager,
+                                                   final String suiteId,
+                                                   final String resultId,
+                                                   final int size) {
+
+        Random random = new Random();
+
+        // Get passing tests from input suite
+        DBObject resultsObject = (DBObject) getResultsObject(manager, resultId).get(TestDataManagerKeys.RESULTS);
+        BasicDBList passing = (BasicDBList) resultsObject.get(TestDataManagerKeys.PASSING_RESULTS);
+
+        // Build processors for these objects
+        EFGProcessor efgProc = new EFGProcessor(manager.getDb());
+        GUIProcessor guiProc = new GUIProcessor(manager.getDb());
+        TestcaseProcessor tcProc = new TestcaseProcessor();
+
+        String cbId = suiteId + "_combined";
+        manager.createNewSuite(cbId);
+        logger.debug("Combined suite " + cbId + " created");
+
+        // Save the EFG and GUI
+        manager.copyArtifact(ArtifactCategory.SUITE_INPUT, cbId, suiteId, efgProc, null);
+        manager.copyArtifact(ArtifactCategory.SUITE_INPUT, cbId, suiteId, guiProc, null);
+
+        // Create random test combinations until suite has desired size
+        HashSet<String> combinedIds = new HashSet<String>();
+        while (combinedIds.size() < size) {
+
+            int aindex = random.nextInt(passing.size());
+            int bindex = random.nextInt(passing.size());
+            String aid = passing.get(aindex).toString();
+            String bid = passing.get(bindex).toString();
+            String cid = aid + "_CONCAT_" + bid;
+
+            if (!aid.equals(bid) && !combinedIds.contains(cid)) {
+                combinedIds.add(cid);
+                TestCase a = (TestCase) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT,
+                        aid, tcProc);
+                TestCase b = (TestCase) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT,
+                        bid, tcProc);
+                TestCase c = TestcaseProcessor.concat(a, b);
+                manager.saveArtifact(ArtifactCategory.TEST_INPUT, tcProc, c, cid);
+                manager.addTestCaseToSuite(cid, cbId);
+            }
+        }
+        return true;
     }
 
     /**
