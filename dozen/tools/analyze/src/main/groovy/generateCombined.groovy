@@ -1,6 +1,7 @@
 // HOST, PORT, DB_ID, SUITE_ID, RESULT_ID, SIZE
 
 import edu.umd.cs.guitar.main.ExperimentManager
+import edu.umd.cs.guitar.main.TestDataManager
 
 String host = args[0]
 String port = args[1]
