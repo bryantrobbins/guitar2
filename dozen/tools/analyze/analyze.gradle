@@ -12,7 +12,7 @@ def result_id_val = hasProperty('result_id') ? result_id : ''
 def suite_id_val = hasProperty('suite_id') ? suite_id : ''
 def bundles_val = hasProperty('bundles') ? bundles : ''
 def suites_val = hasProperty('suites') ? suites : ''
-def size = hasProperty('size') ? size: '1000'
+def size_val = hasProperty('size') ? size: '1000'
 
 configurations.all {
     // check for updates every build
