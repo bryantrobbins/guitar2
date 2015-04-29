@@ -34,6 +34,30 @@ public final class TestDataManagerKeys {
      */
     public static final String BUNDLE_ID = "bundleId";
 
+    /**
+     * Provides the key for RESULT_ID.
+     */
+    public static final String RESULT_ID = "resultId";
+
+    /**
+     * Provides the key for PASSING_RESULTS.
+     */
+    public static final String PASSING_RESULTS = "passingResults";
+
+    /**
+     * Provides the key for FAILING_RESULTS.
+     */
+    public static final String FAILING_RESULTS = "failingResults";
+
+    /**
+     * Provides the key for INCONSISTENT_RESULTS.
+     */
+    public static final String INCONSISTENT_RESULTS = "inconsistentResults";
+
+    /**
+     * Provides the key for RESULTS.
+     */
+    public static final String RESULTS = "results";
 
     /**
      * Provides the key for ARTIFACT_ID.
@@ -59,4 +83,24 @@ public final class TestDataManagerKeys {
      * Provides the key for ARTIFACT_DATA.
      */
     public static final String ARTIFACT_DATA = "artifactData";
+
+    /**
+     * Provides the key for GROUP_ID.
+     */
+    public static final String GROUP_ID = "groupId";
+
+    /**
+     * Provides the key for FEATURE_ID.
+     */
+    public static final String FEATURES_OBJECT = "featuresObject";
+
+    /**
+     * Provides the key for FEATURE_ID.
+     */
+    public static final String FEATURES_LIST = "featuresList";
+
+    /**
+     * Provides the key for TEST_LIST_ID.
+     */
+    public static final String TEST_LIST_ID = "testList";
 }

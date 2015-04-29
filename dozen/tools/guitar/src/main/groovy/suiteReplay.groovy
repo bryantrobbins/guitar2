@@ -3,7 +3,7 @@
 import edu.umd.cs.guitar.util.JenkinsClient
 import edu.umd.cs.guitar.main.TestDataManager
 
-def master = "guitar03.cs.umd.edu"
+def master = "guitar05.cs.umd.edu"
 
 // Jenkins client
 def jenkinsClient = new JenkinsClient(master, "8080", "", "admin", "amalga84go")
@@ -31,5 +31,5 @@ for(String id : manager.getTestIdsInSuite(args[2])){
         jenkinsClient.submitJob("replay-test", jobParams)
 
 				// ZZZ to let the master recover
-				sleep(8000)
+				sleep(3000)
 }

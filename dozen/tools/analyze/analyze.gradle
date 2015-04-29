@@ -3,13 +3,16 @@ apply plugin: 'maven'
 apply plugin: 'groovy'
 
 // Dependency path arg
-def master = hasProperty('master') ? master : 'guitar03.cs.umd.edu'
+def master = hasProperty('master') ? master : 'guitar05.cs.umd.edu'
 def loc = hasProperty('nexusLocation') ? nexusLocation : master + ':8081'
 
 // Ripper args
 def db_id_val = hasProperty('db_id') ? db_id : ''
-def bundle_id_val = hasProperty('bundle_id') ? bundle_id : ''
+def result_id_val = hasProperty('result_id') ? result_id : ''
 def suite_id_val = hasProperty('suite_id') ? suite_id : ''
+def bundles_val = hasProperty('bundles') ? bundles : ''
+def suites_val = hasProperty('suites') ? suites : ''
+def size_val = hasProperty('size') ? size: '1000'
 
 configurations.all {
     // check for updates every build
@@ -28,8 +31,22 @@ dependencies {
 		compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
 }
 
-task process (dependsOn: 'classes', type: JavaExec) {
-    main = 'process'
+task postResults (dependsOn: 'classes', type: JavaExec) {
+    main = 'post'
     classpath = sourceSets.main.runtimeClasspath
-    args master, '37017', db_id_val, bundle_id_val, suite_id_val
+    args master, '37017', db_id_val, suite_id_val, bundles_val
+}
+
+task generateCombined (dependsOn: 'classes', type: JavaExec) {
+    main = 'generateCombined'
+    classpath = sourceSets.main.runtimeClasspath
+    args master, '37017', db_id_val, suite_id_val, result_id_val, size_val
+}
+
+task addFeatures (dependsOn: 'classes', type: JavaExec) {
+		minHeapSize "1g"
+		maxHeapSize "4g"
+    main = 'features'
+    classpath = sourceSets.main.runtimeClasspath
+    args master, '37017', db_id_val, suites_val
 }

@@ -1,6 +1,9 @@
 library("e1071", lib.loc="/opt/Rpackages/")
-x <- array(read.csv("mydata.csv"))
-x <- array(data = c(0,0,1,1,0,1,0,1),dim=c(4,2))
-y <- factor(c(1,-1,-1,1))
+input <- data.frame(read.csv("data/xor.csv"))
+y <- input[,2]
+x <- input
+x$id <- NULL
+x$y <- NULL
 model <- svm(x,y,type="C-classification",kernel="radial")
+print(model)
 predict(model,x)

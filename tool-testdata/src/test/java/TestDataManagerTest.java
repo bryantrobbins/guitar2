@@ -1,5 +1,7 @@
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.util.JSON;
 import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.ArtifactProcessor;
 import edu.umd.cs.guitar.main.TestDataManager;
@@ -88,7 +90,7 @@ public class TestDataManagerTest {
                                 testProcessor.getKey())
                         .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, testId)
                         .append(TestDataManagerKeys.ARTIFACT_DATA,
-                                testProcessor.getMagicString())));
+                                JSON.parse(testProcessor.getMagicString()))));
     }
 
     @Test
@@ -117,11 +119,16 @@ public class TestDataManagerTest {
     public class TestProcessor implements ArtifactProcessor<String> {
 
         public String getMagicString() {
-            return "testJson";
+            return "{ key: 'something' }";
         }
 
         @Override
         public String jsonFromOptions(Map<String, String> options) {
+            return getMagicString();
+        }
+
+        @Override
+        public String jsonFromObject(Object o){
             return getMagicString();
         }
 
