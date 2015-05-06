@@ -8,3 +8,7 @@ y
 model <- svm(x,y,type="C-classification",kernel="radial")
 pred <- predict(model,x)
 pred
+plot(x)
+points(x, pred, col = 4)
+#points(x[model$index, ], col = 2)
+

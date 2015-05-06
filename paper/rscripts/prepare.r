@@ -10,14 +10,19 @@ m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
 # Verify connectivity
 mongo.is.connected(m)
 
-# Some collections
-resultsCollection <- 'amalga_jenkins-generate-sl1-14.results'
-artifactsCollection <- 'amalga_jenkins-generate-sl1-14.artifacts'
-groupsCollection <- 'amalga_jenkins-generate-sl1-14.groups'
-
-# Some JSON objects
+# CONFIGURE THESE VALUES AS NECESSARY
+# EVENTUALLY WE CAN EXPOSE PROPERTIES FOR DB_ID, GROUP_ID, SUITE_ID
+# Update these
+resultsCollection <- 'amalga_jenkins-generate-sl1-15.results'
+artifactsCollection <- 'amalga_jenkins-generate-sl1-15.artifacts'
+groupsCollection <- 'amalga_jenkins-generate-sl1-15.groups'
 input.suite <- 'amalga_JabRef_sq_l_1'
-groupId <- '5538dbc24282b709a7c70fa6'
+groupId <- '553dd3f2e4b06c1d30c51ed8'
+
+
+# IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER
+# HAVE A REALLY GOOD REASON
+# Some JSON objects
 input.query <- sprintf('{"suiteId": "%s"}', input.suite)
 combined.query <- sprintf('{"suiteId": "%s_combined"}', input.suite)
 group.query <- sprintf('{"groupId": "%s"}', groupId)
