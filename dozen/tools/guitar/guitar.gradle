@@ -61,12 +61,6 @@ configurations {
 
 FileCollection collection = files(aut_classpath_val.split(":"))
 
-println "GOTHERE"
-collection.each {File file ->
-    println file.name
-}
-println "GOTHERE"
-
 repositories {
     mavenCentral()
     maven {
