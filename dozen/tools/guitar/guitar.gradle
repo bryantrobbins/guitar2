@@ -17,6 +17,7 @@ def aut_configuration_file_val = hasProperty('aut_configuration_file') ? aut_con
 def delay_val = hasProperty('delay') ? delay : ''
 def aut_arguments_val = hasProperty('aut_arguments') ? aut_arguments : ''
 def aut_gui_file_val = hasProperty('aut_gui_file') ? aut_gui_file : ''
+def aut_classpath_val = hasProperty('aut_classpath') ? aut_classpath : ''
 
 // Additional converter args
 def aut_efg_file_val = hasProperty('aut_efg_file') ? aut_efg_file : ''
@@ -68,17 +69,17 @@ repositories {
 dependencies {
     ripper group: 'edu.umd.cs.guitar', name: 'gui-ripper-jfc', version: '0.0.1-SNAPSHOT'
     ripper group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
-		ripper files(aut_bin_val)
-		ripper files(aut_inst_val)
+    ripper files(aut_classpath_val.split(":"))
+	ripper files(aut_inst_val)
     converter group: 'edu.umd.cs.guitar', name: 'guistructure2graph-efg', version: '0.0.1-SNAPSHOT'
     generate_sl group: 'edu.umd.cs.guitar', name: 'testcase-generator-sequence-length', version: '0.0.1-SNAPSHOT'
     save group: 'edu.umd.cs.guitar', name: 'tool-testdata', version: '0.0.1-SNAPSHOT'
     replayer group: 'edu.umd.cs.guitar', name: 'gui-replayer-jfc', version: '0.0.1-SNAPSHOT'
     replayer group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
-		replayer files(aut_inst_val)
-		replayer files(aut_bin_val)
-		compile 'org.codehaus.groovy:groovy-all:2.3.8'
-		compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
+	replayer files(aut_classpath_val.split(":"))
+	replayer files(aut_inst_val)
+	compile 'org.codehaus.groovy:groovy-all:2.3.8'
+	compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
 }
 
 task hello << {
