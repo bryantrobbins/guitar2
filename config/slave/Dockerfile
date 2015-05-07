@@ -4,11 +4,11 @@ MAINTAINER Bryan Robbins <bryantrobbins@gmail.com>
 # Get latest packages
 RUN apt-get update && apt-get clean
 
-# Needed for Jenkins
+# Needed for Jenkins slave itself
 RUN apt-get install --no-install-recommends openjdk-7-jdk -y
 
 # Needed for Jenkins jobs
-RUN apt-get install ant wget unzip bzip2 xvfb -y
+RUN apt-get install ant wget unzip bzip2 xvfb git-core -y
 
 # Install Gradle
 RUN wget https://services.gradle.org/distributions/gradle-2.1-bin.zip
