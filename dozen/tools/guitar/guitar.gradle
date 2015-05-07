@@ -70,14 +70,12 @@ dependencies {
     ripper group: 'edu.umd.cs.guitar', name: 'gui-ripper-jfc', version: '0.0.1-SNAPSHOT'
     ripper group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
     ripper files(aut_classpath_val.split(":"))
-	ripper files(aut_inst_val)
     converter group: 'edu.umd.cs.guitar', name: 'guistructure2graph-efg', version: '0.0.1-SNAPSHOT'
     generate_sl group: 'edu.umd.cs.guitar', name: 'testcase-generator-sequence-length', version: '0.0.1-SNAPSHOT'
     save group: 'edu.umd.cs.guitar', name: 'tool-testdata', version: '0.0.1-SNAPSHOT'
     replayer group: 'edu.umd.cs.guitar', name: 'gui-replayer-jfc', version: '0.0.1-SNAPSHOT'
     replayer group: 'edu.umd.cs.guitar', name: 'tool-cobertura', version: '0.0.1-SNAPSHOT'
 	replayer files(aut_classpath_val.split(":"))
-	replayer files(aut_inst_val)
 	compile 'org.codehaus.groovy:groovy-all:2.3.8'
 	compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
 }
