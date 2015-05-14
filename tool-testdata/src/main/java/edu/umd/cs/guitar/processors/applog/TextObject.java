@@ -157,4 +157,15 @@ public class TextObject {
         return TestResult.PASS;
     }
 
+    public int computeStepCount() {
+        int stepCount = 1;
+        for (int i = 0; i < this.size(); i++) {
+            String line = this.getLine(i);
+            if (line.contains("END STEP")) {
+                stepCount++;
+            }
+        }
+        return stepCount;
+    }
+
 }

@@ -4,6 +4,7 @@ import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.GsonFileProcessor;
 import edu.umd.cs.guitar.main.TestDataManager;
 import edu.umd.cs.guitar.model.data.TestCase;
+import edu.umd.cs.guitar.processors.applog.TextObject;
 import edu.umd.cs.guitar.processors.features.FeaturesObject;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -33,6 +34,10 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
      */
     private static TestcaseProcessor tcProc = new TestcaseProcessor();
     /**
+     * A TestcaseProcessor instance.
+     */
+    private static LogProcessor logProc = new LogProcessor();
+    /**
      * The manager instance to use for fetching test input artifacts.
      */
     private TestDataManager manager;
@@ -53,7 +58,14 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
         String testId = options.get(TEST_ID_OPTION);
         TestCase testCase = (TestCase) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT,
                 testId, tcProc);
-        return FeaturesObject.getFeaturesFromTestCase(testCase);
+        TextObject testLog = (TextObject) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_OUTPUT,
+                testId, logProc);
+
+        if(testLog != null){
+            return FeaturesObject.getFeaturesFromTestCase(testCase, testLog);
+        } else {
+            return FeaturesObject.getFeaturesFromTestCase(testCase);
+        }
     }
 
     @Override

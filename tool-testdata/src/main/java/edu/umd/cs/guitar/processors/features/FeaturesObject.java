@@ -1,6 +1,7 @@
 package edu.umd.cs.guitar.processors.features;
 
 import edu.umd.cs.guitar.model.data.TestCase;
+import edu.umd.cs.guitar.processors.applog.TextObject;
 import edu.umd.cs.guitar.util.GUITARUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -80,6 +81,33 @@ public class FeaturesObject {
 
         List<String> features = new ArrayList<String>();
         List<String> eventsInOrder = GUITARUtils.getEventIdsFromTest(testCase);
+
+        for (int i = 1; i <= MAX_N; i++) {
+            features.addAll(getNgrams(i, eventsInOrder));
+        }
+
+        features.addAll(getBefores(eventsInOrder));
+
+        return new FeaturesObject(features);
+    }
+
+    /**
+     * Return the feature object for a given test case object and given log.
+     *
+     * @param testCase the test case
+     * @param testLog  the test case log
+     * @return the corresponding features, or null if the test case is null
+     */
+    public static FeaturesObject getFeaturesFromTestCase(final TestCase
+                                                                 testCase, final TextObject testLog) {
+
+        List<String> features = new ArrayList<String>();
+        List<String> eventsInOrder = GUITARUtils.getEventIdsFromTest(testCase);
+
+        // Prune events if test execution was not completed (assuming due to test case being infeasible)
+        if (!testLog.computeResult().equals(TextObject.TestResult.PASS)) {
+            eventsInOrder = eventsInOrder.subList(0, testLog.computeStepCount());
+        }
 
         for (int i = 1; i <= MAX_N; i++) {
             features.addAll(getNgrams(i, eventsInOrder));

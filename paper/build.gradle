@@ -24,7 +24,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.github.docker-java:docker-java:0.10.5'
+		classpath 'com.github.docker-java:docker-java:1.2.0'
 		classpath 'commons-io:commons-io:2.4'
 		classpath 'com.xlson.groovycsv:groovycsv:1.0'
 	}
@@ -35,6 +35,8 @@ def client = DockerClientBuilder.getInstance(dockerUrlVal).build();
 def dockerfileContent = '''
 FROM ubuntu:14.04
 MAINTAINER Bryan Robbins "bryantrobbins@gmail.com"
+RUN echo "deb http://cran.cnr.berkeley.edu/bin/linux/ubuntu trusty/" >> /etc/apt/sources.list
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
 RUN apt-get update && apt-get clean
 RUN apt-get install texlive-latex-base texlive-fonts-recommended -y
 RUN apt-get install r-base r-base-dev -y
@@ -42,7 +44,7 @@ RUN apt-get -y install openjdk-7-jdk --no-install-recommends --no-install-sugges
 RUN mkdir -p /paper
 RUN mkdir -p /opt/Rpackages
 RUN echo 'install.packages("e1071", lib="/opt/Rpackages/", repos="http://lib.stat.cmu.edu/R/CRAN/")' >> rinstall
-RUN echo 'install.packages("rmongodb", lib="/opt/Rpackages/", repos="http://lib.stat.cmu.edu/R/CRAN/")' >> rinstall
+RUN echo 'install.packages("rmongodb", lib="/opt/Rpackages/", repos="http://cran.cnr.berkeley.edu/")' >> rinstall
 RUN R CMD BATCH --slave rinstall rinstall.out
 VOLUME ["/paper"]
 WORKDIR /paper
@@ -190,13 +192,13 @@ task buildPaper (dependsOn: singleFile) <<
 	doCmd(client, latexCmd)
 
 	// Execute BibTex Cmd
-	doCmd(client, bibtexCmd)
+	//doCmd(client, bibtexCmd)
 
 	// Execute LaTex Cmd
-	doCmd(client, latexCmd)
+	//doCmd(client, latexCmd)
 
 	// Execute LaTex Cmd
-	doCmd(client, latexCmd)
+	//doCmd(client, latexCmd)
 }
 
 task generateTable <<

@@ -11,18 +11,22 @@ m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
 mongo.is.connected(m)
 
 # CONFIGURE THESE VALUES AS NECESSARY
-# EVENTUALLY WE CAN EXPOSE PROPERTIES FOR DB_ID, GROUP_ID, SUITE_ID
 # Update these
-resultsCollection <- 'amalga_jenkins-generate-sl1-15.results'
-artifactsCollection <- 'amalga_jenkins-generate-sl1-15.artifacts'
-groupsCollection <- 'amalga_jenkins-generate-sl1-15.groups'
-input.suite <- 'amalga_JabRef_sq_l_1'
-groupId <- '553dd3f2e4b06c1d30c51ed8'
+dbId <- 'amalga_jenkins-generate-sl1-29'
+input.suite <- 'amalga_ArgoUML_sq_l_1'
+groupId <- '554bad0fe4b0dd0ac9f11d17'
 
+####################################################
+# IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER #
+# HAVE A REALLY GOOD REASON                        #
+####################################################
 
-# IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER
-# HAVE A REALLY GOOD REASON
-# Some JSON objects
+# Collections
+resultsCollection <- sprintf('%s.results', dbId)
+artifactsCollection <- sprintf('%s.artifacts', dbId)
+groupsCollection <- sprintf('%s.groups', dbId)
+
+# Query jsons
 input.query <- sprintf('{"suiteId": "%s"}', input.suite)
 combined.query <- sprintf('{"suiteId": "%s_combined"}', input.suite)
 group.query <- sprintf('{"groupId": "%s"}', groupId)
