@@ -4,16 +4,18 @@ of coverage. Consider various existing work by Memon et al., which generates tes
 cases for event-driven systems such as those driven by Graphical User Interfaces
 (GUIs). Their sequence length coverage generation technique experiences an
 exponential growth of possible test cases as longer sequence lengths are considered. This
-growth often leads to a practical limit of considering only sequences of length 2 or 3.
-when generating test suites. Other research suggests that longer test cases, and test
-cases involving the interaction of 3 or more variables, find signficantly more
-bugs than test cases designed to cover only 1 or 2 input variables in combination.
+growth often leads to a practical limit of considering only coverage of sequences 
+of length 2 or 3 when generating test suites. Other research suggests that longer
+test cases can more efficiently and more effectively find bugs than shorter test
+cases.
 
-We suggest that test cases generated from model-based techniques can potentially be
-combined in interesting ways while still preserving the desired qualities of the overall
-test suite. Significantly reducing the runtime of generated suites by combination would allow
-for the consideration of increasingly higher-order test cases.
+In this paper, we lay the groundwork for constructing longer test cases from the shorter
+test cases typical of model-based testing techniques. We explore whether shorter test cases
+can be combined in interesting ways to produce longer test cases while still preserving
+desired characteristics. As a first step, we consider the preservation of test case
+feasibility. More precisely, we explore whether the execution results of model-based test
+cases can be used to predict the feasibility of potential test case combinations. We believe
+that this work can later be extended to the prediction of additional test suite properties,
+and eventually to generalized reduction techniques for model-based test suites; but
+we do not explore those extensions in this work.
 
-In support of this goal of combining test cases, in the paper we describe and
-evaluate a method for predicting the feasibility of potential test case
-combinations. We require our technique

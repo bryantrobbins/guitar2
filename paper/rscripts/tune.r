@@ -9,9 +9,9 @@ data <- data.frame(read.csv(data.file))
 
 # Use input suite as training data, combined suite as test
 tr <- subset(data, isInput == 1)
-y <- tr$isFeas
 tr$isInput <- NULL
 tr$id <- NULL
+#y <- tr$isFeas
 
 #te <- subset(data, isInput == 0)
 #te$isInput <- NULL
