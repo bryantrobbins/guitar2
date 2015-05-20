@@ -13,15 +13,12 @@ tr$isInput <- NULL
 tr$id <- NULL
 #y <- tr$isFeas
 
-#te <- subset(data, isInput == 0)
-#te$isInput <- NULL
-#te$id <- NULL
-
 # Tune SVM on training data
+cat('Tuning model parameters')
 obj <- tune.svm(isFeas~.,
     data = tr,
-	gamma = 2^(-2:-1),
-    cost = 2^(-2:-1),
+	gamma = 2^(-8:3),
+    cost = 2^(-8:3),
 	tunecontrol = tune.control(sampling = "cross")
 )
 
@@ -29,6 +26,10 @@ obj <- tune.svm(isFeas~.,
 summary(obj)
 plot(obj)
 obj.performance
+
+#te <- subset(data, isInput == 0)
+#te$isInput <- NULL
+#te$id <- NULL
 
 # Run predictions
 #bestg = 0.0078125
