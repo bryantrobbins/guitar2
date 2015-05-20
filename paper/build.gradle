@@ -40,7 +40,7 @@ def doCmd(cmd){
 	def sout = new StringBuilder(), serr = new StringBuilder()
 	def proc = cmd.execute()
 	proc.consumeProcessOutput(sout, serr)
-	proc.waitForProcessOutput()
+	proc.waitFor()
 	println "=BEGIN STANDARD OUT="
 	println sout
 	println "===END STANDARD OUT==="
@@ -98,13 +98,13 @@ task buildPaper (dependsOn: singleFile) <<
 	doCmd(latexCmd)
 
 	// Execute BibTex Cmd
-	//doCmd(bibtexCmd)
+	doCmd(bibtexCmd)
 
 	// Execute LaTex Cmd
-	//doCmd(latexCmd)
+	doCmd(latexCmd)
 
 	// Execute LaTex Cmd
-	//doCmd(latexCmd)
+	doCmd(latexCmd)
 }
 
 task generateTable <<
