@@ -20,8 +20,8 @@ tr$id <- NULL
 # Tune SVM on training data
 obj <- tune.svm(isFeas~.,
     data = tr,
-	gamma = 2^(-2:2),
-    cost = 2^(-2:2),
+	gamma = 2^(-2:-1),
+    cost = 2^(-2:-1),
 	tunecontrol = tune.control(sampling = "cross")
 )
 
