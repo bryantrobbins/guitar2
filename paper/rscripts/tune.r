@@ -22,7 +22,6 @@ data <- data.frame(read.csv(data.file))
 tr <- subset(data, isInput == 1)
 tr$isInput <- NULL
 tr$id <- NULL
-#y <- tr$isFeas
 
 # Tune SVM on training data
 cat('Tuning model parameters')
