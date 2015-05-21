@@ -4,6 +4,10 @@ options(echo=TRUE)
 # Grab arguments
 args <- commandArgs(trailingOnly = TRUE)
 aut <- args[1]
+minGammaExp <- args[2]
+maxGammaExp <- args[3]
+minCostExp <- args[4]
+maxCostExp <- args[5]
 
 # LibSVM
 library("e1071", lib.loc="/opt/Rpackages/")
@@ -24,8 +28,8 @@ tr$id <- NULL
 cat('Tuning model parameters')
 obj <- tune.svm(isFeas~.,
 	data = tr,
-	gamma = 2^(-1:1),
-	cost = 2^(-1:1),
+	gamma = 2^(minGammaExp:maxGammaExp),
+	cost = 2^(minCostExp:maxCostExp),
 	tunecontrol = tune.control(sampling = "cross", cross = 5)
 )
 
