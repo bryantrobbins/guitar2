@@ -1,5 +1,5 @@
 # I want commands printed in output
-options(echo=TRUE)
+options(echo=TRUE, warning.length=8170)
 
 # Grab arguments
 args <- commandArgs(trailingOnly = TRUE)
