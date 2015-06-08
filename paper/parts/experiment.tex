@@ -24,9 +24,83 @@ components. These applications represent real-world examples for model-based
 testing. They also draw from multiple domains and use cases as GUI-based
 applications.
 
-\subsection{Tools and Execution Infrastructure}
+\subsection{Tools and Execution Infrastructure}\
 \input{parts/toolsFigure}
+\input{parts/infrastructureFigure}
+\input{parts/DataModelFigure}
+
+
+To carry our empirical evaluation of prediction techniques, we developed a reproducible,
+reusable infrastructure from a combination of open-source and custom-built testing, continuous
+integration (CI), and model-based testing tools. Figure \ref{fig:tools} shows our tool stack, and
+Figure \ref{fig:Infrastructure} our runtime infrastructure for experiments.
+
+First, we leveraged the Java toolchain of the GUITAR framework to generate and execute 
+model-based test cases for each AUT. In particular, we use the GUITAR Ripper tool to
+automatically extract a GUI Tree representation of the AUT. We then convert the GUI tree
+to an Event-flow Graph (EFG), and the EFG into test suites. The GUITAR Replayer executes
+test cases in each suite automatically. This approach for test case generation and replay is
+elaborated in previous work \cite{XXX}.
+
+In addition to the existing GUITAR Java toolchain, we developed two new, reusable tools for
+this research. First, we developed TestDataManager, a tool for persistence of testing artifacts.
+The TestDataManager, backed by the MongoDB NoSQL database, contains interfaces and utilities
+for defining artifact conversion. The \texttt{TestDataManager} then stores artifacts in either a JSON-like
+notation, or as raw binary files to MongoDB's GridFS filesystem. Figure \ref{fig:data} 
+shows the underlying data model of the \texttt{TestDataManager}, which includes representations for both
+test cases and test case executions. Test cases can be associated with one or more test suite and
+one or more test execution. Bundles gather associated test case executions.
+
+The testing process produces a continuous stream of artifacts at every step. In this experiment, we
+rely on three input artifacts: test steps, GUI Tree, and EFG. Test cases are initially
+defined by input files of test steps. The GUITAR Replayer depends on test steps defined in terms
+of executable events, and events defined in terms of position in the GUI Tree. Consequently, the
+Replayer draws from supporting information stored as GUI Tree and EFG artifacts shared by an
+entire generated test suite. As output artifacts, we collect, store, and associate console
+logs with each test case execution.
+
+The \texttt{TestDataManager} and its associated data focus on maintaining artifacts and grouping them into
+high-level abstractions common across testing techniques. We envision this tool supporting the storing
+of test-related artifacts in general. To support the particular experiments of this work, we developed empirical
+studies of software testing in the future. To focus on the particular
+experiments of this work, we also developed the \texttt{ExperimentManager}. The \texttt{ExperimentManager}
+supports higher-level analysis and comparison of artifacts with the following API:
+
+\begin{itemize}
+\item PostResults(TestDataManager, resultId, suiteId, Set bundleIds) - Given a set of execution bundles, categorize each test as feasible (always passing), infeasible (always failing), or inconsistent.
+\item GetResultsObject(TestDataManager, resultId) - Return a results object previously constructed by a call to PostResults.
+\item GenerateCombinationSuite(TestDataManager, suiteIdA, resultId, size) - Given a previously posted results object defined on a test suite A, randomly generate a new test suite {A\_combined} with a given size from combinations of feasible test cases in A.
+\item addFeaturesForSuite(TestDataManager, suiteId) - For each test case in a given suite, extract and store a set of features from its the input artifacts.
+\end{itemize}
+
+Finally, we process apply machine learning algorithms and statistical analysis to artifacts in R. In particular, we use the \texttt{e1071} package
+and its support for construction and analysis predictive binary classifiers. We import data from MongoDB with \texttt{rmongodb}.
 
 \subsection{Input and Combined Test Suites}
+
+With the support of the ExperimentManager API and its underlying tools, we first generate model-based
+test suites for each AUT (the "input" suite). Summary statistics for generated test suites are show in Table
+\ref{tab:suites}. The GUI Tree and EFG artifacts produced by the GUITAR toolchain
+can be used to generate a number of test suites based on event coverage criteria. For this experiment,
+we chose to start with test
+suites constructed to cover all sequences of length=1; therefore, each test suite is guaranteed to cover every event in
+the EFG. We generate this suite by iterating over all events in the EFG, and constructing a test case for each
+by finding a "path to root." (We define and elaborate on the sequence-length coverage test suite generation approach
+in previous work \cite{YYY, ZZZ, AAA}.)
+Each resulting test case should start with an event which is available upon application start,
+and should proceed to the single event (i.e., the sequence of length 1) which the test case was designed to cover.
+For JabRef, this "SL1" test suite includes 662 test cases (one for each of the 662 events in the EFG); and likewise,
+500 test cases for ArgoUML.
+
+As previously discussed at length in Section \ref{sec:feas}, model-based test case generation techniques often
+generate infeasible test cases which cannot be fully executed. In our experiments, we explore whether the infeasibility
+present in our input test suite can be captured by a secondary model and used to predict the feasibility of previously
+unseen test cases. In particular, we evaluate the new model's ability to predict the feasibility of test case combinations.
+
+As previously explored in Section \ref{sec:combine}, we believe that test case combination stands to potentially reduce the effort
+required for execution of model-based test suites such as the SL1 input suites we construct above. In this experiment, we derive from
+the SL1 suite of each AUT an "SL1-C" suite of potential test cases which are combinations of the test cases of the
+SL1 suite. We limit the scope of test case combinations to simple concatenation. To generate the SL1-C suite for each AUT, we randomly
+select 1000 combinations of two test cases (without replacement) from the corresponding SL1 suite.
 
 \subsection{Planned Analyses}
