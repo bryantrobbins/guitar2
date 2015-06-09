@@ -5,7 +5,7 @@ Applications Under Test (AUTs). To support execution of these suites, we
 develop a scalable and portable execution infrastructure. Below, we elaborate
 on the experimental setup and planned analyses.
 
-\subsection{AUTs}
+\subsection{ AUTs }
 
 For this initial study, we chose two GUI-based Java Swing applications as
 AUTs. While we acknowledge that choice of application platform and technology
@@ -24,11 +24,11 @@ components. These applications represent real-world examples for model-based
 testing. They also draw from multiple domains and use cases as GUI-based
 applications.
 
-\subsection{Tools and Execution Infrastructure}\
+\subsection{ Tools and Execution Infrastructure }
+
 \input{parts/toolsFigure}
 \input{parts/infrastructureFigure}
 \input{parts/DataModelFigure}
-
 
 To carry our empirical evaluation of prediction techniques, we developed a reproducible,
 reusable infrastructure from a combination of open-source and custom-built testing, continuous
@@ -76,7 +76,7 @@ supports higher-level analysis and comparison of artifacts with the following AP
 Finally, we process apply machine learning algorithms and statistical analysis to artifacts in R. In particular, we use the \texttt{e1071} package
 and its support for construction and analysis predictive binary classifiers. We import data from MongoDB with \texttt{rmongodb}.
 
-\subsection{Input and Combined Test Suites}
+\subsection{ Input and Combined Test Suites }
 
 With the support of the ExperimentManager API and its underlying tools, we first generate model-based
 test suites for each AUT (the "input" suite). Summary statistics for generated test suites are show in Table
@@ -87,20 +87,34 @@ suites constructed to cover all sequences of length=1; therefore, each test suit
 the EFG. We generate this suite by iterating over all events in the EFG, and constructing a test case for each
 by finding a "path to root." (We define and elaborate on the sequence-length coverage test suite generation approach
 in previous work \cite{YYY, ZZZ, AAA}.)
-Each resulting test case should start with an event which is available upon application start,
+Each resulting test case starts with an event which is available upon application start,
 and should proceed to the single event (i.e., the sequence of length 1) which the test case was designed to cover.
 For JabRef, this "SL1" test suite includes 662 test cases (one for each of the 662 events in the EFG); and likewise,
 500 test cases for ArgoUML.
 
-As previously discussed at length in Section \ref{sec:feas}, model-based test case generation techniques often
-generate infeasible test cases which cannot be fully executed. In our experiments, we explore whether the infeasibility
-present in our input test suite can be captured by a secondary model and used to predict the feasibility of previously
-unseen test cases. In particular, we evaluate the new model's ability to predict the feasibility of test case combinations.
+To determine the feasibility of SL1 cases, we execute each test case 3 times and use the \texttt{ExperimentManager}'s
+PostResults function to categorize each test case as feasible, infeasible, or inconsistent. For a test case to be feasible, it must
+complete successfully all 3 out of the 3 executions. The test cases of the SL1 suite and their feasibility categorizations
+from PostResults serve as training examples for a binary classifier of feasibility.
 
-As previously explored in Section \ref{sec:combine}, we believe that test case combination stands to potentially reduce the effort
-required for execution of model-based test suites such as the SL1 input suites we construct above. In this experiment, we derive from
-the SL1 suite of each AUT an "SL1-C" suite of potential test cases which are combinations of the test cases of the
-SL1 suite. We limit the scope of test case combinations to simple concatenation. To generate the SL1-C suite for each AUT, we randomly
-select 1000 combinations of two test cases (without replacement) from the corresponding SL1 suite.
+To evaluate the model's predictive ability, we derive from
+the SL1 suite of each AUT an "SL1-C" suite of potential test cases which are combinations of feasible test cases of the
+SL1 suite. 
+We limit the scope of test case combinations to simple concatenation. To generate the SL1-C suite for each AUT, we randomly
+select 1000 concatenations of two test cases (without replacement) from the corresponding SL1 suite. As these test cases
+have not yet been executed, their feasibility is unknown at the time of prediction.
 
-\subsection{Planned Analyses}
+\subsection{ Feature Selection }
+
+Test.
+
+\subsection{ Binary Classifier }
+
+Test.
+
+\subsection{ Planned Analyses }
+
+Given a model constructed from the input SL1 suite of each AUT, we consider how well this model can predict the
+feasibility of unseen test cases from the SL1-C suite. We evaluate the effectiveness of the model based on its
+false positive (FP) and false negative (FN) rates
+
