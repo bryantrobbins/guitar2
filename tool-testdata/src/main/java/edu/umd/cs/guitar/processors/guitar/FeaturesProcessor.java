@@ -61,7 +61,7 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
         TextObject testLog = (TextObject) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_OUTPUT,
                 testId, logProc);
 
-        if(testLog != null){
+        if (testLog != null) {
             return FeaturesObject.getFeaturesFromTestCase(testCase, testLog);
         } else {
             return FeaturesObject.getFeaturesFromTestCase(testCase);
