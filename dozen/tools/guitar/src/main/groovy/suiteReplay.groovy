@@ -6,7 +6,7 @@ import edu.umd.cs.guitar.main.TestDataManager
 def master = "guitar05.cs.umd.edu"
 
 // Jenkins client
-def jenkinsClient = new JenkinsClient(master, "8080", "", "admin", "amalga84go")
+def jenkinsClient = new JenkinsClient(master, "8888", "", "admin", "amalga84go")
 
 // TestDataManager
 def manager = new TestDataManager(master, "37017", args[1])
