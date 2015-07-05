@@ -6,7 +6,12 @@ String host = args[0]
 String port = args[1]
 String dbId = args[2]
 def suites = Arrays.asList(args[3].split(","))
+int maxN = Integer.parseInt(args[4])
 println args
 
-// Post results
-ExperimentManager.addGlobalFeaturesForSuites(host, port, dbId, suites)
+for(n in 0..maxN+1) {
+	println "N=${n}"
+
+	// Extract features and post to DB
+	ExperimentManager.addGlobalFeaturesForSuites(host, port, dbId, suites, n)
+}

@@ -24,9 +24,16 @@ public class FeaturesObject {
     private static Logger logger = LogManager.getLogger(FeaturesObject.class);
 
     /**
+     * Default value of maxN.
+     */
+
+    private static final int DEFAULT_MAX_N = 0;
+
+    /**
      * Max number of N-grams to use in feature extraction.
      */
-    private static final int MAX_N = 4;
+    private int maxN = DEFAULT_MAX_N;
+
     /**
      * This is the list of features.
      */
@@ -70,19 +77,21 @@ public class FeaturesObject {
         return features.contains(feature);
     }
 
+
     /**
      * Return the feature object for a given test case object.
      *
      * @param testCase the test case
+     * @param maxN     the max value of N to use when extracting N-grams from the test case
      * @return the corresponding features, or null if the test case is null
      */
-    public static FeaturesObject getFeaturesFromTestCase(final TestCase
-                                                                 testCase) {
+    public static FeaturesObject getFeaturesFromTestCase(final TestCase testCase,
+                                                         final int maxN) {
 
         List<String> features = new ArrayList<String>();
         List<String> eventsInOrder = GUITARUtils.getEventIdsFromTest(testCase);
 
-        for (int i = 1; i <= MAX_N; i++) {
+        for (int i = 1; i <= maxN; i++) {
             features.addAll(getNgrams(i, eventsInOrder));
         }
 
@@ -96,10 +105,12 @@ public class FeaturesObject {
      *
      * @param testCase the test case
      * @param testLog  the test case log
+     * @param maxN     the max value of N to use when extracting N-grams from the test case
      * @return the corresponding features, or null if the test case is null
      */
-    public static FeaturesObject getFeaturesFromTestCase(final TestCase
-                                                                 testCase, final TextObject testLog) {
+    public static FeaturesObject getFeaturesFromTestCase(final TestCase testCase,
+                                                         final TextObject testLog,
+                                                         final int maxN) {
 
         List<String> features = new ArrayList<String>();
         List<String> eventsInOrder = GUITARUtils.getEventIdsFromTest(testCase);
@@ -109,7 +120,7 @@ public class FeaturesObject {
             eventsInOrder = eventsInOrder.subList(0, testLog.computeStepCount());
         }
 
-        for (int i = 1; i <= MAX_N; i++) {
+        for (int i = 1; i <= maxN; i++) {
             features.addAll(getNgrams(i, eventsInOrder));
         }
 

@@ -230,15 +230,15 @@ public final class ExperimentManager {
     /**
      * Generate and save the features artifact for a given test case.
      *
-     * @param manager the TestDataManager to use
-     * @param testId  the test id to generate and save features for
+     * @param manager           the TestDataManager to use
+     * @param testId            the test id to generate and save features for
+     * @param featuresProcessor the features processor to use to produce features for this test case
      * @return the artifact id
      */
     private static String addFeaturesToTest(
             final TestDataManager manager,
-            final String testId) {
-        FeaturesProcessor featuresProcessor = new FeaturesProcessor(manager);
-
+            final String testId,
+            final FeaturesProcessor featuresProcessor) {
         Map<String, String> options = new HashMap<String, String>();
         options.put(FeaturesProcessor.TEST_ID_OPTION, testId);
         return manager.saveArtifact(
@@ -256,15 +256,17 @@ public final class ExperimentManager {
      * @param mongoPort the mongodb port to use
      * @param dbId      the db to use
      * @param testId    the test id to generate and save features for
+     * @param maxN      the max value of N to use when extracting N-grams from test cases
      * @return the artifact id
      */
     public static String addFeaturesToTest(
             final String mongoHost,
             final String mongoPort,
             final String dbId,
-            final String testId) {
+            final String testId,
+            final int maxN) {
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
-        FeaturesProcessor featuresProcessor = new FeaturesProcessor(manager);
+        FeaturesProcessor featuresProcessor = new FeaturesProcessor(manager, maxN);
 
         Map<String, String> options = new HashMap<String, String>();
         options.put(FeaturesProcessor.TEST_ID_OPTION, testId);
@@ -283,22 +285,25 @@ public final class ExperimentManager {
      * @param mongoPort the mongodb port to use
      * @param dbId      the db to use
      * @param suiteId   the suite to add features to
+     * @param maxN      the max value of N to use when extracting N-grams from test cases
      * @return true if all features added successfully, otherwise false
      */
     public static boolean addFeaturesToSuite(
             final String mongoHost,
             final String mongoPort,
             final String dbId,
-            final String suiteId) {
+            final String suiteId,
+            final int maxN) {
 
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
+        FeaturesProcessor fproc = new FeaturesProcessor(manager, maxN);
         int count = 0;
         for (String testId : manager.getTestIdsInSuite(suiteId)) {
             count++;
             if ((count % PROGRESS_INTERVAL) == 0) {
                 System.out.println(".");
             }
-            addFeaturesToTest(manager, testId);
+            addFeaturesToTest(manager, testId, fproc);
         }
 
         return true;
@@ -312,14 +317,16 @@ public final class ExperimentManager {
      * @param mongoPort the mongodb port to use
      * @param dbId      the db to use
      * @param suiteIds  the suites to add features for
+     * @param maxN      max value of N to use when extracting N-grams from test cases
      * @return the unique id for the created group if successful, else null
      */
     public static String addGlobalFeaturesForSuites(final String mongoHost,
                                                     final String mongoPort,
                                                     final String dbId,
-                                                    final List<String> suiteIds) {
+                                                    final List<String> suiteIds,
+                                                    final int maxN) {
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
-        FeaturesProcessor fproc = new FeaturesProcessor(manager);
+        FeaturesProcessor fproc = new FeaturesProcessor(manager, maxN);
         HashSet<String> allFeatures = new HashSet<String>();
 
         int count = 0;
@@ -343,7 +350,7 @@ public final class ExperimentManager {
                 );
 
                 if (fob == null) {
-                    String artifactId = addFeaturesToTest(manager, testId);
+                    String artifactId = addFeaturesToTest(manager, testId, fproc);
                     fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
                 }
                 allFeatures.addAll(fob.getFeatures());

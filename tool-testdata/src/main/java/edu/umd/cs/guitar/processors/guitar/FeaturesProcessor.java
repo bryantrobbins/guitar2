@@ -43,13 +43,21 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
     private TestDataManager manager;
 
     /**
+     * The value of N to use when extracting N-grams from the test case.
+     */
+
+    private int n;
+
+    /**
      * Simple constructor passing Gson serializable FeatureObject to superclass.
      *
      * @param managerInstance the manager instance to use for fetching test input artifacts
+     * @param maxN            the max value N to use in constructing N-gram features (0 for none)
      */
-    public FeaturesProcessor(final TestDataManager managerInstance) {
+    public FeaturesProcessor(final TestDataManager managerInstance, final int maxN) {
         super(FeaturesObject.class);
         this.manager = managerInstance;
+        this.n = maxN;
     }
 
     @Override
@@ -62,15 +70,15 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
                 testId, logProc);
 
         if (testLog != null) {
-            return FeaturesObject.getFeaturesFromTestCase(testCase, testLog);
+            return FeaturesObject.getFeaturesFromTestCase(testCase, testLog, n);
         } else {
-            return FeaturesObject.getFeaturesFromTestCase(testCase);
+            return FeaturesObject.getFeaturesFromTestCase(testCase, n);
         }
     }
 
     @Override
     public String getKey() {
-        return "testCaseFeatures";
+        return "testCaseFeatures_n_" + n;
     }
 
     @Override
