@@ -48,5 +48,5 @@ task addFeatures (dependsOn: 'classes', type: JavaExec) {
 		maxHeapSize "4g"
     main = 'features'
     classpath = sourceSets.main.runtimeClasspath
-    args master, '37017', db_id_val, suites_val
+    args master, '37017', db_id_val, suites_val, 4
 }
