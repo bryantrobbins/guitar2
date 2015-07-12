@@ -356,9 +356,9 @@ public final class ExperimentManager {
                 }
                 if (first) {
                     allFeatures.addAll(fob.getFeatures());
-                    first = false;
                 }
             }
+            first = false;
         }
 
         // Build the DBObject
