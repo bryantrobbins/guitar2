@@ -23,4 +23,4 @@ for(n in 0..maxN+1) {
 }
 
 // Dump properties
-groupIds.store(new FileOutputStream("groups.properties"));
+groupIds.store(new FileOutputStream("groups.properties"), null);
