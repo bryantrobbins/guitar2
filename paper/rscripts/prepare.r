@@ -89,7 +89,9 @@ for (tid in global.all){
   resultBson<- mongo.findOne(m, artifactsCollection, queryBson)
 	resultList <- mongo.bson.to.list(resultBson)
 	for (feat in resultList[['artifactData']][['features']]){
-		global.df[tid, feat] <- 1
+    if(feat %in% global.features){
+			global.df[tid, feat] <- 1
+    }
 	}
 }
 

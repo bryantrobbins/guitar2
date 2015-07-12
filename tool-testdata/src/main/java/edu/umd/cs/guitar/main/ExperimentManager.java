@@ -334,8 +334,9 @@ public final class ExperimentManager {
 
         System.out.println("Adding group");
 
-        // Add features for all in-scope suites
-        // Keep track of all features as we go
+        // Add features to all test cases
+        // Save features from first (input) suite
+        boolean first = true;
         for (String suiteId : suiteIds) {
             for (String testId : manager.getTestIdsInSuite(suiteId)) {
                 count++;
@@ -353,7 +354,10 @@ public final class ExperimentManager {
                     String artifactId = addFeaturesToTest(manager, testId, fproc);
                     fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
                 }
-                allFeatures.addAll(fob.getFeatures());
+                if (first) {
+                    allFeatures.addAll(fob.getFeatures());
+                    first = false;
+                }
             }
         }
 
