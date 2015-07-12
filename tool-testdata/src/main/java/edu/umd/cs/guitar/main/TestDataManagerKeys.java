@@ -107,4 +107,5 @@ public final class TestDataManagerKeys {
     /**
      * Provides the key for N_GRAM_MAX.
      */
+    public static final String MAX_N = "maxN";
 }

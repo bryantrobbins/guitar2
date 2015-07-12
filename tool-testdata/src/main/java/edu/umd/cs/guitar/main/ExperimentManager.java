@@ -375,6 +375,7 @@ public final class ExperimentManager {
         bdo.put(TestDataManagerKeys.FEATURES_LIST, dbl);
 
         // Add the value of N
+        bdo.put(TestDataManagerKeys.MAX_N, maxN);
 
         // Record the group entry
         MongoUtils.addItemToCollection(manager.getDb(),

@@ -15,7 +15,6 @@ args <- commandArgs(trailingOnly = TRUE)
 dbId <- args[1]
 input.suite <- args[2]
 groupId <- args[3]
-featureKey <- args[4]
 
 ####################################################
 # IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER #
@@ -58,6 +57,7 @@ cat('Loading global feature list\n')
 bson <- mongo.bson.from.JSON(group.query)
 value <- mongo.findOne(m, groupsCollection, bson)
 list <- mongo.bson.to.list(value)
+featureKey <- list[['maxN']]
 global.features <- list[['featuresList']]
 length(global.features)
 
