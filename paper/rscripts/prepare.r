@@ -10,11 +10,12 @@ m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
 # Verify connectivity
 mongo.is.connected(m)
 
-# CONFIGURE THESE VALUES AS NECESSARY
-# Update these
-dbId <- 'amalga_jenkins-generate-sl1-29'
-input.suite <- 'amalga_ArgoUML_sq_l_1'
-groupId <- '554bad0fe4b0dd0ac9f11d17'
+# LOAD THESE VALUES FROM COMMAND LINE
+args <- commandArgs(trailingOnly = TRUE)
+dbId <- args[1]
+input.suite <- args[2]
+groupId <- args[3]
+featureKey <- args[4]
 
 ####################################################
 # IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER #
@@ -80,7 +81,7 @@ for (tid in global.all){
 		}
 	}
 
-  features.query <- sprintf('{"artifactType": "testCaseFeatures", "ownerId": "%s"}', tid)
+  features.query <- sprintf('{"artifactType": "%s", "ownerId": "%s"}', featureKey, tid)
 	cat('Loading ')
 	cat(tid)
 	cat('\n')
@@ -91,7 +92,6 @@ for (tid in global.all){
 		global.df[tid, feat] <- 1
 	}
 }
-
 
 output.file <- sprintf('data/%s_data.csv', input.suite)
 cat('Writing out data frame\n')
