@@ -95,6 +95,6 @@ for (tid in global.all){
 	}
 }
 
-output.file <- sprintf('data/%s_data.csv', input.suite)
+output.file <- sprintf('data/%s_%s_data.csv', input.suite, featureKey)
 cat('Writing out data frame\n')
 write.csv(global.df, file = output.file)
