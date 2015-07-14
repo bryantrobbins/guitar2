@@ -13,8 +13,7 @@ mongo.is.connected(m)
 # LOAD THESE VALUES FROM COMMAND LINE
 args <- commandArgs(trailingOnly = TRUE)
 dbId <- args[1]
-input.suite <- args[2]
-groupId <- args[3]
+groupId <- args[2]
 
 ####################################################
 # IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER #
@@ -26,12 +25,20 @@ resultsCollection <- sprintf('%s.results', dbId)
 artifactsCollection <- sprintf('%s.artifacts', dbId)
 groupsCollection <- sprintf('%s.groups', dbId)
 
-# Query jsons
-input.query <- sprintf('{"suiteId": "%s"}', input.suite)
-combined.query <- sprintf('{"suiteId": "%s_combined"}', input.suite)
+# Get global features
 group.query <- sprintf('{"groupId": "%s"}', groupId)
+cat('Loading global feature list\n')
+bson <- mongo.bson.from.JSON(group.query)
+value <- mongo.findOne(m, groupsCollection, bson)
+list <- mongo.bson.to.list(value)
+featureKey <- list[['maxN']]
+input.suite <- list[['suiteId_input']]
+global.features <- list[['featuresList']]
+length(global.features)
 
 # Build lists of test ids in various categories
+input.query <- sprintf('{"suiteId": "%s"}', input.suite)
+combined.query <- sprintf('{"suiteId": "%s_combined"}', input.suite)
 cat('Loading example ids\n')
 cat('Loading input suite\n')
 bson <- mongo.bson.from.JSON(input.query)
@@ -51,15 +58,6 @@ combined.all <- c(combined.passing, combined.failing)
 
 global.all <- c(combined.all, input.all)
 length(global.all)
-
-# Get global features
-cat('Loading global feature list\n')
-bson <- mongo.bson.from.JSON(group.query)
-value <- mongo.findOne(m, groupsCollection, bson)
-list <- mongo.bson.to.list(value)
-featureKey <- list[['maxN']]
-global.features <- list[['featuresList']]
-length(global.features)
 
 # Build data frame for all examples
 cat('Initializing global data frame\n')
