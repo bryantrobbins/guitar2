@@ -33,6 +33,7 @@ value <- mongo.findOne(m, groupsCollection, bson)
 list <- mongo.bson.to.list(value)
 featureKey <- list[['maxN']]
 input.suite <- list[['suiteId_input']]
+combined.suite <- list[['suiteId_predicted']]
 global.features <- list[['featuresList']]
 length(global.features)
 
