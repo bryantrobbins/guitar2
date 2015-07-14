@@ -313,19 +313,19 @@ public final class ExperimentManager {
      * Add features to test cases in given suites which are aware of features
      * across all test cases.
      *
-     * @param mongoHost    the mongodb host to use
-     * @param mongoPort    the mongodb port to use
-     * @param dbId         the db to use
-     * @param suiteGroups  suites (keys) and results (values) to use in this group
-     * @param inputSuiteId input suite to use for feature extraction
-     * @param maxN         max value of N to use when extracting N-grams from test cases
+     * @param mongoHost        the mongodb host to use
+     * @param mongoPort        the mongodb port to use
+     * @param dbId             the db to use
+     * @param inputSuiteId     input suite to use for feature extraction
+     * @param predictedSuiteId suite of test cases to be predicted
+     * @param maxN             max value of N to use when extracting N-grams from test cases
      * @return the unique id for the created group if successful, else null
      */
     public static String addGlobalFeaturesForSuites(final String mongoHost,
                                                     final String mongoPort,
                                                     final String dbId,
-                                                    final Map<String, String> suiteGroups,
                                                     final String inputSuiteId,
+                                                    final String predictedSuiteId,
                                                     final int maxN) {
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
         FeaturesProcessor fproc = new FeaturesProcessor(manager, maxN);
@@ -334,15 +334,13 @@ public final class ExperimentManager {
         int count = 0;
         String groupId = manager.generateId();
 
-        // Add suite Ids
-        BasicDBList suites = new BasicDBList();
-
-        System.out.println("Adding group " + groupId);
+        HashSet<String> suiteSet = new HashSet<String>();
+        suiteSet.add(inputSuiteId);
+        suiteSet.add(predictedSuiteId);
 
         // Add features to all test cases
         // Save features from input suite
-        for (String suiteId : suiteGroups.keySet()) {
-            suites.add(suiteId);
+        for (String suiteId : suiteSet) {
             for (String testId : manager.getTestIdsInSuite(suiteId)) {
                 count++;
                 if ((count % PROGRESS_INTERVAL) == 0) {
@@ -371,11 +369,9 @@ public final class ExperimentManager {
         // Add GroupId
         bdo.put(TestDataManagerKeys.GROUP_ID, groupId);
 
-        // Add suite Ids
-        bdo.put(TestDataManagerKeys.SUITE_ID, suites);
-
-        // Add input suite id
+        // Add suite ids
         bdo.put(TestDataManagerKeys.SUITE_ID + "_input", inputSuiteId);
+        bdo.put(TestDataManagerKeys.SUITE_ID + "_predicted", predictedSuiteId);
 
         // Build and add the global feature list
         BasicDBList dbl = new BasicDBList();

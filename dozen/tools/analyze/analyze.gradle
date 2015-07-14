@@ -12,6 +12,8 @@ def result_id_val = hasProperty('result_id') ? result_id : ''
 def suite_id_val = hasProperty('suite_id') ? suite_id : ''
 def bundles_val = hasProperty('bundles') ? bundles : ''
 def suites_val = hasProperty('suites') ? suites : ''
+def input_suite_val = hasProperty('input_suite') ? input_suite : ''
+def predicted_suite_val = hasProperty('predicted_suite') ? predicted_suite : ''
 def size_val = hasProperty('size') ? size: '1000'
 
 configurations.all {
@@ -48,5 +50,5 @@ task addFeatures (dependsOn: 'classes', type: JavaExec) {
 		maxHeapSize "4g"
     main = 'features'
     classpath = sourceSets.main.runtimeClasspath
-    args master, '37017', db_id_val, suites_val, 4
+    args master, '37017', db_id_val, input_suite_val, predicted_suite_val, 4
 }
