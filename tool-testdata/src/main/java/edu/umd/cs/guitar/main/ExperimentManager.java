@@ -313,17 +313,19 @@ public final class ExperimentManager {
      * Add features to test cases in given suites which are aware of features
      * across all test cases.
      *
-     * @param mongoHost the mongodb host to use
-     * @param mongoPort the mongodb port to use
-     * @param dbId      the db to use
-     * @param suiteIds  the suites to add features for
-     * @param maxN      max value of N to use when extracting N-grams from test cases
+     * @param mongoHost    the mongodb host to use
+     * @param mongoPort    the mongodb port to use
+     * @param dbId         the db to use
+     * @param suiteGroups  suites (keys) and results (values) to use in this group
+     * @param inputSuiteId input suite to use for feature extraction
+     * @param maxN         max value of N to use when extracting N-grams from test cases
      * @return the unique id for the created group if successful, else null
      */
     public static String addGlobalFeaturesForSuites(final String mongoHost,
                                                     final String mongoPort,
                                                     final String dbId,
-                                                    final List<String> suiteIds,
+                                                    final Map<String, String> suiteGroups,
+                                                    final String inputSuiteId,
                                                     final int maxN) {
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
         FeaturesProcessor fproc = new FeaturesProcessor(manager, maxN);
@@ -332,12 +334,15 @@ public final class ExperimentManager {
         int count = 0;
         String groupId = manager.generateId();
 
-        System.out.println("Adding group");
+        // Add suite Ids
+        BasicDBList suites = new BasicDBList();
+
+        System.out.println("Adding group " + groupId);
 
         // Add features to all test cases
-        // Save features from first (input) suite
-        boolean first = true;
-        for (String suiteId : suiteIds) {
+        // Save features from input suite
+        for (String suiteId : suiteGroups.keySet()) {
+            suites.add(suiteId);
             for (String testId : manager.getTestIdsInSuite(suiteId)) {
                 count++;
                 if ((count % PROGRESS_INTERVAL) == 0) {
@@ -354,11 +359,10 @@ public final class ExperimentManager {
                     String artifactId = addFeaturesToTest(manager, testId, fproc);
                     fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
                 }
-                if (first) {
+                if (suiteId.equals(inputSuiteId)) {
                     allFeatures.addAll(fob.getFeatures());
                 }
             }
-            first = false;
         }
 
         // Build the DBObject
@@ -368,9 +372,10 @@ public final class ExperimentManager {
         bdo.put(TestDataManagerKeys.GROUP_ID, groupId);
 
         // Add suite Ids
-        BasicDBList suites = new BasicDBList();
-        suites.addAll(suiteIds);
         bdo.put(TestDataManagerKeys.SUITE_ID, suites);
+
+        // Add input suite id
+        bdo.put(TestDataManagerKeys.SUITE_ID + "_input", inputSuiteId);
 
         // Build and add the global feature list
         BasicDBList dbl = new BasicDBList();
