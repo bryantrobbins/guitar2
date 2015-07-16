@@ -95,6 +95,8 @@ for (tid in global.all){
 	}
 
   features.query <- sprintf('{"artifactType": "testCaseFeatures_%s", "ownerId": "%s"}', featureKey, tid)
+	cat (features.query)
+	cat('\n')
 	cat('Loading ')
 	cat(tid)
 	cat('\n')
