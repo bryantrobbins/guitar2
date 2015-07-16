@@ -1,12 +1,12 @@
 # LibSVM
-install.packages("e1071")
-library("e1071")
-#library("e1071", lib.loc="/opt/Rpackages/")
+#install.packages("e1071")
+#library("e1071")
+library("e1071", lib.loc="/opt/Rpackages/")
 
 # MongoDB
-install.packages("rmongodb")
-library(rmongodb)
-#library("rmongodb", lib.loc="/opt/Rpackages/")
+#install.packages("rmongodb")
+#library(rmongodb)
+library("rmongodb", lib.loc="/opt/Rpackages/")
 
 # Connect to mongo
 m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
