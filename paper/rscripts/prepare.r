@@ -81,7 +81,6 @@ rownames(global.df) <- global.all
 colnames(global.df) <- cna
 
 for (tid in global.all){
-  tid <- 't_e164398384_CONCAT_t_e1947436370'
 	# Set isInput and isFeas
 	if(tid %in% input.all){
 		global.df[tid, 'isInput'] <- 1
