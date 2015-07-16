@@ -43,7 +43,7 @@ cat('Loading global feature list\n')
 bson <- mongo.bson.from.JSON(group.query)
 value <- mongo.findOne(m, groupsCollection, bson)
 list <- mongo.bson.to.list(value)
-featureKey <- list[['maxN']]
+featureKey <- sprintf('testCaseFeatures_n_%s', list[['maxN']])
 featureKey
 input.suite <- list[['suiteId_input']]
 combined.suite <- list[['suiteId_predicted']]
@@ -94,7 +94,7 @@ for (tid in global.all){
 		}
 	}
 
-  features.query <- sprintf('{"artifactType": "testCaseFeatures_%s", "ownerId": "%s"}', featureKey, tid)
+  features.query <- sprintf('{"artifactType": "%s", "ownerId": "%s"}', featureKey, tid)
 	cat (features.query)
 	cat('\n')
 	cat('Loading ')
