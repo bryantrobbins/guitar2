@@ -1,8 +1,12 @@
 # LibSVM
-library("e1071", lib.loc="/opt/Rpackages/")
+install.packages("e1071")
+library("e1071")
+#library("e1071", lib.loc="/opt/Rpackages/")
 
 # MongoDB
-library("rmongodb", lib.loc="/opt/Rpackages/")
+install.packages("rmongodb")
+library(rmongodb)
+#library("rmongodb", lib.loc="/opt/Rpackages/")
 
 # Connect to mongo
 m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
@@ -14,6 +18,14 @@ mongo.is.connected(m)
 args <- commandArgs(trailingOnly = TRUE)
 dbId <- args[1]
 groupId <- args[2]
+
+#groupId <- '55a4f0bee4b0a4af94bc7b14'
+#dbId <- 'amalga_jenkins-generate-sl1-15'
+cat(dbId)
+cat('\n')
+
+cat(groupId)
+cat('\n')
 
 ####################################################
 # IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER #
@@ -32,6 +44,7 @@ bson <- mongo.bson.from.JSON(group.query)
 value <- mongo.findOne(m, groupsCollection, bson)
 list <- mongo.bson.to.list(value)
 featureKey <- list[['maxN']]
+featureKey
 input.suite <- list[['suiteId_input']]
 combined.suite <- list[['suiteId_predicted']]
 global.features <- list[['featuresList']]
@@ -68,6 +81,7 @@ rownames(global.df) <- global.all
 colnames(global.df) <- cna
 
 for (tid in global.all){
+  tid <- 't_e164398384_CONCAT_t_e1947436370'
 	# Set isInput and isFeas
 	if(tid %in% input.all){
 		global.df[tid, 'isInput'] <- 1
@@ -80,7 +94,7 @@ for (tid in global.all){
 		}
 	}
 
-  features.query <- sprintf('{"artifactType": "%s", "ownerId": "%s"}', featureKey, tid)
+  features.query <- sprintf('{"artifactType": "testCaseFeatures_%s", "ownerId": "%s"}', featureKey, tid)
 	cat('Loading ')
 	cat(tid)
 	cat('\n')
