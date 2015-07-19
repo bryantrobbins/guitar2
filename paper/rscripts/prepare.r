@@ -48,11 +48,13 @@ featureKey
 input.suite <- list[['suiteId_input']]
 combined.suite <- list[['suiteId_predicted']]
 global.features <- list[['featuresList']]
+input.suite
+combined.suite
 length(global.features)
 
 # Build lists of test ids in various categories
 input.query <- sprintf('{"suiteId": "%s"}', input.suite)
-combined.query <- sprintf('{"suiteId": "%s_combined"}', input.suite)
+combined.query <- sprintf('{"suiteId": "%s"}', combined.suite)
 cat('Loading example ids\n')
 cat('Loading input suite\n')
 bson <- mongo.bson.from.JSON(input.query)
