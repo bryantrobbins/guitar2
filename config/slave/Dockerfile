@@ -9,6 +9,7 @@ RUN apt-get install --no-install-recommends openjdk-7-jdk -y
 
 # Needed for Jenkins jobs
 RUN apt-get install ant wget unzip bzip2 xvfb git -y
+<<<<<<< HEAD
 
 # Needed for R
 RUN apt-get install r-base r-base-dev -y

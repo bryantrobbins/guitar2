@@ -230,15 +230,15 @@ public final class ExperimentManager {
     /**
      * Generate and save the features artifact for a given test case.
      *
-     * @param manager the TestDataManager to use
-     * @param testId  the test id to generate and save features for
+     * @param manager           the TestDataManager to use
+     * @param testId            the test id to generate and save features for
+     * @param featuresProcessor the features processor to use to produce features for this test case
      * @return the artifact id
      */
     private static String addFeaturesToTest(
             final TestDataManager manager,
-            final String testId) {
-        FeaturesProcessor featuresProcessor = new FeaturesProcessor(manager);
-
+            final String testId,
+            final FeaturesProcessor featuresProcessor) {
         Map<String, String> options = new HashMap<String, String>();
         options.put(FeaturesProcessor.TEST_ID_OPTION, testId);
         return manager.saveArtifact(
@@ -256,15 +256,17 @@ public final class ExperimentManager {
      * @param mongoPort the mongodb port to use
      * @param dbId      the db to use
      * @param testId    the test id to generate and save features for
+     * @param maxN      the max value of N to use when extracting N-grams from test cases
      * @return the artifact id
      */
     public static String addFeaturesToTest(
             final String mongoHost,
             final String mongoPort,
             final String dbId,
-            final String testId) {
+            final String testId,
+            final int maxN) {
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
-        FeaturesProcessor featuresProcessor = new FeaturesProcessor(manager);
+        FeaturesProcessor featuresProcessor = new FeaturesProcessor(manager, maxN);
 
         Map<String, String> options = new HashMap<String, String>();
         options.put(FeaturesProcessor.TEST_ID_OPTION, testId);
@@ -283,22 +285,25 @@ public final class ExperimentManager {
      * @param mongoPort the mongodb port to use
      * @param dbId      the db to use
      * @param suiteId   the suite to add features to
+     * @param maxN      the max value of N to use when extracting N-grams from test cases
      * @return true if all features added successfully, otherwise false
      */
     public static boolean addFeaturesToSuite(
             final String mongoHost,
             final String mongoPort,
             final String dbId,
-            final String suiteId) {
+            final String suiteId,
+            final int maxN) {
 
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
+        FeaturesProcessor fproc = new FeaturesProcessor(manager, maxN);
         int count = 0;
         for (String testId : manager.getTestIdsInSuite(suiteId)) {
             count++;
             if ((count % PROGRESS_INTERVAL) == 0) {
                 System.out.println(".");
             }
-            addFeaturesToTest(manager, testId);
+            addFeaturesToTest(manager, testId, fproc);
         }
 
         return true;
@@ -308,28 +313,34 @@ public final class ExperimentManager {
      * Add features to test cases in given suites which are aware of features
      * across all test cases.
      *
-     * @param mongoHost the mongodb host to use
-     * @param mongoPort the mongodb port to use
-     * @param dbId      the db to use
-     * @param suiteIds  the suites to add features for
+     * @param mongoHost        the mongodb host to use
+     * @param mongoPort        the mongodb port to use
+     * @param dbId             the db to use
+     * @param inputSuiteId     input suite to use for feature extraction
+     * @param predictedSuiteId suite of test cases to be predicted
+     * @param maxN             max value of N to use when extracting N-grams from test cases
      * @return the unique id for the created group if successful, else null
      */
     public static String addGlobalFeaturesForSuites(final String mongoHost,
                                                     final String mongoPort,
                                                     final String dbId,
-                                                    final List<String> suiteIds) {
+                                                    final String inputSuiteId,
+                                                    final String predictedSuiteId,
+                                                    final int maxN) {
         TestDataManager manager = new TestDataManager(mongoHost, mongoPort, dbId);
-        FeaturesProcessor fproc = new FeaturesProcessor(manager);
+        FeaturesProcessor fproc = new FeaturesProcessor(manager, maxN);
         HashSet<String> allFeatures = new HashSet<String>();
 
         int count = 0;
         String groupId = manager.generateId();
 
-        System.out.println("Adding group");
+        HashSet<String> suiteSet = new HashSet<String>();
+        suiteSet.add(inputSuiteId);
+        suiteSet.add(predictedSuiteId);
 
-        // Add features for all in-scope suites
-        // Keep track of all features as we go
-        for (String suiteId : suiteIds) {
+        // Add features to all test cases
+        // Save features from input suite
+        for (String suiteId : suiteSet) {
             for (String testId : manager.getTestIdsInSuite(suiteId)) {
                 count++;
                 if ((count % PROGRESS_INTERVAL) == 0) {
@@ -343,10 +354,12 @@ public final class ExperimentManager {
                 );
 
                 if (fob == null) {
-                    String artifactId = addFeaturesToTest(manager, testId);
+                    String artifactId = addFeaturesToTest(manager, testId, fproc);
                     fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
                 }
-                allFeatures.addAll(fob.getFeatures());
+                if (suiteId.equals(inputSuiteId)) {
+                    allFeatures.addAll(fob.getFeatures());
+                }
             }
         }
 
@@ -356,16 +369,18 @@ public final class ExperimentManager {
         // Add GroupId
         bdo.put(TestDataManagerKeys.GROUP_ID, groupId);
 
-        // Add suite Ids
-        BasicDBList suites = new BasicDBList();
-        suites.addAll(suiteIds);
-        bdo.put(TestDataManagerKeys.SUITE_ID, suites);
+        // Add suite ids
+        bdo.put(TestDataManagerKeys.SUITE_ID + "_input", inputSuiteId);
+        bdo.put(TestDataManagerKeys.SUITE_ID + "_predicted", predictedSuiteId);
 
         // Build and add the global feature list
         BasicDBList dbl = new BasicDBList();
         System.out.println("Features List has size of " + allFeatures.size());
         dbl.addAll(allFeatures);
         bdo.put(TestDataManagerKeys.FEATURES_LIST, dbl);
+
+        // Add the value of N
+        bdo.put(TestDataManagerKeys.MAX_N, maxN);
 
         // Record the group entry
         MongoUtils.addItemToCollection(manager.getDb(),

@@ -1,7 +1,11 @@
 # LibSVM
+#install.packages("e1071")
+#library("e1071")
 library("e1071", lib.loc="/opt/Rpackages/")
 
 # MongoDB
+#install.packages("rmongodb")
+#library(rmongodb)
 library("rmongodb", lib.loc="/opt/Rpackages/")
 
 # Connect to mongo
@@ -10,24 +14,47 @@ m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
 # Verify connectivity
 mongo.is.connected(m)
 
-# CONFIGURE THESE VALUES AS NECESSARY
-# EVENTUALLY WE CAN EXPOSE PROPERTIES FOR DB_ID, GROUP_ID, SUITE_ID
-# Update these
-resultsCollection <- 'amalga_jenkins-generate-sl1-15.results'
-artifactsCollection <- 'amalga_jenkins-generate-sl1-15.artifacts'
-groupsCollection <- 'amalga_jenkins-generate-sl1-15.groups'
-input.suite <- 'amalga_JabRef_sq_l_1'
-groupId <- '553dd3f2e4b06c1d30c51ed8'
+# LOAD THESE VALUES FROM COMMAND LINE
+args <- commandArgs(trailingOnly = TRUE)
+dbId <- args[1]
+groupId <- args[2]
 
+#groupId <- '55a4f0bee4b0a4af94bc7b14'
+#dbId <- 'amalga_jenkins-generate-sl1-15'
+cat(dbId)
+cat('\n')
 
-# IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER
-# HAVE A REALLY GOOD REASON
-# Some JSON objects
-input.query <- sprintf('{"suiteId": "%s"}', input.suite)
-combined.query <- sprintf('{"suiteId": "%s_combined"}', input.suite)
+cat(groupId)
+cat('\n')
+
+####################################################
+# IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER #
+# HAVE A REALLY GOOD REASON                        #
+####################################################
+
+# Collections
+resultsCollection <- sprintf('%s.results', dbId)
+artifactsCollection <- sprintf('%s.artifacts', dbId)
+groupsCollection <- sprintf('%s.groups', dbId)
+
+# Get global features
 group.query <- sprintf('{"groupId": "%s"}', groupId)
+cat('Loading global feature list\n')
+bson <- mongo.bson.from.JSON(group.query)
+value <- mongo.findOne(m, groupsCollection, bson)
+list <- mongo.bson.to.list(value)
+featureKey <- sprintf('testCaseFeatures_n_%s', list[['maxN']])
+featureKey
+input.suite <- list[['suiteId_input']]
+combined.suite <- list[['suiteId_predicted']]
+global.features <- list[['featuresList']]
+input.suite
+combined.suite
+length(global.features)
 
 # Build lists of test ids in various categories
+input.query <- sprintf('{"suiteId": "%s"}', input.suite)
+combined.query <- sprintf('{"suiteId": "%s"}', combined.suite)
 cat('Loading example ids\n')
 cat('Loading input suite\n')
 bson <- mongo.bson.from.JSON(input.query)
@@ -47,14 +74,6 @@ combined.all <- c(combined.passing, combined.failing)
 
 global.all <- c(combined.all, input.all)
 length(global.all)
-
-# Get global features
-cat('Loading global feature list\n')
-bson <- mongo.bson.from.JSON(group.query)
-value <- mongo.findOne(m, groupsCollection, bson)
-list <- mongo.bson.to.list(value)
-global.features <- list[['featuresList']]
-length(global.features)
 
 # Build data frame for all examples
 cat('Initializing global data frame\n')
@@ -76,7 +95,7 @@ for (tid in global.all){
 		}
 	}
 
-  features.query <- sprintf('{"artifactType": "testCaseFeatures", "ownerId": "%s"}', tid)
+  features.query <- sprintf('{"artifactType": "%s", "ownerId": "%s"}', featureKey, tid)
 	cat('Loading ')
 	cat(tid)
 	cat('\n')
@@ -84,11 +103,12 @@ for (tid in global.all){
   resultBson<- mongo.findOne(m, artifactsCollection, queryBson)
 	resultList <- mongo.bson.to.list(resultBson)
 	for (feat in resultList[['artifactData']][['features']]){
-		global.df[tid, feat] <- 1
+    if(feat %in% global.features){
+			global.df[tid, feat] <- 1
+    }
 	}
 }
 
-
-output.file <- sprintf('data/%s_data.csv', input.suite)
+output.file <- sprintf('data/%s_%s_data.csv', input.suite, featureKey)
 cat('Writing out data frame\n')
 write.csv(global.df, file = output.file)

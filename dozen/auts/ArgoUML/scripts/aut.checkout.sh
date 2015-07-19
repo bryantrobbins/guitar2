@@ -26,45 +26,46 @@
 #
 
 ####################################################
-# checkout the  application 
-#
-#   By   baonn@cs.umd.edu
-#   Date:    06/08/2011
+# Checkout Buddi
+#	By	baonn@cs.umd.edu
+#	Date: 	06/08/2011
 ####################################################
-
 
 source "$root_dir/common/common.cfg"
 source "$root_dir/common/util.sh"
 source "`dirname $0`/aut.cfg"
 source "`dirname $0`/aut.utils.sh"
 
-if [ -z $1 ]
-then
-   revision=19844
-else
-   revision=$1
-fi 
-
-# Check out a dir to src 
-function check_out_dir {
-   dir=$1
-
-   # Clean up svn 
-   exec_cmd "svn cleanup $dir"  
-
-   # Check out 
-   exec_cmd "svn co --no-auth-cache --quiet -r $revision --username guest --password '' http://argouml.tigris.org/svn/argouml/trunk/$dir $dir"
-}
-
 echo "Checking out to $aut_src_dir"
-mkdir -p  $aut_src_dir
+exec_cmd "mkdir -p $aut_src_dir"
+
+# Cleanup old stuff
+exec_cmd "rm -rf $aut_src_dir/*"
 
 # Enter src dir 
 pushd $aut_src_dir
 
-# Main 
-check_out_dir src
-check_out_dir tools
+# Download the application 
+exec_cmd "cp /sources/argo-sources.tar.bz2 ."
 
-# cleanup
+# bunzip
+exec_cmd "bunzip2  *.bz2 "
+exec_cmd "tar -xvf   *.tar "
+
+# Copy untar-ed source code 
+for i in argo-sources/* ; do mv "$i" . ; done
+for i in argo-sources/.[a-z]* ; do mv "$i" . ; done
+
+# Cleanup .tar file and tmp directory
+exec_cmd "rm -rf *.tar"
+
+# Sanity check to see if "src" dir exists in the copied sources
+ret=0
+if [ ! -e "src" ]
+then
+   echo FAILED checkout
+   ret=1
+fi
+
 popd
+exit $ret

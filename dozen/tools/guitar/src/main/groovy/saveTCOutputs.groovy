@@ -25,21 +25,21 @@ CoverageProcessor cp = new CoverageProcessor(manager.getDb())
 LogProcessor lp = new LogProcessor()
 
 // Get list of coverage files from coverageDir
-//fileList = []
-//indexList = []
-//def logFile = null
-//
-//def dir = new File(coverageDir)
-//dir.eachFileRecurse (FileType.FILES) { file ->
-//  def splits = file.getName().toString().split("\\.")
-//  if(splits[-1].equals("ser") && (! (splits[0].charAt(0) == 't'))){
-//    indexList << file.getName().toString().split("\\.")[0]
-//    fileList << file.getAbsolutePath()
-//  }
-//	if(splits[-1].equals("log")){
-//		logFilePath = file.getAbsolutePath()
-//	}
-//}
+fileList = []
+indexList = []
+def logFile = null
+
+def dir = new File(coverageDir)
+dir.eachFileRecurse (FileType.FILES) { file ->
+  def splits = file.getName().toString().split("\\.")
+  if(splits[-1].equals("ser") && (! (splits[0].charAt(0) == 't'))){
+    indexList << file.getName().toString().split("\\.")[0]
+    fileList << file.getAbsolutePath()
+  }
+	if(splits[-1].equals("log")){
+        logFilePath = file.getAbsolutePath()
+	}
+}
 
 //println fileList
 

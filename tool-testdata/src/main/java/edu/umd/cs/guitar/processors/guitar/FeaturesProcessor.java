@@ -4,6 +4,7 @@ import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.GsonFileProcessor;
 import edu.umd.cs.guitar.main.TestDataManager;
 import edu.umd.cs.guitar.model.data.TestCase;
+import edu.umd.cs.guitar.processors.applog.TextObject;
 import edu.umd.cs.guitar.processors.features.FeaturesObject;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -33,18 +34,30 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
      */
     private static TestcaseProcessor tcProc = new TestcaseProcessor();
     /**
+     * A TestcaseProcessor instance.
+     */
+    private static LogProcessor logProc = new LogProcessor();
+    /**
      * The manager instance to use for fetching test input artifacts.
      */
     private TestDataManager manager;
 
     /**
+     * The value of N to use when extracting N-grams from the test case.
+     */
+
+    private int n;
+
+    /**
      * Simple constructor passing Gson serializable FeatureObject to superclass.
      *
      * @param managerInstance the manager instance to use for fetching test input artifacts
+     * @param maxN            the max value N to use in constructing N-gram features (0 for none)
      */
-    public FeaturesProcessor(final TestDataManager managerInstance) {
+    public FeaturesProcessor(final TestDataManager managerInstance, final int maxN) {
         super(FeaturesObject.class);
         this.manager = managerInstance;
+        this.n = maxN;
     }
 
     @Override
@@ -53,12 +66,19 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
         String testId = options.get(TEST_ID_OPTION);
         TestCase testCase = (TestCase) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT,
                 testId, tcProc);
-        return FeaturesObject.getFeaturesFromTestCase(testCase);
+        TextObject testLog = (TextObject) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_OUTPUT,
+                testId, logProc);
+
+        if (testLog != null) {
+            return FeaturesObject.getFeaturesFromTestCase(testCase, testLog, n);
+        } else {
+            return FeaturesObject.getFeaturesFromTestCase(testCase, n);
+        }
     }
 
     @Override
     public String getKey() {
-        return "testCaseFeatures";
+        return "testCaseFeatures_n_" + n;
     }
 
     @Override

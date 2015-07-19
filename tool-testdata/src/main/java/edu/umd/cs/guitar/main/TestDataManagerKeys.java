@@ -103,4 +103,9 @@ public final class TestDataManagerKeys {
      * Provides the key for TEST_LIST_ID.
      */
     public static final String TEST_LIST_ID = "testList";
+
+    /**
+     * Provides the key for N_GRAM_MAX.
+     */
+    public static final String MAX_N = "maxN";
 }

@@ -1,63 +1,95 @@
-% THIS IS SIGPROC-SP.TEX - VERSION 3.1
-% WORKS WITH V3.2SP OF ACM_PROC_ARTICLE-SP.CLS
-% APRIL 2009
-%
-% It is an example file showing how to use the 'acm_proc_article-sp.cls' V3.2SP
-% LaTeX2e document class file for Conference Proceedings submissions.
-% ----------------------------------------------------------------------------------------------------------------
-% This .tex file (and associated .cls V3.2SP) *DOES NOT* produce:
-%       1) The Permission Statement
-%       2) The Conference (location) Info information
-%       3) The Copyright Line with ACM data
-%       4) Page numbering
-% ---------------------------------------------------------------------------------------------------------------
-% It is an example which *does* use the .bib file (from which the .bbl file
-% is produced).
-% REMEMBER HOWEVER: After having produced the .bbl file,
-% and prior to final submission,
-% you need to 'insert'  your .bbl file into your source .tex file so as to provide
-% ONE 'self-contained' source file.
-%
-% Questions regarding SIGS should be sent to
-% Adrienne Griscti ---> griscti@acm.org
-%
-% Questions/suggestions regarding the guidelines, .tex and .cls files, etc. to
-% Gerald Murray ---> murray@hq.acm.org
-%
-% For tracking purposes - this is V3.1SP - APRIL 2009
 
-\documentclass{acm_proc_article-sp}
+%% bare_conf.tex
+%% V1.3
+%% 2007/01/11
+%% by Michael Shell
+%% See:
+%% http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.7 or later) with an IEEE conference paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/
+%% and
+%% http://www.ieee.org/
+
+%%*************************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either expressed or
+%% implied; without even the implied warranty of MERCHANTABILITY or
+%% FITNESS FOR A PARTICULAR PURPOSE! 
+%% User assumes all risk.
+%% In no event shall IEEE or any contributor to this code be liable for
+%% any damages or losses, including, but not limited to, incidental,
+%% consequential, or any other damages, resulting from the use or misuse
+%% of any information contained here.
+%%
+%% All comments are the opinions of their respective authors and are not
+%% necessarily endorsed by the IEEE.
+%%
+%% This work is distributed under the LaTeX Project Public License (LPPL)
+%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
+%% distributed and modified. A copy of the LPPL, version 1.3, is included
+%% in the base LaTeX documentation of all distributions of LaTeX released
+%% 2003/12/01 or later.
+%% Retain all contribution notices and credits.
+%% ** Modified files should be clearly indicated as such, including  **
+%% ** renaming them and changing author support contact information. **
+%%
+%% File list of work: IEEEtran.cls, IEEEtran_HOWTO.pdf, bare_adv.tex,
+%%                    bare_conf.tex, bare_jrnl.tex, bare_jrnl_compsoc.tex
+%%*************************************************************************
+
+% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
+% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
+% *** with production work. IEEE's font choices can trigger bugs that do  ***
+% *** not appear when using other class files.                            ***
+% The testflow support page is at:
+% http://www.michaelshell.org/tex/testflow/
+
+
+
+% Note that the a4paper option is mainly intended so that authors in
+% countries using A4 can easily print to A4 and see how their papers will
+% look in print - the typesetting of the document will not typically be
+% affected with changes in paper size (but the bottom and side margins will).
+% Use the testflow package mentioned above to verify correct handling of
+% both paper sizes by the user's LaTeX system.
+%
+% Also note that the "draftcls" or "draftclsnofoot", not "draft", option
+% should be used if it is desired that the figures are to be displayed in
+% draft mode.
+%
+\documentclass[conference,compsoc]{IEEEtran}
+% Add the compsoc option for Computer Society conferences.
+%
+% If IEEEtran.cls has not been installed into the LaTeX system files,
+% manually specify the path to it like:
+% \documentclass[conference]{../sty/IEEEtran}
+
+\input{parts/packages}
 
 \begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{Predicting the Feasibility of Test Case Combinations}
 
-\title{Predicting the Feasibility of Potential Test Case Combinations}
-\numberofauthors{2}
-\author{
-% 1st. author
-\alignauthor
-Bryan Robbins\\
-       \affaddr{University of Maryland - College Park}\\
-       \affaddr{Department of Computer Science}\\
-       \affaddr{4115 AV Williams Building}\\
-       \affaddr{College Park, MD 20742}\\
-       \email{brobbins@cs.umd.edu}
-% 2nd. author
-\alignauthor
-Atif Memon\\
-       \affaddr{University of Maryland - College Park}\\
-       \affaddr{Department of Computer Science}\\
-       \affaddr{4115 AV Williams Building}\\
-       \affaddr{College Park, MD 20742}\\
-       \email{atif@cs.umd.edu}
-}
+
+\input{parts/authors}
+
+
+% use for special paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+
+% make the title area
 \maketitle
-\begin{abstract}
-\input{parts/abstract}
-\end{abstract}
 
-\category{D.2.5}{Software Engineering}{Testing and Debugging}
-\terms{Experimentation, Verification}
-\keywords{Software testing, model-based testing, test automation}
+\input{parts/abstract}
+\IEEEpeerreviewmaketitle
 
 \section{Introduction}
 \input{parts/introduction}
@@ -74,12 +106,6 @@ Atif Memon\\
 \section{Results and Analysis}
 \input{parts/results}
 
-\begin{figure}
-\centering
-\includegraphics[height=1in, width=1in]{images/rosette.pdf}
-\caption{Some Names I Know}
-\end{figure}
-
 \section{Threats to Validity}
 \input{parts/threats}
 
@@ -89,7 +115,14 @@ Atif Memon\\
 \section{Conclusions and Future Work}
 \input{parts/conclusion}
 
-\bibliographystyle{abbrv}
-\bibliography{amalga}
-\balancecolumns
+
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
 \end{document}
