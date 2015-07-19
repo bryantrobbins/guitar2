@@ -32,6 +32,6 @@ docker build -t="bryantrobbins/jslave" ./slave
 for i in `seq 1 $nslave`;
 do
   echo $i
-  docker run -d --volumes-from cuadata -P --name slave-$i bryantrobbins/jslave
+  docker run -d --dns 128.8.127.50 --volumes-from cuadata -P --name slave-$i bryantrobbins/jslave
   sleep 15
 done
