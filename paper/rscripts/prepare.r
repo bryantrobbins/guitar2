@@ -1,12 +1,10 @@
 # LibSVM
-#install.packages("e1071")
-#library("e1071")
-library("e1071", lib.loc="/opt/Rpackages/")
+install.packages("e1071")
+library("e1071")
 
 # MongoDB
-#install.packages("rmongodb")
-#library(rmongodb)
-library("rmongodb", lib.loc="/opt/Rpackages/")
+install.packages("rmongodb")
+library("rmongodb")
 
 # Connect to mongo
 m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
@@ -19,8 +17,6 @@ args <- commandArgs(trailingOnly = TRUE)
 dbId <- args[1]
 groupId <- args[2]
 
-#groupId <- '55a4f0bee4b0a4af94bc7b14'
-#dbId <- 'amalga_jenkins-generate-sl1-15'
 cat(dbId)
 cat('\n')
 
@@ -38,8 +34,8 @@ artifactsCollection <- sprintf('%s.artifacts', dbId)
 groupsCollection <- sprintf('%s.groups', dbId)
 
 # Get global features
+cat('Loading group object\n')
 group.query <- sprintf('{"groupId": "%s"}', groupId)
-cat('Loading global feature list\n')
 bson <- mongo.bson.from.JSON(group.query)
 value <- mongo.findOne(m, groupsCollection, bson)
 list <- mongo.bson.to.list(value)
@@ -55,7 +51,6 @@ length(global.features)
 # Build lists of test ids in various categories
 input.query <- sprintf('{"suiteId": "%s"}', input.suite)
 combined.query <- sprintf('{"suiteId": "%s"}', combined.suite)
-cat('Loading example ids\n')
 cat('Loading input suite\n')
 bson <- mongo.bson.from.JSON(input.query)
 value <- mongo.findOne(m, resultsCollection, bson)

@@ -3,17 +3,17 @@ options(echo=TRUE, warning.length=8170)
 
 # Grab arguments
 args <- commandArgs(trailingOnly = TRUE)
-aut <- args[1]
+suiteId <- args[1]
 minGammaExp <- args[2]
 maxGammaExp <- args[3]
 minCostExp <- args[4]
 maxCostExp <- args[5]
 
 # LibSVM
-library("e1071", lib.loc="/opt/Rpackages/")
+install.packages("e1071")
+library("e1071")
 
-data.suite <- sprintf('amalga_%s_sq_l_1', aut)
-data.file <- sprintf('data/%s_data.csv', data.suite)
+data.file <- sprintf('data/%s_data.csv', suiteId)
 
 cat('Reading from csv\n')
 data <- data.frame(read.csv(data.file))
