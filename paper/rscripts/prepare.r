@@ -13,6 +13,7 @@ library("rmongodb")
 install.packages("devtools", repos=cran)
 require(devtools)
 install_github("RS3", "Gastrograph")
+library("RS3")
 
 # Connect to mongo
 m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
