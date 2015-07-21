@@ -6,6 +6,11 @@ library("e1071")
 install.packages("rmongodb")
 library("rmongodb")
 
+# S3
+install.packages("devtools")
+require(devtools)
+install_github("RS3", "Gastrograph")
+
 # Connect to mongo
 m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
 
@@ -16,6 +21,8 @@ mongo.is.connected(m)
 args <- commandArgs(trailingOnly = TRUE)
 dbId <- args[1]
 groupId <- args[2]
+accessKey <- args[3]
+secretKey <- args[4]
 
 cat(dbId)
 cat('\n')
@@ -107,3 +114,8 @@ for (tid in global.all){
 output.file <- sprintf('data/%s_%s_data.csv', input.suite, featureKey)
 cat('Writing out data frame\n')
 write.csv(global.df, file = output.file)
+
+# Upload to S3 location
+bucket <- 'com.btr3.research'
+S3_connect(accessKey, secretKey)
+S3_put_object(bucket, output.file, output.file, "text/csv")
