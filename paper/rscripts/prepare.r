@@ -1,3 +1,6 @@
+# I want commands printed in output
+options(echo=TRUE, warning.length=8170)
+
 # Needed for portable installs
 cran <- "http://cran.rstudio.com/"
 
@@ -26,7 +29,9 @@ args <- commandArgs(trailingOnly = TRUE)
 dbId <- args[1]
 groupId <- args[2]
 accessKey <- args[3]
+cat(accessKey)
 secretKey <- args[4]
+cat(secretKey)
 
 cat(dbId)
 cat('\n')
