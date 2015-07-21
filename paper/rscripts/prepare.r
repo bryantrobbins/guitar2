@@ -1,13 +1,16 @@
+# Needed for portable installs
+cran <- "http://cran.rstudio.com/"
+
 # LibSVM
-install.packages("e1071")
+install.packages("e1071", repos=cran)
 library("e1071")
 
 # MongoDB
-install.packages("rmongodb")
+install.packages("rmongodb", repos=cran)
 library("rmongodb")
 
 # S3
-install.packages("devtools")
+install.packages("devtools", repos=cran)
 require(devtools)
 install_github("RS3", "Gastrograph")
 
