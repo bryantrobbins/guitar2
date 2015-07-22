@@ -30,7 +30,7 @@ S3_connect(accessKey, secretKey)
 S3_get_object(bucket, data.key, data.key)
 
 cat('Reading from csv\n')
-data <- data.frame(read.csv(data.file))
+data <- data.frame(read.csv(data.key))
 
 # Build training data input set
 tr <- subset(data, isInput == 1)
