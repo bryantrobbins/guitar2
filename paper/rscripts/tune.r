@@ -5,7 +5,7 @@ options(echo=TRUE, warning.length=8170)
 cran <- "http://cran.rstudio.com/"
 
 # LibSVM
-install.packages("e1071", cran)
+install.packages("e1071", repos=cran)
 library("e1071")
 
 # S3
