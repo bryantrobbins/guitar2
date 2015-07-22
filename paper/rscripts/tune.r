@@ -17,8 +17,8 @@ library("RS3")
 # Grab arguments
 args <- commandArgs(trailingOnly = TRUE)
 dataset <- args[1]
-myGammaExp <- args[2]
-myCostExp <- args[3]
+myGammaExp <- as.numeric(args[2])
+myCostExp <- as.numeric(args[3])
 accessKey <- args[4]
 secretKey <- args[5]
 
