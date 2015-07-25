@@ -36,8 +36,10 @@ data <- data.frame(read.csv(data.key))
 tr <- subset(data, isInput == 1)
 tr$isInput <- NULL
 tr$id <- NULL
+isFeas <- tr$isFeas
+tr$isFeas <- NULL
 
-fit <- svm(isFeas~., data = tr, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, tunecontrol = tune.control(sampling = "cross", cross = 5))
+fit <- svm(data = tr, y = isFeas, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, tunecontrol = tune.control(sampling = "cross", cross = 5))
 
 # Describe the fit
 print(fit)
@@ -46,8 +48,8 @@ summary(fit)
 # Predict vs training data
 pred <- fitted(fit)
 pred
-tr['isFeas']
-#table(pred, tr['isFeas'])
+isFeas
+table(pred, isFeas)
 
 # Re-print any warnings
 warnings()
