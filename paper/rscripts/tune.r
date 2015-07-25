@@ -39,9 +39,13 @@ tr$id <- NULL
 
 fit <- svm(isFeas~., data = tr, kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, tunecontrol = tune.control(sampling = "cross", cross = 5))
 
-# Print tuning results
+# Describe the fit
+print(fit)
 summary(fit)
-plot(fit)
 
-# Print any warnings
+# Predict vs training data
+pred <- fitted(fit)
+table(pred, isFeas~.)
+
+# Re-print any warnings
 warnings()
