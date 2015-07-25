@@ -46,6 +46,7 @@ summary(fit)
 # Predict vs training data
 pred <- fitted(fit)
 pred
+tr['isFeas']
 #table(pred, tr['isFeas'])
 
 # Re-print any warnings
