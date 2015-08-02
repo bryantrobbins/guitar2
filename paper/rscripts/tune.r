@@ -23,23 +23,21 @@ accessKey <- args[4]
 secretKey <- args[5]
 
 # Get data CSV file from S3
-cat('Fetching from S3\n')
+cat('Fetching data file from S3\n')
 data.key <- sprintf('data/%s.csv', dataset)
 bucket <- 'com.btr3.research'
 S3_connect(accessKey, secretKey)
 S3_get_object(bucket, data.key, data.key)
 
-cat('Reading from csv\n')
+cat('Reading data frame from csv\n')
 data <- data.frame(read.csv(data.key))
 
-# Build training data input set
-#tr <- subset(data, isInput == 1)
-#tr$isInput <- NULL
-#tr$id <- NULL
-#isFeas <- tr$isFeas
-#tr$isFeas <- NULL
+# Prepare training data
+training <- subset(data, isInput=1)
+training$isInput <- NULL
 
-fit <- svm(isFeas~., data = data, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, scale=FALSE, tunecontrol = tune.control(sampling = "cross", cross = 5))
+# Construct model from training data
+fit <- svm(isFeas~., data = training, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, scale=FALSE, tunecontrol = tune.control(sampling = "cross", cross = 5))
 
 # Describe the fit
 print(fit)
