@@ -47,9 +47,10 @@ summary(fit)
 
 # Predict vs training data
 pred <- fitted(fit)
+actual <- t(data['isFeas'])
 pred
-data['isFeas']
-table(pred, data['isFeas'])
+actual
+table(pred, actual)
 
 # Re-print any warnings
 warnings()
