@@ -33,13 +33,13 @@ cat('Reading from csv\n')
 data <- data.frame(read.csv(data.key))
 
 # Build training data input set
-tr <- subset(data, isInput == 1)
-tr$isInput <- NULL
-tr$id <- NULL
-isFeas <- tr$isFeas
-tr$isFeas <- NULL
+#tr <- subset(data, isInput == 1)
+#tr$isInput <- NULL
+#tr$id <- NULL
+#isFeas <- tr$isFeas
+#tr$isFeas <- NULL
 
-fit <- svm(x = tr, y = isFeas, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, scale=FALSE, tunecontrol = tune.control(sampling = "cross", cross = 5))
+fit <- svm(isFeas~., data = data, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, scale=FALSE, tunecontrol = tune.control(sampling = "cross", cross = 5))
 
 # Describe the fit
 print(fit)
