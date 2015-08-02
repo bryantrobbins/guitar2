@@ -33,8 +33,9 @@ cat('Reading data frame from csv\n')
 data <- data.frame(read.csv(data.key))
 
 # Prepare training data
-training <- subset(data, isInput=1)
+training <- subset(data, isInput==1)
 training$isInput <- NULL
+training
 
 # Construct model from training data
 fit <- svm(isFeas~., data = training, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, scale=FALSE, tunecontrol = tune.control(sampling = "cross", cross = 5))
@@ -45,7 +46,7 @@ summary(fit)
 
 # Predict vs training data
 pred <- fitted(fit)
-actual <- t(data['isFeas'])
+actual <- t(training['isFeas'])
 pred
 actual
 table(pred, actual)
