@@ -42,14 +42,14 @@ training$isInput <- NULL
 training_x <- subset(training, select = -isFeas)
 
 # Construct model from training data
-fit <- svm(isFeas~., data = training, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, probability=TRUE, scale=FALSE)
+fit <- svm(isFeas~., data = training, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, probability=TRUE, scale=FALSE, cross = 5)
 
 # Describe the fit
 print(fit)
 summary(fit)
 
 # Predict vs training data
-actual <- training['isFeas']
+actual <- list(training['isFeas'])
 pred <- predict(fit, training, probability = TRUE)
 length(list(attr(pred, "probabilities")[,2]))
 length(actual)
