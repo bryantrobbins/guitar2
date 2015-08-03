@@ -13,8 +13,8 @@ def maxCostExp = Integer.parseInt(args[4])
 // Jenkins client
 def jenkinsClient = new JenkinsClient(master, "8888", "", "admin", "amalga84go")
 
-for (int gamma=minGammaExp; gamma<=maxGammaExp; i++) {
-	for (int cost=minCostExp; cost<=maxCostExp; i++) {
+for (int gamma=minGammaExp; gamma<=maxGammaExp; gamma++) {
+	for (int cost=minCostExp; cost<=maxCostExp; cost++) {
    	// build Map of params
    	// I have only used text params, but perhaps others supported via Jenkins Remote API
    	def jobParams = new HashMap<String, String>();
