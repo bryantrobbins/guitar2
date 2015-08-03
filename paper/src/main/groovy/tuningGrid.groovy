@@ -9,6 +9,8 @@ def minGammaExp = Integer.parseInt(args[1])
 def maxGammaExp = Integer.parseInt(args[2])
 def minCostExp = Integer.parseInt(args[3])
 def maxCostExp = Integer.parseInt(args[4])
+def accessKey = "AKIAIZRZIIU5OBQ2F3DA"
+def secretKey = "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"
 
 // Jenkins client
 def jenkinsClient = new JenkinsClient(master, "8888", "", "admin", "amalga84go")
@@ -21,6 +23,8 @@ for (int gamma=minGammaExp; gamma<=maxGammaExp; gamma++) {
    	jobParams.put("DATASET", dataset.toString())
    	jobParams.put("GAMMA_EXPONENT", gamma.toString())
    	jobParams.put("COST_EXPONENT", cost.toString())
+		jobParams.put("ACCESS_KEY", accessKey)
+		jobParams.put("SECRET_KEY", secretKey)
 
   	// Use Jenkins client to launch job
    	jenkinsClient.submitJob("train-model", jobParams)
