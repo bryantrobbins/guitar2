@@ -38,18 +38,31 @@ training$isInput <- NULL
 training_x <- subset(training, select = -isFeas)
 
 # Construct model from training data
-fit <- svm(isFeas~., data = training, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, scale=FALSE, tunecontrol = tune.control(sampling = "cross", cross = 5))
+fit <- svm(isFeas~., data = training, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, probability=TRUE, scale=FALSE, tunecontrol = tune.control(sampling = "cross", cross = 5))
 
 # Describe the fit
 print(fit)
 summary(fit)
 
 # Predict vs training data
-pred <- fitted(fit)
 actual <- t(training['isFeas'])
-table(pred, actual)
+pred <- fitted(fit, probability = TRUE)
+rocr <- prediction(attr(pred, "probabilities")[,2], actual)
+performance(rocr, "fpr")
+performance(rocr, "fnr")
+
 #pred
 #actual
 
 # Re-print any warnings
 warnings()
+
+# Save classifier perf to file
+#performanceFileName <- sprintf("tune_%s_%s_%s.result", dataset, myGammaExp, myCostExp)
+#headers <- sprintf("dataset,gamma,cost,fnc,fpc")
+#results <- sprintf("%s,%s,%s,%s,%s", dataset, myGammaExp,myCostExp,pred)
+#fileConn<-file(filename)
+#writeLines(c(headers, results), fileConn)
+#close(fileConn)
+
+# Upload files to S3
