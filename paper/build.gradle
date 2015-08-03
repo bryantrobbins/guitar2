@@ -6,6 +6,10 @@ import org.apache.commons.io.IOUtils
 import org.apache.commons.io.FileUtils
 import static com.xlson.groovycsv.CsvParser.parseCsv
 
+// Dependency path arg
+def master = hasProperty('master') ? master : 'guitar05.cs.umd.edu'
+def loc = hasProperty('nexusLocation') ? nexusLocation : master + ':8081'
+
 // Load properties or defaults
 def baseVal = hasProperty('base') ? base : 'example'
 def csvDataVal = hasProperty('csvData') ? csvData : ''
@@ -33,6 +37,17 @@ buildscript {
 		classpath 'commons-io:commons-io:2.4'
 		classpath 'com.xlson.groovycsv:groovycsv:1.0'
 	}
+}
+
+repositories {
+    maven {
+          url "http://" + loc + "/nexus/content/groups/public"
+    }
+}
+
+dependencies {
+  compile 'org.codehaus.groovy:groovy-all:2.3.8'
+  compile 'edu.umd.cs.guitar:tool-testdata:0.0.1-SNAPSHOT'
 }
 
 // Commands
