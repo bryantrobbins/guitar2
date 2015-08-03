@@ -52,6 +52,7 @@ summary(fit)
 actual <- t(training['isFeas'])
 pred <- predict(fit, training, probability = TRUE)
 attr(pred, "probabilities")[,2]
+actual
 rocr <- prediction(attr(pred, "probabilities")[,2], actual)
 performance(rocr, "fpr")
 performance(rocr, "fnr")
