@@ -8,6 +8,10 @@ cran <- "http://cran.rstudio.com/"
 install.packages("e1071", repos=cran)
 library("e1071")
 
+# ROCR
+install.packages("ROCR", repos=cran)
+library("ROCR")
+
 # S3
 install.packages("devtools", repos=cran)
 require(devtools)
