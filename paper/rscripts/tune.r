@@ -49,11 +49,8 @@ print(fit)
 summary(fit)
 
 # Predict vs training data
-actual <- t(training['isFeas'])
+actual <- training['isFeas']
 pred <- predict(fit, training, probability = TRUE)
-is.data.frame((attr(pred, "probabilities")[,2]))
-is.matrix(attr(pred, "probabilities")[,2])
-is.vector(attr(pred, "probabilities")[,2])
 length(list(attr(pred, "probabilities")[,2]))
 length(actual)
 rocr <- prediction(attr(pred, "probabilities")[,2], actual)
