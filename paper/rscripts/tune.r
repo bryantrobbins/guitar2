@@ -49,16 +49,10 @@ print(fit)
 summary(fit)
 
 # Predict vs training data
-actual <- list(training['isFeas'])
+actual <- t(training['isFeas'])
 pred <- predict(fit, training, probability = TRUE)
-length(list(attr(pred, "probabilities")[,2]))
-length(actual)
-rocr <- prediction(attr(pred, "probabilities")[,2], actual)
-performance(rocr, "fpr")
-performance(rocr, "fnr")
 
-#pred
-#actual
+table(pred, actual)
 
 # Re-print any warnings
 warnings()
