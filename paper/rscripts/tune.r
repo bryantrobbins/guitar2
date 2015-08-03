@@ -42,7 +42,7 @@ training$isInput <- NULL
 training_x <- subset(training, select = -isFeas)
 
 # Construct model from training data
-fit <- svm(isFeas~., data = training, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, probability=TRUE, scale=FALSE, cross = 5)
+fit <- svm(isFeas~., data = training, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, probability=TRUE, scale=FALSE)
 
 # Describe the fit
 print(fit)
