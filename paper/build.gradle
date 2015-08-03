@@ -13,6 +13,11 @@ def heightVal = hasProperty('height') ? height : ''
 def widthVal = hasProperty('width') ? width : ''
 def scaleVal = hasProperty('scale') ? scale : ''
 def rscriptVal = hasProperty('rscript') ? rscript : ''
+def dataset_val = hasProperty('dataset') ? dataset : ''
+def min_gamma_val = hasProperty('min_gamma') ? min_gamma : ''
+def max_gamma_val = hasProperty('max_gamma') ? max_gamma : ''
+def min_cost_val = hasProperty('min_cost') ? min_cost : ''
+def max_cost_val = hasProperty('max_cost') ? max_cost : ''
 
 buildscript {
 	repositories {
@@ -196,4 +201,10 @@ task runRscript << {
 
 task debugMe << {
   doCmd(debugCmd)
+}
+
+task tuningGrid(dependsOn: 'classes', type: JavaExec) {
+	main = 'tuningGrid'
+	classpath = sourceSets.main.runtimeClasspath
+	args dataset_val, min_gamma_val, max_gamma_val, min_cost_val, max_cost_val
 }
