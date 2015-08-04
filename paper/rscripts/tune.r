@@ -15,8 +15,8 @@ library("ROCR")
 # S3
 install.packages("devtools", repos=cran)
 require(devtools)
-install_github("RS3", "Gastrograph")
-library("RS3")
+install_github("Gastrograph/RS3")
+library("Gastrograph/RS3")
 
 # Grab arguments
 args <- commandArgs(trailingOnly = TRUE)
