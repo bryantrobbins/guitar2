@@ -25,6 +25,10 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
      */
     public static final String TEST_ID_OPTION = "testId";
     /**
+     * The key to use for the test ID in options.
+     */
+    public static final String TRIM_OPTION = "trim";
+    /**
      * Log4j logger.
      */
     private static Logger logger = LogManager.getLogger(FeaturesProcessor.class);
@@ -64,13 +68,18 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
     public FeaturesObject objectFromOptions(final Map<String, String> options) {
 
         String testId = options.get(TEST_ID_OPTION);
+        boolean trim = false;
+        String trimString = options.get(TRIM_OPTION);
+        if (trimString != null) {
+            trim = trimString.toLowerCase().equals("true");
+        }
         TestCase testCase = (TestCase) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT,
                 testId, tcProc);
         TextObject testLog = (TextObject) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_OUTPUT,
                 testId, logProc);
 
         if (testLog != null) {
-            return FeaturesObject.getFeaturesFromTestCase(testCase, testLog, n);
+            return FeaturesObject.getFeaturesFromTestCase(testCase, testLog, n, trim);
         } else {
             return FeaturesObject.getFeaturesFromTestCase(testCase, n);
         }

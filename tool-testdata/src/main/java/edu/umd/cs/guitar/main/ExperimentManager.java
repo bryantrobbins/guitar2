@@ -233,14 +233,21 @@ public final class ExperimentManager {
      * @param manager           the TestDataManager to use
      * @param testId            the test id to generate and save features for
      * @param featuresProcessor the features processor to use to produce features for this test case
+     * @param trim              whether or not to trim the features of the test case if infeasible
      * @return the artifact id
      */
     private static String addFeaturesToTest(
             final TestDataManager manager,
             final String testId,
-            final FeaturesProcessor featuresProcessor) {
+            final FeaturesProcessor featuresProcessor,
+            final boolean trim) {
+        String trimString = "false";
+        if (trim) {
+            trimString = "true";
+        }
         Map<String, String> options = new HashMap<String, String>();
         options.put(FeaturesProcessor.TEST_ID_OPTION, testId);
+        options.put(FeaturesProcessor.TRIM_OPTION, trimString);
         return manager.saveArtifact(
                 ArtifactCategory.TEST_INPUT,
                 featuresProcessor,
@@ -303,7 +310,7 @@ public final class ExperimentManager {
             if ((count % PROGRESS_INTERVAL) == 0) {
                 System.out.println(".");
             }
-            addFeaturesToTest(manager, testId, fproc);
+            addFeaturesToTest(manager, testId, fproc, false);
         }
 
         return true;
@@ -354,7 +361,12 @@ public final class ExperimentManager {
                 );
 
                 if (fob == null) {
-                    String artifactId = addFeaturesToTest(manager, testId, fproc);
+                    String artifactId = null;
+                    if (suiteId.equals(inputSuiteId)) {
+                        artifactId = addFeaturesToTest(manager, testId, fproc, true);
+                    } else {
+                        artifactId = addFeaturesToTest(manager, testId, fproc, false);
+                    }
                     fob = (FeaturesObject) manager.getArtifactById(artifactId, fproc);
                 }
                 if (suiteId.equals(inputSuiteId)) {

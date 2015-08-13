@@ -14,10 +14,11 @@ def manager = new TestDataManager(master, "37017", args[1])
 def tests = manager.getTestIdsInSuite(args[2])
 println "Size is ${tests.size()}"
 
+int count = 0
+int start_buffer_count = 50
 for(String id : manager.getTestIdsInSuite(args[2])){
-        
-        // update/obtain job-specific params
-        
+				count++
+
         // build Map of params
         // I have only used text params, but perhaps others supported via Jenkins Remote API
         def jobParams = new HashMap<String, String>();
@@ -31,5 +32,9 @@ for(String id : manager.getTestIdsInSuite(args[2])){
         jenkinsClient.submitJob("replay-test", jobParams)
 
 				// ZZZ to let the master recover
-				sleep(3000)
+				if(count < start_buffer_count) {
+					sleep(3000)
+				} else {
+					sleep(10000)
+				}
 }

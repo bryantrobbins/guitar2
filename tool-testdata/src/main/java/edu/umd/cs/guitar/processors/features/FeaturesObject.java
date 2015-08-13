@@ -106,17 +106,19 @@ public class FeaturesObject {
      * @param testCase the test case
      * @param testLog  the test case log
      * @param maxN     the max value of N to use when extracting N-grams from the test case
+     * @param trim     true if the features of the test case should be trimmed according to the log
      * @return the corresponding features, or null if the test case is null
      */
     public static FeaturesObject getFeaturesFromTestCase(final TestCase testCase,
                                                          final TextObject testLog,
-                                                         final int maxN) {
+                                                         final int maxN,
+                                                         final boolean trim) {
 
         List<String> features = new ArrayList<String>();
         List<String> eventsInOrder = GUITARUtils.getEventIdsFromTest(testCase);
 
         // Prune events if test execution was not completed (assuming due to test case being infeasible)
-        if (!testLog.computeResult().equals(TextObject.TestResult.PASS)) {
+        if (!testLog.computeResult().equals(TextObject.TestResult.PASS) && trim) {
             eventsInOrder = eventsInOrder.subList(0, testLog.computeStepCount());
         }
 
