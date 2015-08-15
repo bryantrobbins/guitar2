@@ -52,5 +52,9 @@ close(fileConn)
 # Write out model
 save(model, file = modelFile)
 
+# Upload files to S3
+S3_put_object(bucket,reportFile,reportFile,"text/csv")
+S3_put_object(bucket,modelFile,modelFile)
+
 # Re-print any warnings
 warnings()
