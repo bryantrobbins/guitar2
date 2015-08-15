@@ -47,7 +47,7 @@ save(model, file = modelFile)
 reportKey <- sprintf("reports/%s", reportFile)
 modelKey <- sprintf("models/%s", modelFile)
 S3_put_object(bucket,reportKey,reportFile,"text/csv")
-S3_put_object(bucket,modelKey,modelFile)
+S3_put_object(bucket,modelKey,modelFile,"")
 
 # Re-print any warnings
 warnings()
