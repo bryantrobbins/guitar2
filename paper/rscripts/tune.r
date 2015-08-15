@@ -7,7 +7,7 @@ cran <- "http://cran.rstudio.com/"
 # LibSVM
 library("e1071")
 library("ROCR")
-library("Gastrograph/RS3")
+library("RS3")
 
 # Grab arguments
 args <- commandArgs(trailingOnly = TRUE)
