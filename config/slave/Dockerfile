@@ -2,6 +2,8 @@ FROM ubuntu:14.04
 MAINTAINER Bryan Robbins <bryantrobbins@gmail.com>
 
 # Get latest packages
+RUN echo "deb http://lib.stat.cmu.edu/R/CRAN/bin/linux/ubuntu trusty/" >> /etc/apt/sources.list
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
 RUN apt-get update && apt-get clean
 
 # Needed for Jenkins
@@ -9,10 +11,11 @@ RUN apt-get install --no-install-recommends openjdk-7-jdk -y
 
 # Needed for Jenkins jobs
 RUN apt-get install ant wget unzip bzip2 xvfb git -y
-<<<<<<< HEAD
 
 # Needed for R
-RUN apt-get install r-base r-base-dev -y
+RUN apt-get install r-base r-base-dev libxml2-dev libcurl3-dev -y
+COPY install.r /install.r
+RUN Rscript install.r
 
 # Install Gradle
 COPY gradle-2.1-bin.zip /gradle-2.1-bin.zip
