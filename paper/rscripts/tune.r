@@ -27,42 +27,30 @@ accessKey <- args[4]
 secretKey <- args[5]
 
 # Get data CSV file from S3
-cat('Fetching data file from S3\n')
 data.key <- sprintf('data/%s.csv', dataset)
 bucket <- 'com.btr3.research'
 S3_connect(accessKey, secretKey)
 S3_get_object(bucket, data.key, data.key)
 
-cat('Reading data frame from csv\n')
 data <- data.frame(read.csv(data.key))
 
-# Prepare training data
 training <- subset(data, isInput==1)
-training$isInput <- NULL
-training_x <- subset(training, select = -isFeas)
+x <- subset(training, select = -isFeas)
+x <- data.frame(lapply(x,as.numeric))
+x <- as.matrix(x)
+y <- factor(training[['isFeas']])
+model <- svm(x, y, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, probability=TRUE, scale=FALSE, cross = 3)
+modelFile <- sprintf("tune_model_%s_%s.rda", myCostExp, myGammaExp)
+reportFile <- sprintf("tune_report_%s_%s.txt", myCostExp, myGammaExp)
+report <- sprintf("%s,%s,%s,%s", myCostExp, myGammaExp, modelFile, model$tot.accuracy)
 
-# Construct model from training data
-fit <- svm(isFeas~., data = training, type = "C-classification", kernel = "radial", cost=2^myCostExp, gamma=2^myGammaExp, probability=TRUE, scale=FALSE, cross = 5)
+# Write out report
+fileConn<-file(reportFile)
+writeLines(c(report), fileConn)
+close(fileConn)
 
-# Describe the fit
-print(fit)
-summary(fit)
-
-# Predict vs training data
-actual <- t(training['isFeas'])
-pred <- predict(fit, training, probability = TRUE)
-
-table(pred, actual)
+# Write out model
+save(model, file = modelFile)
 
 # Re-print any warnings
 warnings()
-
-# Save classifier perf to file
-#performanceFileName <- sprintf("tune_%s_%s_%s.result", dataset, myGammaExp, myCostExp)
-#headers <- sprintf("dataset,gamma,cost,fnc,fpc")
-#results <- sprintf("%s,%s,%s,%s,%s", dataset, myGammaExp,myCostExp,pred)
-#fileConn<-file(filename)
-#writeLines(c(headers, results), fileConn)
-#close(fileConn)
-
-# Upload files to S3
