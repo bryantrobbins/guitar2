@@ -5,17 +5,8 @@ options(echo=TRUE, warning.length=8170)
 cran <- "http://cran.rstudio.com/"
 
 # LibSVM
-install.packages("e1071", repos=cran)
 library("e1071")
-
-# ROCR
-install.packages("ROCR", repos=cran)
 library("ROCR")
-
-# S3
-install.packages("devtools", repos=cran)
-require(devtools)
-install_github("Gastrograph/RS3")
 library("Gastrograph/RS3")
 
 # Grab arguments
