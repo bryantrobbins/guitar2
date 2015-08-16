@@ -119,7 +119,7 @@ public class FeaturesObject {
 
         // Prune events if test execution was not completed (assuming due to test case being infeasible)
         if (!testLog.computeResult().equals(TextObject.TestResult.PASS) && trim) {
-            eventsInOrder = eventsInOrder.subList(0, testLog.computeStepCount()+1);
+            eventsInOrder = eventsInOrder.subList(0, testLog.computeStepCount() + 1);
         }
 
         for (int i = 1; i <= maxN; i++) {
