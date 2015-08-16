@@ -1,21 +1,9 @@
 # I want commands printed in output
 options(echo=TRUE, warning.length=8170)
 
-# Needed for portable installs
-cran <- "http://cran.rstudio.com/"
-
-# LibSVM
-install.packages("e1071", repos=cran)
+# Load libs
 library("e1071")
-
-# MongoDB
-install.packages("rmongodb", repos=cran)
 library("rmongodb")
-
-# S3
-install.packages("devtools", repos=cran)
-require(devtools)
-install_github("RS3", "Gastrograph")
 library("RS3")
 
 # Connect to mongo
