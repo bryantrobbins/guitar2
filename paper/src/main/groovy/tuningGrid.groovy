@@ -64,7 +64,7 @@ reportKeys.each {
 }
 
 println "Best accuracy is ${bestAcc} by model ${modelKey}"
-utils.putBestFile(dataset, modelKey)
+utils.writeBestFile(dataset, modelKey)
 
 class AwsUtils {
 
@@ -117,12 +117,13 @@ class AwsUtils {
 		}
 	}
 	
-	def putBestFile(String dataset, String modelKey) {
+	def writeBestFile(String dataset, String modelKey) {
 		def bestFile = new File("${dataset}_best")
 		bestFile.withWriter('UTF-8') { writer ->
-			writer.write("models/${modelKey}")
+			writer.write("${modelKey}")
 		}
 
-		client.putObject(BUCKET, "best/${dataset}_best", bestFile)
+		client.getObject(BUCKET, "models/${modelKey}")
 	}
+
 }
