@@ -123,7 +123,7 @@ class AwsUtils {
 			writer.write("${modelKey}")
 		}
 
-		client.getObject(BUCKET, "models/${modelKey}", new File("${modelKey}"))
+		def gor = new GetObjectRequest(BUCKET, "models/${modelKey}")
+		client.getObject(gor, new File("${modelKey}"))
 	}
-
 }
