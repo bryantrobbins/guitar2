@@ -17,9 +17,7 @@ args <- commandArgs(trailingOnly = TRUE)
 dbId <- args[1]
 groupId <- args[2]
 accessKey <- args[3]
-cat(accessKey)
 secretKey <- args[4]
-cat(secretKey)
 
 cat(dbId)
 cat('\n')
