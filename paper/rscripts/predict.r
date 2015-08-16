@@ -9,6 +9,8 @@ library("RS3")
 args <- commandArgs(trailingOnly = TRUE)
 dataset <- args[1]
 modelFile <- args[2]
+accessKey <- args[3]
+secretKey <- args[4]
 
 # Get data from S3
 data.key <- sprintf('data/%s.csv', dataset)
