@@ -19,8 +19,8 @@ S3_connect(accessKey, secretKey)
 S3_get_object(bucket, data.key, data.key)
 data <- data.frame(read.csv(data.key))
 
-# Get model from model file
-model <- load(modelFile)
+# Load model from model file
+load(modelFile)
 
 # Prepare test data
 testing <- subset(data, isInput==0)
