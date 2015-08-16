@@ -4,6 +4,7 @@ import edu.umd.cs.guitar.util.JenkinsClient
 import edu.umd.cs.guitar.main.TestDataManager
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.auth.BasicAWSCredentials
+import com.amazonaws.services.s3.model.GetObjectRequest
 
 def master = "guitar05.cs.umd.edu"
 def dataset = args[0]
