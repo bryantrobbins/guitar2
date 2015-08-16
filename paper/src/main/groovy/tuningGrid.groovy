@@ -19,7 +19,7 @@ def jenkinsClient = new JenkinsClient(master, "8888", "", "admin", "amalga84go")
 def awsClient = new AwsUtils(accessKey, secretKey)
 
 println "Removing old reports for this dataset"
-client.deleteOldReports("reports/${dataset}_report")
+awsClient.deleteOldReports("reports/${dataset}_report")
 
 println "Train models with various parameters"
 int reportCount = 0
