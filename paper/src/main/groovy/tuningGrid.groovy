@@ -70,7 +70,7 @@ utils.writeBestFile(dataset, modelKey)
 class AwsUtils {
 
 	def client
-	static final long POLL_INTERVAL= 30000
+	static final long POLL_INTERVAL= 120000
 	static final long POLL_MAX = 2400000
 	static final String BUCKET = "com.btr3.research"
 
