@@ -24,15 +24,13 @@ RUN mv /gradle-2.1 /gradle
 ENV PATH $PATH:/gradle/bin
 
 # Set up slave files and user
-RUN mkdir jslave
-RUN mkdir jslave/home
-ADD swarm.jar /jslave/swarm.jar
 RUN groupadd -r jslave && useradd -r -g jslave jslave
-RUN chown -R jslave:jslave /jslave
+ADD swarm.jar /home/jslave/swarm.jar
+RUN chown -R jslave:jslave /home/jslave
 
 EXPOSE 22
 EXPOSE 5005
 
 USER jslave
-WORKDIR jslave
-CMD    ["java", "-jar", "swarm.jar", "-master", "http://guitar05.cs.umd.edu:8888", "-username", "admin", "-password", "amalga84go", "-labels", "basic R", "-executors", "1", "-fsroot", "/jslave/home"]
+WORKDIR /home/jslave
+CMD    ["java", "-jar", "swarm.jar", "-master", "http://guitar05.cs.umd.edu:8888", "-username", "admin", "-password", "amalga84go", "-labels", "basic R", "-executors", "1", "-fsroot", "/home/jslave/work"]
