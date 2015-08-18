@@ -281,6 +281,10 @@ public class JFCReplayer {
         if (isPrintUsage) {
             throw new CmdLineException("");
         }
+
+        this.tdm = new TestDataManager(JFCReplayerConfiguration.TESTDATA_HOST,
+                JFCReplayerConfiguration.TESTDATA_PORT,
+                JFCReplayerConfiguration.TESTDATA_DB_ID);
     }
 
     /**
@@ -289,9 +293,6 @@ public class JFCReplayer {
     public JFCReplayer(JFCReplayerConfiguration configuration) {
         super();
         this.CONFIG = configuration;
-        this.tdm = new TestDataManager(JFCReplayerConfiguration.TESTDATA_HOST,
-                JFCReplayerConfiguration.TESTDATA_PORT,
-                JFCReplayerConfiguration.TESTDATA_DB_ID);
     }
 
     /**
