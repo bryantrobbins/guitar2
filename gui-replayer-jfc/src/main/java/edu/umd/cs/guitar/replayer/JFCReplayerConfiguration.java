@@ -139,4 +139,8 @@ public class JFCReplayerConfiguration extends GReplayerConfiguration {
             aliases = "--testdata-port")
     public static String TESTDATA_PORT = "";
 
+    @Option(name = "-tdb", usage = "testdata manager bundle id to use",
+            aliases = "--testdata-bundle")
+    public static String TESTDATA_BUNDLE_ID = "";
+
 }

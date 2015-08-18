@@ -24,7 +24,9 @@
  */
 package edu.umd.cs.guitar.replayer;
 
+import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.exception.GException;
+import edu.umd.cs.guitar.processors.guitar.LogProcessor;
 import edu.umd.cs.guitar.util.GUITARLog;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -32,6 +34,7 @@ import org.kohsuke.args4j.CmdLineParser;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 /**
@@ -118,6 +121,14 @@ public class JFCReplayerMain {
         printInfo(retVal);
 
         GUITARLog.log.info("-------- END REPLAY --------");
+
+        GUITARLog.log.info("Saving Test case log");
+        HashMap<String, String> opts = new HashMap<String, String>();
+        opts.put(LogProcessor.FILE_PATH_OPTION, JFCReplayerConfiguration.LOG_FILE);
+        jfcReplayer.tdm.saveArtifact(ArtifactCategory.TEST_OUTPUT,
+                new LogProcessor(),
+                opts,
+                JFCReplayerConfiguration.TESTDATA_EXECUTION_ID);
 
         // Exit with error status
         System.exit(retVal);

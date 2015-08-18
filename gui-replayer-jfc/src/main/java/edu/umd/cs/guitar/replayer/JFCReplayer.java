@@ -45,7 +45,6 @@ import edu.umd.cs.guitar.model.wrapper.AttributesTypeWrapper;
 import edu.umd.cs.guitar.model.wrapper.ComponentTypeWrapper;
 import edu.umd.cs.guitar.processors.guitar.EFGProcessor;
 import edu.umd.cs.guitar.processors.guitar.GUIProcessor;
-import edu.umd.cs.guitar.processors.guitar.LogProcessor;
 import edu.umd.cs.guitar.processors.guitar.TestcaseProcessor;
 import edu.umd.cs.guitar.replayer.monitor.CoberturaCoverageMonitor;
 import edu.umd.cs.guitar.replayer.monitor.GTestMonitor;
@@ -61,7 +60,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -80,6 +78,7 @@ import java.util.TreeMap;
  */
 public class JFCReplayer {
     JFCReplayerConfiguration CONFIG;
+    TestDataManager tdm;
 
     public void execute()
             throws Exception, GException, FileNotFoundException {
@@ -91,11 +90,13 @@ public class JFCReplayer {
 
         GUITARLog.addFileAppender(JFCReplayerConfiguration.LOG_FILE);
 
-        // Get objects from TestDataManager
-        TestDataManager tdm = new TestDataManager(JFCReplayerConfiguration
-                .TESTDATA_HOST, JFCReplayerConfiguration.TESTDATA_PORT,
-                JFCReplayerConfiguration.TESTDATA_DB_ID);
+        // Log this execution
+        tdm.addExecutionToBundle(JFCReplayerConfiguration.TESTDATA_EXECUTION_ID,
+                JFCReplayerConfiguration.TESTDATA_BUNDLE_ID,
+                JFCReplayerConfiguration.TESTDATA_TEST_ID,
+                JFCReplayerConfiguration.TESTDATA_SUITE_ID);
 
+        // Get objects from TestDataManager
         GUIStructure guiStructure = (GUIStructure)
                 tdm.getArtifactByCategoryAndOwnerId(ArtifactCategory
                                 .SUITE_INPUT,
@@ -288,6 +289,9 @@ public class JFCReplayer {
     public JFCReplayer(JFCReplayerConfiguration configuration) {
         super();
         this.CONFIG = configuration;
+        this.tdm = new TestDataManager(JFCReplayerConfiguration.TESTDATA_HOST,
+                JFCReplayerConfiguration.TESTDATA_PORT,
+                JFCReplayerConfiguration.TESTDATA_DB_ID);
     }
 
     /**
