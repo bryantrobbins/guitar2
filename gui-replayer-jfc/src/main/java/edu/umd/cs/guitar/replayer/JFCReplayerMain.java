@@ -124,7 +124,7 @@ public class JFCReplayerMain {
 
         GUITARLog.log.info("-------- END REPLAY --------");
 
-        jfcReplayer.saveLog(logProcessor);
+        jfcReplayer.saveLog();
 
         // Exit with error status
         System.exit(retVal);
