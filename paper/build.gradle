@@ -228,3 +228,8 @@ task tuningGrid(dependsOn: 'classes', type: JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
 	args dataset_val, min_gamma_val, max_gamma_val, min_cost_val, max_cost_val
 }
+
+task debug(dependsOn: 'classes', type: JavaExec) {
+	main = 'getKeys'
+	classpath = sourceSets.main.runtimeClasspath
+}

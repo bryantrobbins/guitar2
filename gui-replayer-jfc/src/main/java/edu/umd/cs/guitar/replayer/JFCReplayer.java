@@ -45,6 +45,7 @@ import edu.umd.cs.guitar.model.wrapper.AttributesTypeWrapper;
 import edu.umd.cs.guitar.model.wrapper.ComponentTypeWrapper;
 import edu.umd.cs.guitar.processors.guitar.EFGProcessor;
 import edu.umd.cs.guitar.processors.guitar.GUIProcessor;
+import edu.umd.cs.guitar.processors.guitar.LogProcessor;
 import edu.umd.cs.guitar.processors.guitar.TestcaseProcessor;
 import edu.umd.cs.guitar.replayer.monitor.CoberturaCoverageMonitor;
 import edu.umd.cs.guitar.replayer.monitor.GTestMonitor;
@@ -60,6 +61,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -79,6 +81,7 @@ import java.util.TreeMap;
 public class JFCReplayer {
     JFCReplayerConfiguration CONFIG;
     TestDataManager tdm;
+    LogProcessor lp = new LogProcessor();
 
     public void execute()
             throws Exception, GException, FileNotFoundException {
@@ -232,13 +235,16 @@ public class JFCReplayer {
             replayer.execute();
 
         } catch (GException e) {
+            saveLog();
             throw e;
 
         } catch (IOException e) {
             GUITARLog.log.error("Unable to create GUI data path");
+            saveLog();
             throw e;
 
         } catch (Exception e) {
+            saveLog();
             throw e;
         }
     }
@@ -385,6 +391,16 @@ public class JFCReplayer {
         }
 
         return mTerminalLabels;
+    }
+
+    public void saveLog() {
+        GUITARLog.log.info("Saving Test case log");
+        HashMap<String, String> opts = new HashMap<String, String>();
+        opts.put(LogProcessor.FILE_PATH_OPTION, JFCReplayerConfiguration.LOG_FILE);
+        tdm.saveArtifact(ArtifactCategory.TEST_OUTPUT,
+                lp,
+                opts,
+                JFCReplayerConfiguration.TESTDATA_EXECUTION_ID);
     }
 
 } // End of class

@@ -257,6 +257,4 @@ public class JenkinsClient {
 
         this.makeHttpRequest(urlBuild, pString);
     }
-
-
 }

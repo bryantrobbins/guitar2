@@ -59,6 +59,8 @@ public class JFCReplayerMain {
     static long nStartTime;
     static long nEndTime;
 
+    static LogProcessor logProcessor = new LogProcessor();
+
     /**
      * @param args
      */
@@ -122,13 +124,7 @@ public class JFCReplayerMain {
 
         GUITARLog.log.info("-------- END REPLAY --------");
 
-        GUITARLog.log.info("Saving Test case log");
-        HashMap<String, String> opts = new HashMap<String, String>();
-        opts.put(LogProcessor.FILE_PATH_OPTION, JFCReplayerConfiguration.LOG_FILE);
-        jfcReplayer.tdm.saveArtifact(ArtifactCategory.TEST_OUTPUT,
-                new LogProcessor(),
-                opts,
-                JFCReplayerConfiguration.TESTDATA_EXECUTION_ID);
+        jfcReplayer.saveLog(logProcessor);
 
         // Exit with error status
         System.exit(retVal);
