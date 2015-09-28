@@ -4,7 +4,6 @@ import com.mongodb.DB;
 import edu.umd.cs.guitar.artifacts.GridFSFileProcessor;
 import edu.umd.cs.guitar.model.IO;
 import edu.umd.cs.guitar.model.data.GUIMap;
-import edu.umd.cs.guitar.model.data.GUIStructure;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
