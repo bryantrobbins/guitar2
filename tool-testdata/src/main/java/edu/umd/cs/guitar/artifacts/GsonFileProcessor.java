@@ -1,8 +1,6 @@
 package edu.umd.cs.guitar.artifacts;
 
 import com.google.gson.Gson;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import java.util.Map;
 
@@ -21,11 +19,6 @@ public abstract class GsonFileProcessor<T> implements ArtifactProcessor<T> {
      */
     public static final String FILE_PATH_OPTION = "path";
 
-    /**
-     * Logger instance for this class.
-     */
-    private static Logger logger =
-            LogManager.getLogger(GsonFileProcessor.class);
     /**
      * Serializer for GSON processing.
      */

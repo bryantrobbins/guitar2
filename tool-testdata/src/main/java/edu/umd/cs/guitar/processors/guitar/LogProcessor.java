@@ -2,8 +2,6 @@ package edu.umd.cs.guitar.processors.guitar;
 
 import edu.umd.cs.guitar.artifacts.GsonFileProcessor;
 import edu.umd.cs.guitar.processors.applog.TextObject;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import java.util.Iterator;
 import java.util.List;
@@ -15,11 +13,6 @@ import java.util.Map;
  * Created by bryan on 4/5/14.
  */
 public class LogProcessor extends GsonFileProcessor<TextObject> {
-
-    /**
-     * Log4j logger.
-     */
-    private static Logger logger = LogManager.getLogger(LogProcessor.class);
 
     /**
      * Simple constructor passing Gson serializable TextObject to superclass.

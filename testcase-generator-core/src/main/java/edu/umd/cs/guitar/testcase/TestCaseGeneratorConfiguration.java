@@ -86,11 +86,11 @@ public class TestCaseGeneratorConfiguration {
     // Plugin specific parameters
     // ---------------------------------
 
-    // Length coverage
     @Option(name = "-l",
             usage = "test case length",
             aliases = "--length")
     static public Integer LENGTH=1;
+    // Length coverage
 
     /**
      * Check arguments' configuration

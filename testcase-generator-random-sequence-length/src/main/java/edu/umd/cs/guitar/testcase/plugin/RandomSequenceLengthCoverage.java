@@ -161,6 +161,8 @@ public class RandomSequenceLengthCoverage extends GTestCaseGeneratorPlugin {
          }
       }
 
+       GUITARLog.log.info("Done building list of interaction events");
+
       nAllTestcases      = 0;
       nSkippedDup        = 0;
       nSkippedPath       = 0;
