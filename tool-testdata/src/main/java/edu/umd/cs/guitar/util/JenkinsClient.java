@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
@@ -55,13 +56,11 @@ public class JenkinsClient {
      */
     private static final int HTTP_INTERNAL_SERVER_ERROR = 500;
 
-
     /**
-     * Number of retries per HTTP request
+     * Number of retries per HTTP request.
      */
-     private static final int MAX_RETRIES = 5;
-     
-     
+    private static final int MAX_RETRIES = 5;
+
     /**
      * The host of the Jenkins master.
      */
@@ -155,7 +154,7 @@ public class JenkinsClient {
             // Add payload, if available
             if (body != null) {
                 List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-                nvps.add(new BasicNameValuePair(json", body));
+                nvps.add(new BasicNameValuePair("json", body));
                 httppost.setEntity(new UrlEncodedFormEntity(nvps));
                 logger.debug(httppost.getEntity().toString());
             }
@@ -182,9 +181,9 @@ public class JenkinsClient {
                 }
 
                 EntityUtils.consume(entity);
-            } catch (Exception e) {
+            } catch (NoHttpResponseException e) {
                 logger.error("HTTP Error: ", e);
-               ret = nul;  
+                ret = null;
             } finally {
                 response.close();
             }
@@ -226,10 +225,11 @@ public class JenkinsClient {
      * @param jobName the job name
      * @param params  the job parameters as a String, String Map
      * @throws IOException if valid HTTP Request cannot be constructed
+     * @throws InterruptedException if sleeping gets interrupted
      */
     public void submitJob(final String jobName, final Map<String,
             String> params) throws
-            IOException {
+            IOException, InterruptedException {
         String urlBuild = "http://" + host + ":" + port + "/" + path + "/job/"
                 + jobName + "/build";
 
@@ -266,9 +266,12 @@ public class JenkinsClient {
 
 
         // Try the call
-        String ret = null
+        String ret = null;
         int numRetries = 0;
         while ((ret == null) && (numRetries < MAX_RETRIES)) {
+            if (numRetries > 0) {
+                Thread.sleep(DEFAULT_POLLING_INTERVAL);
+            }
             ret = this.makeHttpRequest(urlBuild, pString);
             numRetries++;
         }
