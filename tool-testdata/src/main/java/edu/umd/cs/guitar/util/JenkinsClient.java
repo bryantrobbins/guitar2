@@ -55,6 +55,13 @@ public class JenkinsClient {
      */
     private static final int HTTP_INTERNAL_SERVER_ERROR = 500;
 
+
+    /**
+     * Number of retries per HTTP request
+     */
+     private static final int MAX_RETRIES = 5;
+     
+     
     /**
      * The host of the Jenkins master.
      */
@@ -148,12 +155,12 @@ public class JenkinsClient {
             // Add payload, if available
             if (body != null) {
                 List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-                nvps.add(new BasicNameValuePair("json", body));
+                nvps.add(new BasicNameValuePair(json", body));
                 httppost.setEntity(new UrlEncodedFormEntity(nvps));
                 logger.debug(httppost.getEntity().toString());
             }
 
-            System.out.println("executing request" + httppost.getRequestLine());
+            System.out.println("executing request " + httppost.getRequestLine());
             CloseableHttpResponse response = httpclient.execute(targetHost,
                     httppost, localContext);
             try {
@@ -175,6 +182,9 @@ public class JenkinsClient {
                 }
 
                 EntityUtils.consume(entity);
+            } catch (Exception e) {
+                logger.error("HTTP Error: ", e);
+               ret = nul;  
             } finally {
                 response.close();
             }
@@ -255,6 +265,12 @@ public class JenkinsClient {
         }
 
 
-        this.makeHttpRequest(urlBuild, pString);
+        // Try the call
+        String ret = null
+        int numRetries = 0;
+        while ((ret == null) && (numRetries < MAX_RETRIES)) {
+            ret = this.makeHttpRequest(urlBuild, pString);
+            numRetries++;
+        }
     }
 }
