@@ -41,7 +41,7 @@ group.query <- sprintf('{"groupId": "%s"}', groupId)
 bson <- mongo.bson.from.JSON(group.query)
 value <- mongo.findOne(m, groupsCollection, bson)
 list <- mongo.bson.to.list(value)
-featureKey <- 'testCaseFeatures'
+featureKey <- sprintf('testCaseFeatures_n_%s', list[['maxN']])
 input.suite <- list[['suiteId']]
 global.features <- list[['featuresList']]
 input.suite
