@@ -42,16 +42,13 @@ bson <- mongo.bson.from.JSON(group.query)
 value <- mongo.findOne(m, groupsCollection, bson)
 list <- mongo.bson.to.list(value)
 featureKey <- 'testCaseFeatures'
-input.suite <- list[['suiteId_input']]
-combined.suite <- list[['suiteId_predicted']]
+input.suite <- list[['suiteId']]
 global.features <- list[['featuresList']]
 input.suite
-combined.suite
 length(global.features)
 
 # Build lists of test ids in various categories
 input.query <- sprintf('{"suiteId": "%s"}', input.suite)
-combined.query <- sprintf('{"suiteId": "%s"}', combined.suite)
 cat('Loading input suite\n')
 bson <- mongo.bson.from.JSON(input.query)
 value <- mongo.findOne(m, resultsCollection, bson)
@@ -60,15 +57,7 @@ input.passing <- list[['results']][['passingResults']]
 input.failing <- list[['results']][['failingResults']]
 input.all <- c(input.passing, input.failing)
 
-cat('Loading combined suite\n')
-bson <- mongo.bson.from.JSON(combined.query)
-value <- mongo.findOne(m, resultsCollection, bson)
-list <- mongo.bson.to.list(value)
-combined.passing <- list[['results']][['passingResults']]
-combined.failing <- list[['results']][['failingResults']]
-combined.all <- c(combined.passing, combined.failing)
-
-global.all <- c(combined.all, input.all)
+global.all <- input.all
 length(global.all)
 
 # Build data frame for all examples
@@ -80,15 +69,9 @@ colnames(global.df) <- cna
 
 for (tid in global.all){
 	# Set isInput and isFeas
-	if(tid %in% input.all){
-		global.df[tid, 'isInput'] <- 1
-		if(tid %in% input.passing){
-			global.df[tid, 'isFeas'] <- 1
-		}
-	}else {
-		if(tid %in% combined.passing){
-			global.df[tid, 'isFeas'] <- 1
-		}
+	global.df[tid, 'isInput'] <- 1
+	if(tid %in% input.passing){
+		global.df[tid, 'isFeas'] <- 1
 	}
 
   features.query <- sprintf('{"artifactType": "%s", "ownerId": "%s"}', featureKey, tid)
