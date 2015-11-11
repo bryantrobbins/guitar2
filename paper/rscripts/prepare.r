@@ -26,6 +26,9 @@ cat('\n')
 cat(groupId)
 cat('\n')
 
+cat(resultId)
+cat('\n')
+
 ####################################################
 # IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER #
 # HAVE A REALLY GOOD REASON                        #
