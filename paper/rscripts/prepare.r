@@ -16,8 +16,9 @@ mongo.is.connected(m)
 args <- commandArgs(trailingOnly = TRUE)
 dbId <- args[1]
 groupId <- args[2]
-accessKey <- args[3]
-secretKey <- args[4]
+resultId <- args[3]
+accessKey <- args[4]
+secretKey <- args[5]
 
 cat(dbId)
 cat('\n')
@@ -48,7 +49,7 @@ input.suite
 length(global.features)
 
 # Build lists of test ids in various categories
-input.query <- sprintf('{"suiteId": "%s"}', input.suite)
+input.query <- sprintf('{"resultId": "%s"}', resultId)
 cat('Loading input suite\n')
 bson <- mongo.bson.from.JSON(input.query)
 value <- mongo.findOne(m, resultsCollection, bson)
