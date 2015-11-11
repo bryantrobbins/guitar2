@@ -1,5 +1,8 @@
 package edu.umd.cs.guitar.processors.features;
 
+import edu.umd.cs.guitar.model.data.EFG;
+import edu.umd.cs.guitar.model.data.EventType;
+import edu.umd.cs.guitar.model.data.GUIStructure;
 import edu.umd.cs.guitar.model.data.TestCase;
 import edu.umd.cs.guitar.processors.applog.TextObject;
 import edu.umd.cs.guitar.util.GUITARUtils;
@@ -37,7 +40,7 @@ public class FeaturesObject {
     /**
      * This is the list of features.
      */
-    private List<String> features;
+    private Set<String> features;
 
 
     /**
@@ -45,7 +48,7 @@ public class FeaturesObject {
      *
      * @param featuresVal the features
      */
-    public FeaturesObject(final List<String> featuresVal) {
+    public FeaturesObject(final Set<String> featuresVal) {
         this.features = featuresVal;
     }
 
@@ -63,7 +66,7 @@ public class FeaturesObject {
      *
      * @return the List of features
      */
-    public List<String> getFeatures() {
+    public Set<String> getFeatures() {
         return features;
     }
 
@@ -88,7 +91,7 @@ public class FeaturesObject {
     public static FeaturesObject getFeaturesFromTestCase(final TestCase testCase,
                                                          final int maxN) {
 
-        List<String> features = new ArrayList<String>();
+        Set<String> features = new HashSet<String>();
         List<String> eventsInOrder = GUITARUtils.getEventIdsFromTest(testCase);
 
         for (int i = 1; i <= maxN; i++) {
@@ -105,16 +108,20 @@ public class FeaturesObject {
      *
      * @param testCase the test case
      * @param testLog  the test case log
+     * @param gui      the GUI Structure for this application
+     * @param efg      the EFG for this application
      * @param maxN     the max value of N to use when extracting N-grams from the test case
      * @param trim     true if the features of the test case should be trimmed according to the log
      * @return the corresponding features, or null if the test case is null
      */
     public static FeaturesObject getFeaturesFromTestCase(final TestCase testCase,
                                                          final TextObject testLog,
+                                                         final GUIStructure gui,
+                                                         final EFG efg,
                                                          final int maxN,
                                                          final boolean trim) {
 
-        List<String> features = new ArrayList<String>();
+        Set<String> features = new HashSet<String>();
         List<String> eventsInOrder = GUITARUtils.getEventIdsFromTest(testCase);
 
         // Prune events if test execution was not completed (assuming due to test case being infeasible)
@@ -122,13 +129,32 @@ public class FeaturesObject {
             eventsInOrder = eventsInOrder.subList(0, testLog.computeStepCount());
         }
 
+        // Get event types
+        List<String> typesInOrder = new ArrayList<String>();
+        for (String eventId : eventsInOrder) {
+            EventType et = getEventById(efg, eventId);
+            typesInOrder.add(et.getType());
+        }
+
         for (int i = 1; i <= maxN; i++) {
             features.addAll(getNgrams(i, eventsInOrder));
+            features.addAll(getNgrams(i, typesInOrder));
         }
 
         features.addAll(getBefores(eventsInOrder));
+        features.addAll(getBefores(typesInOrder));
 
         return new FeaturesObject(features);
+    }
+
+    private static EventType getEventById(EFG efg, String eventId) {
+        for (EventType et : efg.getEvents().getEvent()) {
+            if (et.getEventId().equals(eventId)) {
+                return et;
+            }
+        }
+
+        throw new RuntimeException("Tried to find EFG event with id " + eventId + " but found none");
     }
 
     /**

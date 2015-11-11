@@ -3,6 +3,9 @@ package edu.umd.cs.guitar.processors.guitar;
 import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.GsonFileProcessor;
 import edu.umd.cs.guitar.main.TestDataManager;
+import edu.umd.cs.guitar.model.data.EFG;
+import edu.umd.cs.guitar.model.data.GUIMap;
+import edu.umd.cs.guitar.model.data.GUIStructure;
 import edu.umd.cs.guitar.model.data.TestCase;
 import edu.umd.cs.guitar.processors.applog.TextObject;
 import edu.umd.cs.guitar.processors.features.FeaturesObject;
@@ -27,6 +30,10 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
     /**
      * The key to use for the test ID in options.
      */
+    public static final String SUITE_ID_OPTION = "suiteId";
+    /**
+     * The key to use for the test ID in options.
+     */
     public static final String TRIM_OPTION = "trim";
     /**
      * Log4j logger.
@@ -37,6 +44,14 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
      * A TestcaseProcessor instance.
      */
     private static TestcaseProcessor tcProc = new TestcaseProcessor();
+    /**
+     * A GUIProcessor instance.
+     */
+    private static GUIProcessor guiProc;
+    /**
+     * A EFGProcessor instance.
+     */
+    private static EFGProcessor efgProc;
     /**
      * A TestcaseProcessor instance.
      */
@@ -62,26 +77,37 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
         super(FeaturesObject.class);
         this.manager = managerInstance;
         this.n = maxN;
+
+        // Initialize db-sensitive processors
+        guiProc = new GUIProcessor(manager.getDb());
+        efgProc = new EFGProcessor(manager.getDb());
     }
 
     @Override
     public FeaturesObject objectFromOptions(final Map<String, String> options) {
 
         String testId = options.get(TEST_ID_OPTION);
+        String suiteId = options.get(SUITE_ID_OPTION);
         boolean trim = false;
         String trimString = options.get(TRIM_OPTION);
         if (trimString != null) {
             trim = trimString.toLowerCase().equals("true");
         }
+
+        // Get artifacts
         TestCase testCase = (TestCase) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_INPUT,
                 testId, tcProc);
         TextObject testLog = (TextObject) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.TEST_OUTPUT,
                 testId, logProc);
+        GUIStructure gui = (GUIStructure) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.SUITE_INPUT,
+                suiteId, guiProc);
+        EFG efg = (EFG) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.SUITE_INPUT,
+                suiteId, efgProc);
 
-        if (testLog != null) {
-            return FeaturesObject.getFeaturesFromTestCase(testCase, testLog, n, trim);
-        } else {
+        if (testLog == null) {
             return FeaturesObject.getFeaturesFromTestCase(testCase, n);
+        } else {
+            return FeaturesObject.getFeaturesFromTestCase(testCase, testLog, gui, efg, n, trim);
         }
     }
 
