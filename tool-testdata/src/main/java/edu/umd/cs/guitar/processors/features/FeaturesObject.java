@@ -147,6 +147,13 @@ public class FeaturesObject {
         return new FeaturesObject(features);
     }
 
+    /**
+     * Get event from an EFG by ID.
+     *
+     * @param efg the EFG for this suite
+     * @param eventId the event ID to look up
+     * @return the EventType object (has all event data)
+     */
     private static EventType getEventById(EFG efg, String eventId) {
         for (EventType et : efg.getEvents().getEvent()) {
             if (et.getEventId().equals(eventId)) {

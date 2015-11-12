@@ -4,7 +4,6 @@ import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.GsonFileProcessor;
 import edu.umd.cs.guitar.main.TestDataManager;
 import edu.umd.cs.guitar.model.data.EFG;
-import edu.umd.cs.guitar.model.data.GUIMap;
 import edu.umd.cs.guitar.model.data.GUIStructure;
 import edu.umd.cs.guitar.model.data.TestCase;
 import edu.umd.cs.guitar.processors.applog.TextObject;
