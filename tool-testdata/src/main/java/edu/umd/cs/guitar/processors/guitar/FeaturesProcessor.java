@@ -46,11 +46,11 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
     /**
      * A GUIProcessor instance.
      */
-    private static GUIProcessor guiProc;
+    private GUIProcessor guiProc;
     /**
      * A EFGProcessor instance.
      */
-    private static EFGProcessor efgProc;
+    private EFGProcessor efgProc;
     /**
      * A TestcaseProcessor instance.
      */
