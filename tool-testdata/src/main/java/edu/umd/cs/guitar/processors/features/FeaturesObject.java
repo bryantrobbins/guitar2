@@ -154,14 +154,14 @@ public class FeaturesObject {
      * @param eventId the event ID to look up
      * @return the EventType object (has all event data)
      */
-    private static EventType getEventById(EFG efg, String eventId) {
+    private static EventType getEventById(final EFG efg, final String eventId) {
         for (EventType et : efg.getEvents().getEvent()) {
             if (et.getEventId().equals(eventId)) {
                 return et;
             }
         }
 
-        throw new RuntimeException("Tried to find EFG event with id " + eventId + " but found none");
+        throw new EventTypeLookupException(eventId);
     }
 
     /**
