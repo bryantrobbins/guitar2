@@ -4,6 +4,7 @@ package edu.umd.cs.guitar.util;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteResult;
@@ -185,5 +186,21 @@ public final class MongoUtils {
 
     }
 
-
+    /**
+     * Remove all matching existing items from a collection given a query.
+     *
+     * @param db the DB instance to work with
+     * @param collectionId the collection to query
+     * @param query the query to use for finding existing objects
+     */
+    public static void removeExistingItemsFromCollection(final DB db,
+                                                         final String collectionId,
+                                                         final DBObject query) {
+        DBCollection collection = db.getCollection(collectionId);
+        DBCursor existingSet = collection.find(query);
+        logger.info("Removing " + existingSet.size() + " existing objects from collection " + collectionId);
+        for (DBObject exist : existingSet) {
+            collection.remove(exist);
+        }
+    }
 }

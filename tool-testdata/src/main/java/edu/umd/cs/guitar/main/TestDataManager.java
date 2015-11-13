@@ -227,12 +227,27 @@ public final class TestDataManager {
 
         String key = processor.getKey();
         String index = options.get(ArtifactProcessor.INDEX_OPTION);
+        boolean remove = options.get(ArtifactProcessor.REMOVE_OPTION) != null
+                && options.get(ArtifactProcessor.REMOVE_OPTION).toLowerCase().equals("true");
 
         // Build key with optional index suffix
         if (index != null) {
             key += index;
         }
 
+        // If we want to remove existing objects with the same coordinates
+        if (remove) {
+            BasicDBObject query = new BasicDBObject()
+                    .append(TestDataManagerKeys.ARTIFACT_CATEGORY,
+                            category.getKey())
+                    .append(TestDataManagerKeys.ARTIFACT_OWNER_ID, owner)
+                    .append(TestDataManagerKeys.ARTIFACT_TYPE, key);
+
+            MongoUtils.removeExistingItemsFromCollection(db, TestDataManagerCollections.ARTIFACTS, query);
+        }
+
+        // Build the JSON representation of the object we want to insert
+        // This is nested into the entry in the artifacts collection as the ARTIFACT_DATA property
         DBObject dataObject = (DBObject) JSON.parse(processor.jsonFromOptions(options));
 
         // Create object
@@ -244,6 +259,7 @@ public final class TestDataManager {
                 .append(TestDataManagerKeys.ARTIFACT_TYPE, key)
                 .append(TestDataManagerKeys.ARTIFACT_DATA, dataObject);
 
+        // Perform the insert
         MongoUtils.addItemToCollection(db, TestDataManagerCollections
                 .ARTIFACTS, basicDBObject);
 

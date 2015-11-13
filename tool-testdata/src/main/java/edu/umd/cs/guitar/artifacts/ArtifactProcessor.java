@@ -20,6 +20,11 @@ public interface ArtifactProcessor<T> {
     String INDEX_OPTION = "index";
 
     /**
+     * Key for remove option in options map.
+     */
+    String REMOVE_OPTION = "remove";
+
+    /**
      * This method provides conversion from options to a JSON string. The
      * options can specify, for example, a filename from which the object
      * can be loaded. Options available and their handling are left
