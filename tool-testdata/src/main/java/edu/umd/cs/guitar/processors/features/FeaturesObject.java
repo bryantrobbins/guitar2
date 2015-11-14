@@ -125,7 +125,7 @@ public class FeaturesObject {
         List<String> eventsInOrder = GUITARUtils.getEventIdsFromTest(testCase);
 
         // Prune events if test execution was not completed (assuming due to test case being infeasible)
-        if (!testLog.computeResult().equals(TextObject.TestResult.PASS) && trim) {
+        if (trim && !testLog.computeResult().equals(TextObject.TestResult.PASS)) {
             eventsInOrder = eventsInOrder.subList(0, testLog.computeStepCount());
         }
 
