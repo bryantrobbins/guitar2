@@ -103,11 +103,13 @@ public class FeaturesProcessor extends GsonFileProcessor<FeaturesObject> {
         EFG efg = (EFG) manager.getArtifactByCategoryAndOwnerId(ArtifactCategory.SUITE_INPUT,
                 suiteId, efgProc);
 
+        // We need a testLog if we're going to prune the list
         if (testLog == null) {
-            return FeaturesObject.getFeaturesFromTestCase(testCase, n);
-        } else {
-            return FeaturesObject.getFeaturesFromTestCase(testCase, testLog, gui, efg, n, trim);
+            trim = false;
         }
+
+        // Compute the features
+        return FeaturesObject.getFeaturesFromTestCase(testCase, testLog, gui, efg, n, trim);
     }
 
     @Override
