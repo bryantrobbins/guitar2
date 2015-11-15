@@ -165,6 +165,7 @@ public class FeaturesObject {
     private static EventType getEventById(final EFG efg, final String eventId) {
         if (efg == null || efg.getEvents() == null) {
             logger.info("The EFG or its events are null in getEventById");
+            throw new EventTypeLookupException(eventId);
         }
 
         for (EventType et : efg.getEvents().getEvent()) {
