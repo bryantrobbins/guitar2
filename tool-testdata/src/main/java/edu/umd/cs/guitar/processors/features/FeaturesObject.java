@@ -121,6 +121,14 @@ public class FeaturesObject {
                                                          final int maxN,
                                                          final boolean trim) {
 
+        if (efg == null) {
+            logger.info("The EFG is null in getFeaturesFromTestCase");
+        }
+
+        if (gui == null) {
+            logger.info("The GUIStructure is null in getFeaturesFromTestCase");
+        }
+
         Set<String> features = new HashSet<String>();
         List<String> eventsInOrder = GUITARUtils.getEventIdsFromTest(testCase);
 
@@ -150,14 +158,14 @@ public class FeaturesObject {
     /**
      * Get event from an EFG by ID.
      *
-     * @param efg the EFG for this suite
+     * @param efg     the EFG for this suite
      * @param eventId the event ID to look up
      * @return the EventType object (has all event data)
      */
     private static EventType getEventById(final EFG efg, final String eventId) {
-        assert (efg != null);
-        assert (efg.getEvents() != null);
-        assert (efg.getEvents().getEvent() != null);
+        if (efg == null || efg.getEvents() == null) {
+            logger.info("The EFG or its events are null in getEventById");
+        }
 
         for (EventType et : efg.getEvents().getEvent()) {
             if (et.getEventId().equals(eventId)) {
