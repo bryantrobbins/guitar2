@@ -157,6 +157,7 @@ public class FeaturesObject {
     private static EventType getEventById(final EFG efg, final String eventId) {
         assert (efg != null);
         assert (efg.getEvents() != null);
+        assert (efg.getEvents().getEvent() != null);
 
         for (EventType et : efg.getEvents().getEvent()) {
             if (et.getEventId().equals(eventId)) {
