@@ -2,7 +2,7 @@
 options(echo=TRUE, warning.length=8170)
 
 # LibSVM
-library("e1071")
+library("glmnet")
 library("ROCR")
 library("RS3")
 
