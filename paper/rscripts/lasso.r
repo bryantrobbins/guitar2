@@ -18,14 +18,14 @@ bucket <- 'com.btr3.research'
 S3_connect(accessKey, secretKey)
 S3_get_object(bucket, data.key, data.key)
 
-// Load massive data file from csv
+# Load massive data file from csv
 data=data.frame(read.csv(data.key))
 
-// Cut into x and y
+# Cut into x and y
 x=model.matrix(isFeas~.,data=data)
 y=data$isFeas
 
-// Run the lasso
+# Run the lasso
 fit.lasso=glmnet(x,y)
 cv.lasso=cv.glmnet(x,y)
 coef(cv.lasso)
