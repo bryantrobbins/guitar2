@@ -87,7 +87,7 @@ for (tid in global.all){
 	resultList <- mongo.bson.to.list(resultBson)
 	for (feat in resultList[['artifactData']][['features']]){
     if(feat %in% global.features){
-			global.df[tid, feat] <- 1
+			global.df[tid, feat] <- '1'
     }
 	}
 }
