@@ -66,16 +66,16 @@ length(global.all)
 
 # Build data frame for all examples
 cat('Initializing global data frame\n')
-cna <- c(list('isFeas', 'isInput'),global.features)
-global.df <- data.frame(matrix(0, length(global.all), length(cna)))
+cna <- c(list('isInfeas', 'isInput'),global.features)
+global.df <- data.frame(matrix('0', length(global.all), length(cna)))
 rownames(global.df) <- global.all
 colnames(global.df) <- cna
 
 for (tid in global.all){
-	# Set isInput and isFeas
-	global.df[tid, 'isInput'] <- 1
-	if(tid %in% input.passing){
-		global.df[tid, 'isFeas'] <- 1
+	# Set isInput and isInfeas
+	#global.df[tid, 'isInput'] <- '1'
+	if(tid %in% input.failing){
+		global.df[tid, 'isInfeas'] <- '1'
 	}
 
   features.query <- sprintf('{"artifactType": "%s", "ownerId": "%s"}', featureKey, tid)

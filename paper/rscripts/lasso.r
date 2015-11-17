@@ -3,6 +3,7 @@ options(echo=TRUE, warning.length=8170)
 
 # LibSVM
 library("glmnet")
+library("data.table")
 library("ROCR")
 library("RS3")
 
@@ -19,16 +20,16 @@ S3_connect(accessKey, secretKey)
 S3_get_object(bucket, data.key, data.key)
 
 # Load massive data file from csv
-data=data.frame(read.csv(data.key))
+data=fread(input.file, stringsAsFactors=TRUE)
 
 # Cut into x and y
-x=model.matrix(isFeas~.,data=data)
-y=data$isFeas
+x=model.matrix(isInfeas~.,data=data)
+y=data$isInfeas
 
 # Run the lasso
-fit.lasso=glmnet(x,y)
-cv.lasso=cv.glmnet(x,y)
+cvfit=cv.glmnet(x,y)
 coef(cv.lasso)
+plot(cvfit)
 
 # Re-print any warnings
 warnings()
