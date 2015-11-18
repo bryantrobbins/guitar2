@@ -72,10 +72,8 @@ rownames(global.df) <- global.all
 colnames(global.df) <- cna
 
 for (tid in global.all){
-	# Set isInput and isInfeas
-	#global.df[tid, 'isInput'] <- '1'
 	if(tid %in% input.failing){
-		global.df[tid, 'isInfeas'] <- '1'
+		global.df[tid, 'isInfeas'] <- "1"
 	}
 
   features.query <- sprintf('{"artifactType": "%s", "ownerId": "%s"}', featureKey, tid)
@@ -87,7 +85,7 @@ for (tid in global.all){
 	resultList <- mongo.bson.to.list(resultBson)
 	for (feat in resultList[['artifactData']][['features']]){
     if(feat %in% global.features){
-			global.df[tid, feat] <- '1'
+			global.df[tid, feat] <- "1"
     }
 	}
 }
