@@ -66,7 +66,7 @@ length(global.all)
 
 # Build data frame for all examples
 cat('Initializing global data frame\n')
-cna <- c(list('isInfeas',global.features)
+cna <- c(list('isInfeas'),global.features)
 global.df <- data.frame(matrix('0', length(global.all), length(cna)))
 rownames(global.df) <- global.all
 colnames(global.df) <- cna
