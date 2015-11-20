@@ -68,7 +68,7 @@ train.failing <- list[['results']][['failingResults']]
 train.all <- c(train.passing, train.failing)
 
 # Get test data
-train.query <- sprintf('{"resultId": "%s"}', testId)
+test.query <- sprintf('{"resultId": "%s"}', testId)
 cat('Loading test data', '\n')
 bson <- mongo.bson.from.JSON(test.query)
 value <- mongo.findOne(m, testCollection, bson)
@@ -113,7 +113,7 @@ for (tid in global.all){
 	resultList <- mongo.bson.to.list(resultBson)
 	for (feat in resultList[['artifactData']][['features']]){
     if(feat %in% global.features){
-	  global.df[tid, feat] <- '1'
+	    global.df[tid, feat] <- '1'
     }
 	}
 }
