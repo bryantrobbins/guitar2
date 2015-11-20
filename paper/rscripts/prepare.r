@@ -65,7 +65,7 @@ value <- mongo.findOne(m, trainingCollection, bson)
 list <- mongo.bson.to.list(value)
 train.passing <- list[['results']][['passingResults']]
 train.failing <- list[['results']][['failingResults']]
-train.all <- c(input.passing, input.failing)
+train.all <- c(train.passing, train.failing)
 
 # Get test data
 train.query <- sprintf('{"resultId": "%s"}', testId)
@@ -75,7 +75,7 @@ value <- mongo.findOne(m, testCollection, bson)
 list <- mongo.bson.to.list(value)
 test.passing <- list[['results']][['passingResults']]
 test.failing <- list[['results']][['failingResults']]
-test.all <- c(input.passing, input.failing)
+test.all <- c(test.passing, test.failing)
 
 global.all <- c(train.all, test.all)
 length(global.all)
