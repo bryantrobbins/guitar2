@@ -16,18 +16,24 @@ mongo.is.connected(m)
 args <- commandArgs(trailingOnly = TRUE)
 groupDb <- args[1]
 groupId <- args[2]
-resultDb <- args[3]
-resultId <- args[4]
-accessKey <- args[5]
-secretKey <- args[6]
+trainingDb <- args[3]
+trainingId <- args[4]
+testDb <- args[5]
+testId <- args[6]
+accessKey <- args[7]
+secretKey <- args[8]
 
 cat("Group Object", "\n")
 cat(groupDb, "\n")
 cat(groupId, "\n")
 
-cat("Result Object", "\n")
-cat(resultDb, "\n")
-cat(resultId, "\n")
+cat("Training Object", "\n")
+cat(trainingDb, "\n")
+cat(trainingId, "\n")
+
+cat("Test Object", "\n")
+cat(testDb, "\n")
+cat(testId, "\n")
 
 ####################################################
 # IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER #
@@ -35,7 +41,8 @@ cat(resultId, "\n")
 ####################################################
 
 # Collections
-resultsCollection <- sprintf('%s.results', resultDb)
+trainingCollection <- sprintf('%s.results', trainingDb)
+testCollection <- sprintf('%s.results', testDb)
 artifactsCollection <- sprintf('%s.artifacts', resultDb)
 groupsCollection <- sprintf('%s.groups', groupDb)
 
@@ -51,41 +58,63 @@ global.features <- list[['featuresList']]
 input.suite
 length(global.features)
 
-# Build lists of test ids in various categories
-input.query <- sprintf('{"resultId": "%s"}', resultId)
-cat('Loading input suite\n')
-bson <- mongo.bson.from.JSON(input.query)
-value <- mongo.findOne(m, resultsCollection, bson)
+# Get training data
+train.query <- sprintf('{"resultId": "%s"}', trainingId)
+cat('Loading training data', '\n')
+bson <- mongo.bson.from.JSON(train.query)
+value <- mongo.findOne(m, trainingCollection, bson)
 list <- mongo.bson.to.list(value)
-input.passing <- list[['results']][['passingResults']]
-input.failing <- list[['results']][['failingResults']]
-input.all <- c(input.passing, input.failing)
+train.passing <- list[['results']][['passingResults']]
+train.failing <- list[['results']][['failingResults']]
+train.all <- c(input.passing, input.failing)
 
-global.all <- input.all
+# Get test data
+train.query <- sprintf('{"resultId": "%s"}', testId)
+cat('Loading test data', '\n')
+bson <- mongo.bson.from.JSON(test.query)
+value <- mongo.findOne(m, testCollection, bson)
+list <- mongo.bson.to.list(value)
+test.passing <- list[['results']][['passingResults']]
+test.failing <- list[['results']][['failingResults']]
+test.all <- c(input.passing, input.failing)
+
+global.all <- c(train.all, test.all)
 length(global.all)
 
 # Build data frame for all examples
 cat('Initializing global data frame\n')
-cna <- c(list('isInfeas'),global.features)
+cna <- c(list('isInfeas', 'isTraining'),global.features)
 global.df <- data.frame(matrix('0', length(global.all), length(cna)))
 rownames(global.df) <- global.all
 colnames(global.df) <- cna
 
 for (tid in global.all){
-	if(tid %in% input.failing){
-		global.df[tid, 'isInfeas'] <- "1"
+	if(tid %in% train.failing){
+		global.df[tid, 'isInfeas'] <- '1'
 	}
 
+	if(tid %in% test.failing){
+		global.df[tid, 'isInfeas'] <- '1'
+	}
+
+  # Set 'isTraining' value for splitting later
+  # init artifactsCollection for loading of features
+	if(tid %in% train.all){
+		global.df[tid, 'isTraining'] <- '1'
+    artifactsCollection <- sprintf('%s.artifacts', trainingDb)
+	} else {
+    artifactsCollection <- sprintf('%s.artifacts', testDb)
+  }
+  
+  # Load features
   features.query <- sprintf('{"artifactType": "%s", "ownerId": "%s"}', featureKey, tid)
-	cat('Loading ')
-	cat(tid)
-	cat('\n')
+	cat('Loading', tid, '\n')
   queryBson <- mongo.bson.from.JSON(features.query)
   resultBson<- mongo.findOne(m, artifactsCollection, queryBson)
 	resultList <- mongo.bson.to.list(resultBson)
 	for (feat in resultList[['artifactData']][['features']]){
     if(feat %in% global.features){
-			global.df[tid, feat] <- "1"
+	  global.df[tid, feat] <- '1'
     }
 	}
 }
