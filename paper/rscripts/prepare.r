@@ -43,7 +43,6 @@ cat(testId, "\n")
 # Collections
 trainingCollection <- sprintf('%s.results', trainingDb)
 testCollection <- sprintf('%s.results', testDb)
-artifactsCollection <- sprintf('%s.artifacts', resultDb)
 groupsCollection <- sprintf('%s.groups', groupDb)
 
 # Get global features
