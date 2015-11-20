@@ -57,11 +57,11 @@ plot(cvfit)
 
 # Prepare test set
 xmt=model.matrix(isInfeas~., data=test.data)
-x=apply(xmt, 2, as.numeric)
+xt=apply(xmt, 2, as.numeric)
 actual=as.numeric(test.data$isInfeas)
 
 # Run predictions
-expected=predict(cvfit, newx = xmt, type = "class", s = c(cvfit$lambda.min))
+expected=predict(cvfit, newx = xt, type = "class", s = c(cvfit$lambda.min))
 expected
 actual
 
