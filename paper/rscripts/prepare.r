@@ -14,20 +14,20 @@ mongo.is.connected(m)
 
 # LOAD THESE VALUES FROM COMMAND LINE
 args <- commandArgs(trailingOnly = TRUE)
-dbId <- args[1]
+groupDb <- args[1]
 groupId <- args[2]
-resultId <- args[3]
-accessKey <- args[4]
-secretKey <- args[5]
+resultDb <- args[3]
+resultId <- args[4]
+accessKey <- args[5]
+secretKey <- args[6]
 
-cat(dbId)
-cat('\n')
+cat("Group Object", "\n")
+cat(groupDb, "\n")
+cat(groupId, "\n")
 
-cat(groupId)
-cat('\n')
-
-cat(resultId)
-cat('\n')
+cat("Result Object", "\n")
+cat(resultDb, "\n")
+cat(resultId, "\n")
 
 ####################################################
 # IF YOU EDIT SOMETHING BELOW THIS LINE YOU BETTER #
@@ -35,9 +35,9 @@ cat('\n')
 ####################################################
 
 # Collections
-resultsCollection <- sprintf('%s.results', dbId)
-artifactsCollection <- sprintf('%s.artifacts', dbId)
-groupsCollection <- sprintf('%s.groups', dbId)
+resultsCollection <- sprintf('%s.results', resultsDb)
+artifactsCollection <- sprintf('%s.artifacts', resultsDb)
+groupsCollection <- sprintf('%s.groups', groupDb)
 
 # Get global features
 cat('Loading group object\n')
@@ -66,7 +66,7 @@ length(global.all)
 
 # Build data frame for all examples
 cat('Initializing global data frame\n')
-cna <- c(list('isInfeas', 'isInput'),global.features)
+cna <- c(list('isInfeas',global.features)
 global.df <- data.frame(matrix('0', length(global.all), length(cna)))
 rownames(global.df) <- global.all
 colnames(global.df) <- cna

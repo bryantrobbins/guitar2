@@ -46,7 +46,16 @@ for (ix in names(test.data)) {
 test.data=test.data[,(filter):=NULL]
 cat('After filtering:', length(names(test.data)), ' features in test set', '\n')
 
-# Cut into x and y
+# Add missing cols to test data
+missing=setdiff(names(data), names(test.data))
+test.data=test.data[,(missing):="0"]
+
+# Prepare training data
+xm=model.matrix(isInfeas~., data=data)
+x=apply(xm, 2, as.numeric)
+y=as.numeric(data$isInfeas)
+
+# Prepare test data
 xm=model.matrix(isInfeas~., data=data)
 x=apply(xm, 2, as.numeric)
 y=as.numeric(data$isInfeas)
