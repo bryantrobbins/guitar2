@@ -35,8 +35,8 @@ cat(resultId, "\n")
 ####################################################
 
 # Collections
-resultsCollection <- sprintf('%s.results', resultsDb)
-artifactsCollection <- sprintf('%s.artifacts', resultsDb)
+resultsCollection <- sprintf('%s.results', resultDb)
+artifactsCollection <- sprintf('%s.artifacts', resultDb)
 groupsCollection <- sprintf('%s.groups', groupDb)
 
 # Get global features
