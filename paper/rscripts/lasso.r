@@ -19,7 +19,6 @@ data.key <- sprintf('data/%s.csv', dataset)
 bucket <- 'com.btr3.research'
 S3_connect(accessKey, secretKey)
 S3_get_object(bucket, data.key, data.key)
-data <- data.frame(read.csv(data.key))
 
 # Load massive data file from csv
 data=fread(data.key, stringsAsFactors=TRUE)
