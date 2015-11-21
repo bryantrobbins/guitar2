@@ -6,6 +6,7 @@ library('data.table')
 library('glmnet')
 library('methods')
 library('mda')
+library("RS3")
 
 # Grab arguments
 args <- commandArgs(trailingOnly = TRUE)
