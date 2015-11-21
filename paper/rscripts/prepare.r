@@ -126,3 +126,6 @@ write.csv(global.df, file = output.file)
 bucket <- 'com.btr3.research'
 S3_connect(accessKey, secretKey)
 S3_put_object(bucket, output.file, output.file, "text/csv")
+
+# Re-print any warnings
+warnings()
