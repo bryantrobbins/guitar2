@@ -107,7 +107,7 @@ for (tid in global.all){
   
   # Load features
   features.query <- sprintf('{"artifactType": "%s", "ownerId": "%s"}', featureKey, tid)
-	cat('Loading', tid, '\n')
+	cat('Loading features for', tid, '\n')
   queryBson <- mongo.bson.from.JSON(features.query)
   resultBson<- mongo.findOne(m, artifactsCollection, queryBson)
 	resultList <- mongo.bson.to.list(resultBson)
