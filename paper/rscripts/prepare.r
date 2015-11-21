@@ -62,9 +62,9 @@ train.query <- sprintf('{"resultId": "%s"}', trainingId)
 cat('Loading training data', '\n')
 bson <- mongo.bson.from.JSON(train.query)
 value <- mongo.findOne(m, trainingCollection, bson)
-list <- mongo.bson.to.list(value)
-train.passing <- list[['results']][['passingResults']]
-train.failing <- list[['results']][['failingResults']]
+rlist <- mongo.bson.to.list(value)
+train.passing <- rlist[['results']][['passingResults']]
+train.failing <- rlist[['results']][['failingResults']]
 train.all <- c(train.passing, train.failing)
 
 # Get test data
@@ -72,9 +72,9 @@ test.query <- sprintf('{"resultId": "%s"}', testId)
 cat('Loading test data', '\n')
 bson <- mongo.bson.from.JSON(test.query)
 value <- mongo.findOne(m, testCollection, bson)
-list <- mongo.bson.to.list(value)
-test.passing <- list[['results']][['passingResults']]
-test.failing <- list[['results']][['failingResults']]
+rlist <- mongo.bson.to.list(value)
+test.passing <- rlist[['results']][['passingResults']]
+test.failing <- rlist[['results']][['failingResults']]
 test.all <- c(test.passing, test.failing)
 
 global.all <- c(train.all, test.all)
@@ -83,23 +83,23 @@ length(global.all)
 # Build data frame for all examples
 cat('Initializing global data frame\n')
 cna <- c(list('isInfeas', 'isTraining'),global.features)
-global.df <- data.frame(matrix('0', length(global.all), length(cna)))
+global.df <- data.frame(matrix("0", length(global.all), length(cna)))
 rownames(global.df) <- global.all
 colnames(global.df) <- cna
 
 for (tid in global.all){
 	if(tid %in% train.failing){
-		global.df[tid, 'isInfeas'] <- '1'
+		global.df[tid, 'isInfeas'] <- "1"
 	}
 
 	if(tid %in% test.failing){
-		global.df[tid, 'isInfeas'] <- '1'
+		global.df[tid, 'isInfeas'] <- "1"
 	}
 
   # Set 'isTraining' value for splitting later
   # init artifactsCollection for loading of features
 	if(tid %in% train.all){
-		global.df[tid, 'isTraining'] <- '1'
+		global.df[tid, 'isTraining'] <- "1"
     artifactsCollection <- sprintf('%s.artifacts', trainingDb)
 	} else {
     artifactsCollection <- sprintf('%s.artifacts', testDb)
@@ -113,7 +113,7 @@ for (tid in global.all){
 	resultList <- mongo.bson.to.list(resultBson)
 	for (feat in resultList[['artifactData']][['features']]){
     if(feat %in% global.features){
-	    global.df[tid, feat] <- '1'
+	    global.df[tid, feat] <- "1"
     }
 	}
 }
