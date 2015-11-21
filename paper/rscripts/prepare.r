@@ -83,23 +83,21 @@ length(global.all)
 # Build data frame for all examples
 cat('Initializing global data frame\n')
 cna <- c(list('isInfeas', 'isTraining'),global.features)
-global.df <- data.frame(matrix("0", length(global.all), length(cna)))
-rownames(global.df) <- global.all
-colnames(global.df) <- cna
+mm = matrix("0", length(global.all), length(cna), dimnames=list(global.all, cna))
 
 for (tid in global.all){
 	if(tid %in% train.failing){
-		global.df[tid, 'isInfeas'] <- "1"
+		mm[tid, 'isInfeas'] = "1"
 	}
 
 	if(tid %in% test.failing){
-		global.df[tid, 'isInfeas'] <- "1"
+		mm[tid, 'isInfeas'] = "1"
 	}
 
   # Set 'isTraining' value for splitting later
   # init artifactsCollection for loading of features
 	if(tid %in% train.all){
-		global.df[tid, 'isTraining'] <- "1"
+		mm[tid, 'isTraining'] = "1"
     artifactsCollection <- sprintf('%s.artifacts', trainingDb)
 	} else {
     artifactsCollection <- sprintf('%s.artifacts', testDb)
@@ -113,11 +111,16 @@ for (tid in global.all){
 	resultList <- mongo.bson.to.list(resultBson)
 	for (feat in resultList[['artifactData']][['features']]){
     if(feat %in% global.features){
-	    global.df[tid, feat] <- "1"
+	    mm[tid, feat] = "1"
     }
 	}
 }
 
+# Convert to df and write out
+mm = unname(mm)
+global.df = data.frame(mm)
+rownames(global.df) <- global.all
+colnames(global.df) <- cna
 output.file <- sprintf('data/%s_%s_data.csv', input.suite, featureKey)
 cat('Writing out data frame\n')
 write.csv(global.df, file = output.file)
