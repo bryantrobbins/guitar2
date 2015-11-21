@@ -7,11 +7,21 @@ library('glmnet')
 library('methods')
 library('mda')
 
-# Input files
-input.file="data.csv"
+# Grab arguments
+args <- commandArgs(trailingOnly = TRUE)
+dataset <- args[1]
+accessKey <- args[2]
+secretKey <- args[3]
+
+# Get data from S3
+data.key <- sprintf('data/%s.csv', dataset)
+bucket <- 'com.btr3.research'
+S3_connect(accessKey, secretKey)
+S3_get_object(bucket, data.key, data.key)
+data <- data.frame(read.csv(data.key))
 
 # Load massive data file from csv
-data=fread(input.file, stringsAsFactors=TRUE)
+data=fread(data.key, stringsAsFactors=TRUE)
 train.data=data[isTraining=="1"]
 test.data=data[isTraining=="0"]
 
@@ -33,6 +43,7 @@ for (ix in names(train.data)) {
     filter <- c(filter, ix)
   }
 }
+
 train.data=train.data[,(filter):=NULL]
 cat('After filtering:', length(names(train.data)), ' features in training set', '\n')
 
