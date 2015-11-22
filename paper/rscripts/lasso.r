@@ -20,7 +20,7 @@ bucket <- 'com.btr3.research'
 S3_connect(accessKey, secretKey)
 S3_get_object(bucket, data.key, data.key)
 
-# Load massive data file from csv
+# Load model from exported file
 data <- readRDS(data.key)
 
 # Run the lasso
