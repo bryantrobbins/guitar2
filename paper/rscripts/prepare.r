@@ -6,6 +6,9 @@ library("e1071")
 library("rmongodb")
 library("RS3")
 
+# Load common code
+source('common.r')
+
 # Connect to mongo
 m <- mongo.create(host = "guitar05.cs.umd.edu:37017")
 
@@ -116,19 +119,29 @@ for (tid in global.all){
 	}
 }
 
-# Convert to df and write out
+# Convert to df
+cat('Converting to data frame')
 mm = unname(mm)
 global.df = data.frame(mm)
 rownames(global.df) <- global.all
 colnames(global.df) <- cna
-output.file <- sprintf('data/%s_%s_data.csv', input.suite, featureKey)
+okey <- sprintf('data/%s_%s_data', input.suite, featureKey)
+output.file <- sprintf('%s.csv', okey)
+model.file <- sprintf('%s.dat', okey)
+
+# Write out df
 cat('Writing out data frame\n')
 write.csv(global.df, file = output.file)
+
+# Convert to model
+cat('Loading model structures', '\n')
+data <- loadAndWriteData(output.file, "sub.dat")
 
 # Upload to S3 location
 bucket <- 'com.btr3.research'
 S3_connect(accessKey, secretKey)
 S3_put_object(bucket, output.file, output.file, "text/csv")
+S3_put_object(bucket, model.file, model.file, "application/octet-stream")
 
 # Re-print any warnings
 warnings()
