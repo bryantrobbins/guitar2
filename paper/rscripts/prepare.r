@@ -134,9 +134,9 @@ write.csv(global.df, file = output.file)
 
 # Convert to model
 cat('Loading model structures', '\n')
-data <- loadAndWriteData(output.file, "sub.dat")
+data <- loadAndWriteData(output.file, model.file)
 
-# Upload to S3 location
+# Upload files to S3 location
 bucket <- 'com.btr3.research'
 S3_connect(accessKey, secretKey)
 S3_put_object(bucket, output.file, output.file, "text/csv")
