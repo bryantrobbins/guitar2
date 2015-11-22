@@ -2,7 +2,6 @@
 options(echo=TRUE, warning.length=8170)
 
 # Load libs
-library("e1071")
 library("rmongodb")
 library("RS3")
 
