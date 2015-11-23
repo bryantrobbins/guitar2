@@ -25,7 +25,11 @@ loadData <- function(file) {
 
   train.data=data[isTraining=="1"]
   test.data=data[isTraining=="0"]
-  
+ 
+  # Drop filter var
+  train.data=train.data[,isTraining:=NULL] 
+  test.data=train.data[,isTraining:=NULL] 
+ 
   # Prepare training matrix
   cat('Creating training matrix', '\n')
   xm=model.matrix(isInfeas~., data=train.data)
