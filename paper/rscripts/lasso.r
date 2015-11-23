@@ -32,12 +32,12 @@ plot(cvfit)
 # Run predictions, printing confusion matrix of t1 and t2 errors
 confusion(predict(cvfit, newx = data$testMatrix, type = "class", s = c(cvfit$lambda.min)), data$testY)
 
-# Inspect the chosen coefficients
+# Inspect fit
+lix <- which(cvfit$lambda == cvfit$lambda.min)
 cfs <- coef(cvfit, s = "lambda.min")
-cix <- which(cfs != 0)
 sorted <- sort(cfs[which(cfs != 0)], decreasing=TRUE, index.return=TRUE)
-sorted$x
-rownames(cfs)[sorted$ix]
+cat('Lambda is', cvfit$lambda.min, 'index=', lix, '\n')
+cat('Model has', cvfit$nzero[lix], 'non-zero coefficients:', rownames(cfs)[sorted$ix], '\n')
 
 # Re-print any warnings
 warnings()
