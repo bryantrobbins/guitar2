@@ -28,7 +28,7 @@ loadData <- function(file) {
  
   # Drop filter var
   train.data=train.data[,isTraining:=NULL] 
-  test.data=train.data[,isTraining:=NULL] 
+  test.data=test.data[,isTraining:=NULL] 
  
   # Prepare training matrix
   cat('Creating training matrix', '\n')
