@@ -99,9 +99,12 @@ public final class SaveSuiteInput {
 
         // Store the ripper coverage
         procOptions = new HashMap<String, String>();
-        procOptions.put(CoverageProcessor.FILE_PATH_OPTION,
-                cmd.getOptionValue("r"));
-        testDataManager.saveArtifact(ArtifactCategory.SUITE_INPUT, covProc,
-                procOptions, suiteId);
+        
+        if(cmd.getOptionValue("r") != null) {
+          procOptions.put(CoverageProcessor.FILE_PATH_OPTION,
+            cmd.getOptionValue("r"));
+          testDataManager.saveArtifact(ArtifactCategory.SUITE_INPUT, covProc,
+            procOptions, suiteId);
+        }
     }
 }
