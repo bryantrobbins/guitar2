@@ -32,13 +32,13 @@ loadData <- function(file) {
  
   # Prepare training matrix
   cat('Creating training matrix', '\n')
-  xm=model.matrix(isInfeas~., data=train.data)
+  xm=model.matrix(isInfeas~. - 1, data=train.data, contrasts.arg = lapply(train.data[sapply(train.data, is.factor)], contrasts, contrasts=FALSE))
   x=apply(xm, 2, as.numeric)
   y=as.numeric(train.data$isInfeas)
 
   # Prepare test data
   cat('Creating test matrix', '\n')
-  xtm=model.matrix(isInfeas~., data=test.data)
+  xtm=model.matrix(isInfeas~. - 1, data=test.data, contrasts.arg = lapply(test.data[sapply(test.data, is.factor)], contrasts, contrasts=FALSE))
   xt=apply(xtm, 2, as.numeric)
   actual=as.numeric(test.data$isInfeas)
 

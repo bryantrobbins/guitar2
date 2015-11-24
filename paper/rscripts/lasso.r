@@ -33,11 +33,17 @@ plot(cvfit)
 confusion(predict(cvfit, newx = data$testMatrix, type = "class", s = c(cvfit$lambda.min)), data$testY)
 
 # Inspect fit
+# Inspect fit
 lix <- which(cvfit$lambda == cvfit$lambda.min)
 cfs <- coef(cvfit, s = "lambda.min")
 sorted <- sort(cfs[which(cfs != 0)], decreasing=TRUE, index.return=TRUE)
-cat('Lambda is', cvfit$lambda.min, 'index=', lix, '\n')
-cat('Model has', cvfit$nzero[lix], 'non-zero coefficients:', rownames(cfs)[sorted$ix], '\n')
+cat('Lambda is', cvfit$lambda.min, '\n')
+cat('Lambda index is', lix, '\n')
+cat('Model has', cvfit$nzero[lix], 'coefficients\n')
+cat('Coefficients are:\n')
+for (c in rownames(cfs)[sorted$ix]) {
+  cat(c, '\n')
+}
 
 # Re-print any warnings
 warnings()
