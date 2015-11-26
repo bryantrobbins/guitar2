@@ -98,12 +98,12 @@ public final class SaveSuiteInput {
                 procOptions, suiteId);
 
         // Store the ripper coverage
-        procOptions = new HashMap<String, String>();
-        if (cmd.getOptionValue("r") != null) {
-            procOptions.put(CoverageProcessor.FILE_PATH_OPTION,
-                    cmd.getOptionValue("r"));
-            testDataManager.saveArtifact(ArtifactCategory.SUITE_INPUT, covProc,
-                    procOptions, suiteId);
-        }
+//        procOptions = new HashMap<String, String>();
+//        if (cmd.getOptionValue("r") != null && ) {
+//            procOptions.put(CoverageProcessor.FILE_PATH_OPTION,
+//                    cmd.getOptionValue("r"));
+//            testDataManager.saveArtifact(ArtifactCategory.SUITE_INPUT, covProc,
+//                    procOptions, suiteId);
+//        }
     }
 }
