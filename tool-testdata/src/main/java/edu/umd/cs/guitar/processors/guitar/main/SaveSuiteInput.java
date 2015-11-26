@@ -3,7 +3,7 @@ package edu.umd.cs.guitar.processors.guitar.main;
 import edu.umd.cs.guitar.artifacts.ArtifactCategory;
 import edu.umd.cs.guitar.artifacts.ArtifactProcessor;
 import edu.umd.cs.guitar.main.TestDataManager;
-import edu.umd.cs.guitar.processors.guitar.CoverageProcessor;
+//import edu.umd.cs.guitar.processors.guitar.CoverageProcessor;
 import edu.umd.cs.guitar.processors.guitar.EFGProcessor;
 import edu.umd.cs.guitar.processors.guitar.GUIProcessor;
 import org.apache.commons.cli.BasicParser;
