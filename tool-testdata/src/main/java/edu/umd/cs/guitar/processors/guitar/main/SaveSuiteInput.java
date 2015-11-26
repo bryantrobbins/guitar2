@@ -78,8 +78,8 @@ public final class SaveSuiteInput {
         // Build processors for these objects
         ArtifactProcessor efgProc = new EFGProcessor(testDataManager.getDb());
         ArtifactProcessor guiProc = new GUIProcessor(testDataManager.getDb());
-        ArtifactProcessor covProc =
-                new CoverageProcessor(testDataManager.getDb());
+//        ArtifactProcessor covProc =
+//                new CoverageProcessor(testDataManager.getDb());
 
         // Create test suite (reset contents if necessary)
         String suiteId = cmd.getOptionValue("s");
