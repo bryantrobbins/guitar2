@@ -146,9 +146,9 @@ public class TextObject {
             if (line.toUpperCase().contains("STEP TIMER: TIMEOUT!!!")) {
                 return TestResult.STEP_TIMEOUT;
             }
-            if (pattern.matcher(line).matches()) {
-                return TestResult.ERROR_IN_LOG;
-            }
+//            if (pattern.matcher(line).matches()) {
+//                return TestResult.ERROR_IN_LOG;
+//            }
             if (line.toUpperCase().contains(":REPLAY FAILED")) {
                 return TestResult.FAIL;
             }
