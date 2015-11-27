@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Pattern;
+//import java.util.regex.Pattern;
 
 /**
  * Created by bryan on 4/5/14.
