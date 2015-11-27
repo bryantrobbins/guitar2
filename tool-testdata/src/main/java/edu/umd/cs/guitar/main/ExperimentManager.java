@@ -113,6 +113,8 @@ public final class ExperimentManager {
 
                 if (logObject != null) {
                     result = logObject.computeResult();
+                } else {
+                    logger.info("Could not find log object for execution: " + execId);
                 }
 
                 if (result.equals(TextObject.TestResult.PASS)) {
