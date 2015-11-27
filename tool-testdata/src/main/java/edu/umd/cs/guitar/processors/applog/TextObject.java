@@ -128,12 +128,12 @@ public class TextObject {
      * @return the codified result
      */
     public TestResult computeResult() {
-        Pattern pattern = Pattern.compile("(((?:[a-zA-Z]{3} \\d{1,2}, \\d{4,"
-                + "4} \\d{1,2}:\\d{2}:\\d{2} (AM|PM) (\\(SEVERE\\)|\\"
-                + "(ERROR\\))"
-                + ").*\\r(?:(.*Exception.*(\\r.*)(\\tat.*\\r)+)))|("
-                + "(?:[a-zA-Z]{3} \\d{1,2}, \\d{4,4} \\d{1,"
-                + "2}:\\d{2}:\\d{2} (AM|PM) (\\(SEVERE\\)|\\(ERROR\\))).*))");
+//        Pattern pattern = Pattern.compile("(((?:[a-zA-Z]{3} \\d{1,2}, \\d{4,"
+//                + "4} \\d{1,2}:\\d{2}:\\d{2} (AM|PM) (\\(SEVERE\\)|\\"
+//                + "(ERROR\\))"
+//                + ").*\\r(?:(.*Exception.*(\\r.*)(\\tat.*\\r)+)))|("
+//                + "(?:[a-zA-Z]{3} \\d{1,2}, \\d{4,4} \\d{1,"
+//                + "2}:\\d{2}:\\d{2} (AM|PM) (\\(SEVERE\\)|\\(ERROR\\))).*))");
 
         for (int i = 0; i < this.size(); i++) {
             String line = this.getLine(i);
